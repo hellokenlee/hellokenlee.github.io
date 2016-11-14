@@ -6,4 +6,17 @@ categories: jekyll
 tag: jekyll
 ---
 
-这是来自Github的编辑
+这是来自Github的编辑  
+
+数学公式测试：
+
+$$a^2 + b^2 = c^2$$
+
+测试代码块:  
+```cpp
+#include <iostream>
+using namespace std;
+int main(){
+	return 0;
+}
+```
