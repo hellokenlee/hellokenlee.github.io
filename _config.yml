@@ -1,0 +1,29 @@
+# Site settings
+name: HelloKenLee
+email: ken_4000@qq.com
+author: KenLee
+url: https://www.hellokenlee.github.io
+resume_site: /resume
+github: https://github.com/hellokenlee/
+baseurl: 
+description: Abstractness is the price of genarality.
+meta_description: meta_des
+motto: 施工队施工中...
+banner: 请绕路行驶
+categories: 1
+permalink: /:year/:month/:day/:title/
+paginate: 10
+
+exclude: ['README.md', 'Gemfile.lock', 'Gemfile', 'Rakefile']
+
+github_username: hellokenlee
+highlighter: rouge
+
+# Build settings
+markdown: kramdown
+
+FB:
+  comments :
+    provider : disqus
+    disqus :
+        short_name : hellokenlee
