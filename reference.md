@@ -33,5 +33,10 @@ permalink: /reference/
 一个非常厉害的同学的博客，本科毕业后去了阿里任职前端工程师/软件工程师:  
 [秋，怡然若晴。](http://joyeecheung.cnblogs.com/)
 
+[Rachilaji]
+=====================
+一个舍友的博客:
+[Rachilaji](http://blog.csdn.net/richlaji)
+
 
 
