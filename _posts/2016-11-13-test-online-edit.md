@@ -13,7 +13,7 @@ tag: jekyll
 $$a^2 + b^2 = c^2$$
 
 测试代码块:  
-```cpp
+```
 #include <iostream>
 using namespace std;
 int main(){
