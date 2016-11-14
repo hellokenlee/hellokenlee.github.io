@@ -1,19 +1,18 @@
 <!DOCTYPE html>
+<head>
+	<title>HelloKenLee-Blog</title>
+</head>
 <html>
+	{% include head.html %}
+	<body class="index">
+	{% include header.html %}
+	{% include docs_header.html %}
+	
+	{% if page.title %}
+		{% include banner.html %}
+	{% endif %}
 
-  {% include head.html %}
-
-  <body class="index">
-
-    {% include header.html %}
-    {% include docs_header.html %}
-    {% if page.title %}
-      {% include banner.html %}
-    {% endif %}
-
-    {{ content }}
-    
-    {% include footer.html %}
-
-  </body>
+	{{ content }}
+	{% include footer.html %}
+</body>
 </html>
