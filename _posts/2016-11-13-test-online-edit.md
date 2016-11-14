@@ -13,7 +13,7 @@ tag: jekyll
 $$a^2 + b^2 = c^2$$
 
 测试代码块:  
-~~~ruby
+```ruby
 def show
   @widget = Widget(params[:id])
   respond_to do |format|
@@ -21,4 +21,4 @@ def show
     format.json { render json: @widget }
   end
 end
-~~~
+```
