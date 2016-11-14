@@ -1,6 +1,7 @@
 # Site settings
 name: HelloKenLee
 email: ken_4000@qq.com
+# site info
 author: KenLee
 url: https://www.hellokenlee.github.io
 resume_site: /resume/
@@ -13,17 +14,18 @@ banner: 很高兴能在这遇见你!
 categories: 1
 permalink: /:year/:month/:day/:title/
 paginate: 10
-
 exclude: ['README.md', 'Gemfile.lock', 'Gemfile', 'Rakefile']
-
 github_username: hellokenlee
-# Same config with GitHub
-pygments: true
-safe: true
-auto: true
-# Build settings
-markdown: kramdown
 
+# Build settings
+gems: [jekyll-paginate]
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+# Comment system
 FB:
   comments :
     provider : disqus
