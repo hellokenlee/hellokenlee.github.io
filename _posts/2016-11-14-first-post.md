@@ -87,6 +87,7 @@ tags: 感想 环境搭建
 ```
 
 &emsp;&emsp;都不行。其实解决方法就是把关于highlighter和kramdown的几行都删了，因为现在Github只支持kramdown和rouge，所以无需在配置中声明。
+
 - Disqus：这个也有教程。关键在于，Disqus会给你一个类似于
 
 ```js
