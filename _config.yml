@@ -19,11 +19,10 @@ github_username: hellokenlee
 
 # Build settings
 gems: [jekyll-paginate]
-markdown: kramdown
 highlighter: rouge
+markdown: kramdown
 kramdown:
   input: GFM
-  auto_ids: true
   syntax_highlighter: rouge
 
 # Comment system
