@@ -5,8 +5,13 @@
     <description>Abstractness is the price of genarality.</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
+<<<<<<< HEAD
     <pubDate>Mon, 14 Nov 2016 21:49:46 +0800</pubDate>
     <lastBuildDate>Mon, 14 Nov 2016 21:49:46 +0800</lastBuildDate>
+=======
+    <pubDate>Mon, 14 Nov 2016 21:36:37 +0800</pubDate>
+    <lastBuildDate>Mon, 14 Nov 2016 21:36:37 +0800</lastBuildDate>
+>>>>>>> b0bfdb68ab5603ce6e90cdd6f162b9c02946136c
     <generator>Jekyll v3.3.0</generator>
     
       <item>
@@ -58,6 +63,7 @@
 &lt;h3 id=&quot;section-2&quot;&gt;&lt;strong&gt;怎么在这里搭建&lt;/strong&gt;&lt;/h3&gt;
 &lt;p&gt;  我使用的是jekyll+Github Pages，没有为什么，因为Github只支持jekyll。教程网上一搜一大堆，我不在这细说。不过我倒是想说说我遇到的坑(估计是由于我完全不会ruby的缘故，特别是估计我以后都不会用到ruby，也懒得学)：&lt;/p&gt;
 
+<<<<<<< HEAD
 &lt;ul&gt;
   &lt;li&gt;jekyll需要ruby2.0: 在Ubuntu14.04上，需要&lt;/li&gt;
 &lt;/ul&gt;
@@ -120,6 +126,69 @@
 &lt;/div&gt;
 
 &lt;p&gt;  的js脚本给你插入，但是Github只支持Https，因此我们需要把所有外链的js脚本(包括之前说的mathjax)都改成https来访问，不然会链接失败。如果你在本地的jekyll使用localhost访问正常，但是到Github Pages上面访问出错，很有可能就是由于使用Http外链js的原因。&lt;/p&gt;
+=======
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;jekyll需要ruby2.0: 在Ubuntu14.04上，需要&lt;/p&gt;
+
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;shell
+ sudo apt-get install ruby2.0
+&lt;/code&gt;
+ 然后&lt;/p&gt;
+
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;shell
+ sudo gem2.0 install jekyll
+&lt;/code&gt;&lt;/p&gt;
+
+    &lt;p&gt;才能使用，不然会出错。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;插入数学公式： 我用的markdown公式是支持mathjax公式编辑的，但是测试jekyll的时候发现不行。解决方法是在博客目录(含有_post/的目录)下的_layout/下的default.html，在head标签中插入一Mathjax提供的JS库。&lt;/p&gt;
+
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;html
+ &amp;lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;&amp;gt;&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/p&gt;
+
+    &lt;p&gt;当然你也可以把Mathjax的JS库下载下来放到某个子目录然后通过相对路径访问，不过Mathjax太大了，push到Github上面不是很道德，所以我采用的是外链的。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;代码高亮！！！这个弄了我好久。我用到的主题是LessOrMore这个主题，但是他好像在jekyll2.x的时候写的，直接使用放在Github Pages上面显示不出来。主题自带的_config.yaml文件是这样的：&lt;/p&gt;
+
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ruby
+ highlighter: rouge
+ # Build settings
+ markdown: kramdown
+&lt;/code&gt;&lt;/p&gt;
+
+    &lt;p&gt;然后push到Github上面，只能通过jekyll大括号+百分号的方法高亮，不能使用markdown自带的三个backticks的方法，所以写markdown的时候很不爽。我尝试过很多方法。包括更改_config.yaml:&lt;/p&gt;
+
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ruby
+ markdown: kramdown
+ highlighter: rouge
+ kramdown:
+ 	input: GFM
+ 	syntax_highlighter: rouge
+&lt;/code&gt;&lt;/p&gt;
+
+    &lt;p&gt;和&lt;/p&gt;
+
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ruby
+ pygments: true
+&lt;/code&gt;&lt;/p&gt;
+
+    &lt;p&gt;都不行。其实解决方法就是把关于highlighter和kramdown的几行都删了，因为现在Github只支持kramdown和rouge，所以无需在配置中声明。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Disqus：这个也有教程。关键在于，Disqus会给你一个类似于&lt;/p&gt;
+
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;js
+ 'http://' + disqus_shortname + '.disqus.com/embed.js'
+&lt;/code&gt;&lt;/p&gt;
+
+    &lt;p&gt;脚本给你插入，但是Github只支持Https，因此我们需要把所有外链的js脚本(包括之前说的mathjax)都改成https来访问，不然会链接失败。如果你在本地的jekyll使用localhost访问正常，但是到Github Pages上面访问出错，很有可能就是由于使用Http外链js的原因。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+>>>>>>> b0bfdb68ab5603ce6e90cdd6f162b9c02946136c
 
 &lt;h3 id=&quot;section-3&quot;&gt;感谢&lt;/h3&gt;
 &lt;p&gt;  搭建博客的时候用了很多人的东西，特别感谢。谢谢你们创造出来了这些东西，谢谢你们把这些东西开源。&lt;/p&gt;
