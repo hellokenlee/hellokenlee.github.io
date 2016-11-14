@@ -53,7 +53,7 @@ highlighter: rouge
 # Build settings
 markdown: kramdown
 ```
-然后push到Github上面，只能通过{% language %}的方法高亮，不能使用markdown自带的三个backticks的方法，所以写markdown的时候很不爽。我尝试过很多方法。包括更改_config.yaml:
+然后push到Github上面，只能通过jekyll大括号+百分号的方法高亮，不能使用markdown自带的三个backticks的方法，所以写markdown的时候很不爽。我尝试过很多方法。包括更改_config.yaml:
 ```ruby
 markdown: kramdown
 highlighter: rouge

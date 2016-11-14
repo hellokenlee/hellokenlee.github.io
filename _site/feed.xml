@@ -5,72 +5,110 @@
     <description>Abstractness is the price of genarality.</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 14 Nov 2016 19:18:41 +0800</pubDate>
-    <lastBuildDate>Mon, 14 Nov 2016 19:18:41 +0800</lastBuildDate>
+    <pubDate>Mon, 14 Nov 2016 21:10:20 +0800</pubDate>
+    <lastBuildDate>Mon, 14 Nov 2016 21:10:20 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
-        <title>Test online edit on Github</title>
-        <description>&lt;p&gt;这是来自Github的编辑&lt;/p&gt;
-
-&lt;p&gt;测试数学公式：&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;a^2 + b^2 = c^2&lt;/script&gt;
-
-&lt;p&gt;测试代码块:&lt;/p&gt;
-&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;iostream&amp;gt;
-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;private&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
-	&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
-	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;测试图片&lt;/p&gt;
-</description>
-        <pubDate>Sun, 13 Nov 2016 00:13:01 +0800</pubDate>
-        <link>http://localhost:4000/2016/11/13/test-online-edit/</link>
-        <guid isPermaLink="true">http://localhost:4000/2016/11/13/test-online-edit/</guid>
-        
-        <category>jekyll</category>
-        
-        
-        <category>jekyll</category>
-        
-      </item>
-    
-      <item>
-        <title>Welcome to Jekyll!</title>
+        <title>第一篇博客</title>
         <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;诫子书&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;为什么会有这一个博客&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;为什么选在在这里搭建&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-2&quot; id=&quot;markdown-toc-section-2&quot;&gt;怎么在这里搭建&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-3&quot; id=&quot;markdown-toc-section-3&quot;&gt;感谢&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;First POST build by Jekyll.&lt;/p&gt;
+&lt;h3 id=&quot;section&quot;&gt;为什么会有这一个博客&lt;/h3&gt;
+&lt;p&gt;数了数有接近一年没写博客了，这一年发生了太多事情： 毕业，找工作，升学，分手…还有很多数不清的，麻烦的事情。感觉自己也变了很多，不像以前那样无忧无虑了。以前的同学大多数都去了工作，没有能像以前那样有那么多时间聚在一起玩。现在的同学倒也还不错，大家为了前程都非常努力学习。应了一句歌词 “朋友们都去了远方，我只能每天早上和树说话。” 从前玩得最好的几个同学都开始自给自足了，开始探讨买车买房结婚生子的人生大计。我呢，还在吭老读书，结婚生子的事情似乎比读本科的时候离得更加远了。
+不过，最近的生活也算是过得稳定而且充实吧～就想着更新一下博客。原来的博客是用worldpress搭建在新浪云SAE上面的，结果前几天登录上去他说我余额不足，然后把我的东西给删了。同时我前几天刚刚重装了系统，之前本地的备份也都没有了…自己的东西没备份好，怪不了其他人(喂谁把SAE给黑了好不好…)。不过这倒让我发现了WorldPress博客的弊端：WorldPress的博客数据是存在他的MySQL数据库里面的，必须要导出成XML才能备份，而且编辑也得用他的编辑器来编辑，格式才不会乱(尽管有插件兼容markdown或者其他语法)。没办法，塞翁失马，就让他失呗。从新开始也是一件好事，毕竟以前的写的博文幼稚又无知。&lt;/p&gt;
 
-&lt;h2 id=&quot;section&quot;&gt;诫子书&lt;/h2&gt;
+&lt;h3 id=&quot;section-1&quot;&gt;为什么选在在这里搭建&lt;/h3&gt;
+&lt;p&gt;其实写博客就像是在浩瀚的网络中搭建一个家，出于经常玩Minecraft和饥荒的习惯，对家的选址总是非常谨慎，想了很多地方，注册了很多个账号(比如CSDN，博客园，163博客…)都觉得不太好。于是总结了一下自己对博客的需求：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;没有广告：网上一般的博客系统会各种方式插入广告。非常理解，但是不认同。明白他们运营需要成本，但是总感觉如果一个读者看我博客看着看着出现了一个性感写真在我正文附近，是我对他的不尊重。&lt;/li&gt;
+  &lt;li&gt;免费：之前SAE上的费用是一次他故障然后赔我的费用，一直没充值，没想到就这样没了。&lt;/li&gt;
+  &lt;li&gt;能插入代码，数学公式，图片：每一个程序员写博客基本上都需要这三样东西吧。&lt;/li&gt;
+  &lt;li&gt;容易迁移和保存：前一次博客的教训。&lt;/li&gt;
+  &lt;li&gt;简单！简单！简单！：不需要worldpress上面的那么多功能，也不需要动态的很炫的东西，只是一个记录思考的地方&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;&lt;img src=&quot;/styles/images/jiezishu.jpg&quot; alt=&quot;诫子书&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;对着上面的要求排除了一下，也就剩下Github Pages和简书这两家了，都试了一下，感觉都不错，尽管简书不能直接的插入数学公式，但是能通过第三方服务器生成图片插入的方法来hack，问题不大。后来还是觉得Github Pages的可定制性高，自己也学过一些Web的知识，所以选择在这安家。
+说一说Github Pages的优点和缺点吧：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;优点：免费，没广告这点不用说了。每一次上传博客都是一次commit和push的过程，这对于一个程序员来说是最安心的了。而且博客内容是源码的一部分，只要Github不倒闭，你的源码就在那，不会消失，而且能版本回退。博文内容使用markdown格式，非常轻而易举插入公式和代码，支持高亮，即使是做迁移也只需要把所有.md文件拷贝下来即可，不涉及数据库啊，服务器啊这些东西。而且能支持在线编辑，只要能登录Github就能使用它的源码编辑器在线编辑，编辑完commit即可。&lt;/li&gt;
+  &lt;li&gt;缺点：搭建麻烦而且坑多。我之前以为只要是静态博客生成工具生成的博客都可以使用，后来发现GithubPages只支持jekyll，其他生成工具(比如我一开始是使用了一个自己熟悉的python写的生成工具)只能本地生成，然后把html push上去。同时Github在2016年2月升级到了jekyll3，很多教程都是以前的版本，坑有点多。最最最令我不习惯的就是，Github强制https访问，使用http访问的话会出错。&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;&lt;a href=&quot;#&quot;&gt;诸葛亮&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;section-2&quot;&gt;怎么在这里搭建&lt;/h3&gt;
+&lt;p&gt;我使用的是jekyll+Github Pages，没有为什么，因为Github只支持jekyll。教程网上一搜一大堆，我不在这细说。不过我倒是想说说我遇到的坑(估计是由于我完全不会ruby的缘故，特别是估计我以后都不会用到ruby，也懒得学)：&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;jekyll需要ruby2.0: 在Ubuntu14.04上，需要
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo apt-get install ruby2.0
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+    &lt;p&gt;然后&lt;/p&gt;
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo gem2.0 install jekyll
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+    &lt;p&gt;才能使用，不然会出错。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;插入数学公式： 我用的markdown公式是支持mathjax公式编辑的，但是测试jekyll的时候发现不行。解决方法是在博客目录(含有_post/的目录)下的_layout/下的default.html，在head标签中插入一Mathjax提供的JS库。
+```html&lt;/li&gt;
+&lt;/ol&gt;
+&lt;head&gt;
+	...
+	&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;&gt;&lt;/script&gt;
+	...
+&lt;/head&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;当然你也可以把Mathjax的JS库下载下来放到某个子目录然后通过相对路径访问，不过Mathjax太大了，push到Github上面不是很道德，所以我采用的是外链的。
+3. 代码高亮！！！这个弄了我好久。我用到的主题是LessOrMore这个主题，但是他好像在jekyll2.x的时候写的，直接使用放在Github Pages上面显示不出来。主题自带的_config.yaml文件是这样的：
+```ruby
+highlighter: rouge
+# Build settings
+markdown: kramdown
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;然后push到Github上面，只能通过jekyll大括号+百分号的方法高亮，不能使用markdown自带的三个backticks的方法，所以写markdown的时候很不爽。我尝试过很多方法。包括更改_config.yaml:&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;ss&quot;&gt;markdown: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kramdown&lt;/span&gt;
+&lt;span class=&quot;ss&quot;&gt;highlighter: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rouge&lt;/span&gt;
+&lt;span class=&quot;ss&quot;&gt;kramdown:
+	input: &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;GFM&lt;/span&gt;
+	&lt;span class=&quot;ss&quot;&gt;syntax_highlighter: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rouge&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;和&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;ss&quot;&gt;pygments: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;都不行。其实解决方法就是把关于highlighter和kramdown的几行都删了，因为现在Github只支持kramdown和rouge，所以无需在配置中声明。&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Disqus：这个也有教程。关键在于，Disqus会给你一个类似于
+    &lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;s1&quot;&gt;'http://'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;disqus_shortname&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'.disqus.com/embed.js'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+    &lt;p&gt;的js脚本给你插入，但是Github只支持Https，因此我们需要把所有外链的js脚本(包括之前说的mathjax)都改成https来访问，不然会链接失败。如果你在本地的jekyll使用localhost访问正常，但是到Github Pages上面访问出错，很有可能就是由于使用Http外链js的原因。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
 
-&lt;p&gt;夫君子之行，静以修身，俭以养德。非淡泊(澹泊)无以明志，非宁静无以致远。夫学须静也，才须学也。非学无以广才，非志无以成学。淫慢则不能励精，险躁则不能冶性。
-年与时驰，意与日去，遂成枯落，多不接世，悲守穷庐，将复何及！&lt;/p&gt;
-
+&lt;h3 id=&quot;section-3&quot;&gt;感谢&lt;/h3&gt;
+&lt;p&gt;搭建博客的时候用了很多人的东西，特别感谢。谢谢你们创造出来了这些东西，谢谢你们把这些东西开源。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.github.com&quot;&gt;Github&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.jekyll.com/&quot;&gt;Jekyll&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.ruby-lang.org/en/&quot;&gt;Ruby&lt;/a&gt; ——尽管我不太喜欢这种语言，写东西还是喜欢c/cpp or Python or Mathlab，大概因为我老。&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/luoyan35714/LessOrMore&quot;&gt;LessOrMore&lt;/a&gt; ——我用到的jekyll主题，但经过我很多修改，还是感谢&lt;a href=&quot;https://github.com/luoyan35714&quot;&gt;作者&lt;/a&gt;。&lt;/li&gt;
+&lt;/ul&gt;
 </description>
-        <pubDate>Mon, 17 Nov 2014 13:31:01 +0800</pubDate>
-        <link>http://localhost:4000/2014/11/17/welcome-to-jekyll/</link>
-        <guid isPermaLink="true">http://localhost:4000/2014/11/17/welcome-to-jekyll/</guid>
+        <pubDate>Mon, 14 Nov 2016 19:23:00 +0800</pubDate>
+        <link>http://localhost:4000/2016/11/14/first-post/</link>
+        <guid isPermaLink="true">http://localhost:4000/2016/11/14/first-post/</guid>
         
-        <category>jekyll21421</category>
+        <category>感想</category>
+        
+        <category>环境搭建</category>
         
         
-        <category>jekyll</category>
+        <category>杂谈</category>
         
       </item>
     
