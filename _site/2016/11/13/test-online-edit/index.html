@@ -163,11 +163,13 @@
 <script type="math/tex; mode=display">a^2 + b^2 = c^2</script>
 
 <p>测试代码块:</p>
-<div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
-</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-<span class="kt">int</span> <span class="n">main</span><span class="p">(){</span>
-	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">show</span>
+  <span class="vi">@widget</span> <span class="o">=</span> <span class="no">Widget</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:id</span><span class="p">])</span>
+  <span class="n">respond_to</span> <span class="k">do</span> <span class="o">|</span><span class="nb">format</span><span class="o">|</span>
+    <span class="nb">format</span><span class="p">.</span><span class="nf">html</span> <span class="c1"># show.html.erb</span>
+    <span class="nb">format</span><span class="p">.</span><span class="nf">json</span> <span class="p">{</span> <span class="n">render</span> <span class="ss">json: </span><span class="vi">@widget</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
 </code></pre>
 </div>
 
