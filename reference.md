@@ -35,7 +35,7 @@ permalink: /reference/
 
 [Rachilaji]
 =====================
-一个舍友的博客:
+一个舍友的博客:  
 [Rachilaji](http://blog.csdn.net/richlaji)
 
 
