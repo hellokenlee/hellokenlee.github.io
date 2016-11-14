@@ -19,11 +19,6 @@ github_username: hellokenlee
 
 # Build settings
 gems: [jekyll-paginate]
-highlighter: rouge
-markdown: kramdown
-kramdown:
-  input: GFM
-  syntax_highlighter: rouge
 
 # Comment system
 FB:

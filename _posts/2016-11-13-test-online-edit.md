@@ -27,3 +27,18 @@ int main(){
 	return 0;
 }
 {% endhighlight %}
+
+```cpp
+#include <iostream>
+using namespace std;
+class A{
+public:
+	A();
+	~A();
+private:
+	int a;
+}
+int main(){
+	return 0;
+}
+```
