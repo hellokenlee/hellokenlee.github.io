@@ -5,14 +5,70 @@
     <description>Abstractness is the price of genarality.</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-<<<<<<< HEAD
-    <pubDate>Mon, 14 Nov 2016 21:49:46 +0800</pubDate>
-    <lastBuildDate>Mon, 14 Nov 2016 21:49:46 +0800</lastBuildDate>
-=======
-    <pubDate>Mon, 14 Nov 2016 21:36:37 +0800</pubDate>
-    <lastBuildDate>Mon, 14 Nov 2016 21:36:37 +0800</lastBuildDate>
->>>>>>> b0bfdb68ab5603ce6e90cdd6f162b9c02946136c
+    <pubDate>Thu, 01 Dec 2016 21:24:26 +0800</pubDate>
+    <lastBuildDate>Thu, 01 Dec 2016 21:24:26 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
+    
+      <item>
+        <title>OpenGL: 摄像机类的设计(摄像机旋转的公式推导)</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;&lt;strong&gt;前言&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;&lt;strong&gt;问题描述&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-2&quot; id=&quot;markdown-toc-section-2&quot;&gt;&lt;strong&gt;思考过程&lt;/strong&gt;&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#section-3&quot; id=&quot;markdown-toc-section-3&quot;&gt;&lt;strong&gt;欧拉角:&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#section-4&quot; id=&quot;markdown-toc-section-4&quot;&gt;&lt;strong&gt;小学数学：&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#section-5&quot; id=&quot;markdown-toc-section-5&quot;&gt;&lt;strong&gt;二维映射三维：&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;section&quot;&gt;&lt;strong&gt;前言&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;  前一段时间在follow &lt;a href=&quot;&quot;&gt;LearOpenGL&lt;/a&gt; 学习OpenGL的核心模式，主要是学习GLSL和与GLSL配套的OpenGL。当我看到 &lt;a href=&quot;http://www.learnopengl.com/#!Getting-started/Camera&quot;&gt;Camera&lt;/a&gt; 这一章的时候，他在说明摄像机旋转的时候有说得不是很清楚(从原PO的下面评论区一堆人发问可以看出来)。其实原理是很简单的高中数学问题，在这和大家分享一下自己的思考过程。(原教程还是非常棒的，不想看原PO英文的同学推荐看中文版的教程&lt;a href=&quot;https://learnopengl-cn.github.io/01%20Getting%20started/09%20Camera/&quot;&gt;LearnOpenGL-CN&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/question1.png&quot; alt=&quot;pic&quot; /&gt;
+&lt;img src=&quot;/images/question2.png&quot; alt=&quot;pic&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;(下面的评论区很多人对这点发问)&lt;/p&gt;
+
+&lt;h3 id=&quot;section-1&quot;&gt;&lt;strong&gt;问题描述&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;  要设计一个第一人称视角的摄像机，摄像机无非2种操作：平移(玩家位置移动)，旋转(玩家视角变化，比如向左看，像右看…)。我们单纯考虑摄像机的旋转问题(平移比较简单，有兴趣可以看原Po或者看我下面给出的实现)。任何编程问题我们都需要明确我们的输入和输出是什么，那么我们得到的输入是：鼠标在水平和竖直两个方向的平移量，我们需要输出的是：摄像机的朝向，我们用一个从原点出发的三维向量(x,y,z)表示。&lt;/p&gt;
+
+&lt;h3 id=&quot;section-2&quot;&gt;&lt;strong&gt;思考过程&lt;/strong&gt;&lt;/h3&gt;
+&lt;h4 id=&quot;section-3&quot;&gt;&lt;strong&gt;欧拉角:&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;  我们先介绍欧拉角的概念，欧拉根据旋转轴的不同把旋转分为3种不同的旋转，分别是：类似于点头动作Pitch，和类似以摇头动作的Yaw，以及类似于在地上滚来滚去Roll。
+&lt;img src=&quot;/images/eular.png&quot; alt=&quot;pic&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;  结合一下我们玩过的FPS游戏，在&lt;strong&gt;问题描述&lt;/strong&gt;中的输入，鼠标在两个方向的移动分量事实上可以看做是摄像机的Pitch角以及Yaw角。为什么没有Roll角？你特么会在游戏中做&lt;em&gt;歪头&lt;/em&gt;的动作啊？！就连现实也很少做好伐？!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/head.jpg&quot; alt=&quot;pci&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;section-4&quot;&gt;&lt;strong&gt;小学数学：&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;  原文在这里出现了第一个难以理解的地方，原文的配图和描述是这样的：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/triangle.png&quot; alt=&quot;pic&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;If we define the hypotenuse to be of length 1 we know from trigonometry (soh cah toa) that the adjacant side’s length is cos x/h=cos x/1=cos xcos⁡ x/h=cos⁡ x/1=cos⁡ x and that the opposing side’s length is sin y/h=sin y/1=sin ysin⁡ y/h=sin⁡ y/1=sin⁡ y. This gives us some general formulas for retrieving the length in both the x and y directions, depending on the given angle.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;  我看完原文之后的表情和上面尔康是一样的(???)：为毛cosθ=x/h,然后直角边就变成了cosx啊？？？本来很简单的东西一下子就变懵逼了。我认为正确的理解应是这样：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/triangle_fixed.png&quot; alt=&quot;pic&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;section-5&quot;&gt;&lt;strong&gt;二维映射三维：&lt;/strong&gt;&lt;/h4&gt;
+</description>
+        <pubDate>Thu, 01 Dec 2016 20:16:00 +0800</pubDate>
+        <link>http://localhost:4000/2016/12/01/opengl-camera-rotate/</link>
+        <guid isPermaLink="true">http://localhost:4000/2016/12/01/opengl-camera-rotate/</guid>
+        
+        <category>数学</category>
+        
+        <category>图形学</category>
+        
+        
+        <category>OpenGL</category>
+        
+      </item>
     
       <item>
         <title>第一篇博客</title>
@@ -63,7 +119,6 @@
 &lt;h3 id=&quot;section-2&quot;&gt;&lt;strong&gt;怎么在这里搭建&lt;/strong&gt;&lt;/h3&gt;
 &lt;p&gt;  我使用的是jekyll+Github Pages，没有为什么，因为Github只支持jekyll。教程网上一搜一大堆，我不在这细说。不过我倒是想说说我遇到的坑(估计是由于我完全不会ruby的缘故，特别是估计我以后都不会用到ruby，也懒得学)：&lt;/p&gt;
 
-<<<<<<< HEAD
 &lt;ul&gt;
   &lt;li&gt;jekyll需要ruby2.0: 在Ubuntu14.04上，需要&lt;/li&gt;
 &lt;/ul&gt;
@@ -117,6 +172,7 @@
 &lt;/div&gt;
 
 &lt;p&gt;  都不行。其实解决方法就是把关于highlighter和kramdown的几行都删了，因为现在Github只支持kramdown和rouge，所以无需在配置中声明。&lt;/p&gt;
+
 &lt;ul&gt;
   &lt;li&gt;Disqus：这个也有教程。关键在于，Disqus会给你一个类似于&lt;/li&gt;
 &lt;/ul&gt;
@@ -126,69 +182,6 @@
 &lt;/div&gt;
 
 &lt;p&gt;  的js脚本给你插入，但是Github只支持Https，因此我们需要把所有外链的js脚本(包括之前说的mathjax)都改成https来访问，不然会链接失败。如果你在本地的jekyll使用localhost访问正常，但是到Github Pages上面访问出错，很有可能就是由于使用Http外链js的原因。&lt;/p&gt;
-=======
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;jekyll需要ruby2.0: 在Ubuntu14.04上，需要&lt;/p&gt;
-
-    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;shell
- sudo apt-get install ruby2.0
-&lt;/code&gt;
- 然后&lt;/p&gt;
-
-    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;shell
- sudo gem2.0 install jekyll
-&lt;/code&gt;&lt;/p&gt;
-
-    &lt;p&gt;才能使用，不然会出错。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;插入数学公式： 我用的markdown公式是支持mathjax公式编辑的，但是测试jekyll的时候发现不行。解决方法是在博客目录(含有_post/的目录)下的_layout/下的default.html，在head标签中插入一Mathjax提供的JS库。&lt;/p&gt;
-
-    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;html
- &amp;lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;&amp;gt;&amp;lt;/script&amp;gt;
-&lt;/code&gt;&lt;/p&gt;
-
-    &lt;p&gt;当然你也可以把Mathjax的JS库下载下来放到某个子目录然后通过相对路径访问，不过Mathjax太大了，push到Github上面不是很道德，所以我采用的是外链的。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;代码高亮！！！这个弄了我好久。我用到的主题是LessOrMore这个主题，但是他好像在jekyll2.x的时候写的，直接使用放在Github Pages上面显示不出来。主题自带的_config.yaml文件是这样的：&lt;/p&gt;
-
-    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ruby
- highlighter: rouge
- # Build settings
- markdown: kramdown
-&lt;/code&gt;&lt;/p&gt;
-
-    &lt;p&gt;然后push到Github上面，只能通过jekyll大括号+百分号的方法高亮，不能使用markdown自带的三个backticks的方法，所以写markdown的时候很不爽。我尝试过很多方法。包括更改_config.yaml:&lt;/p&gt;
-
-    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ruby
- markdown: kramdown
- highlighter: rouge
- kramdown:
- 	input: GFM
- 	syntax_highlighter: rouge
-&lt;/code&gt;&lt;/p&gt;
-
-    &lt;p&gt;和&lt;/p&gt;
-
-    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ruby
- pygments: true
-&lt;/code&gt;&lt;/p&gt;
-
-    &lt;p&gt;都不行。其实解决方法就是把关于highlighter和kramdown的几行都删了，因为现在Github只支持kramdown和rouge，所以无需在配置中声明。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Disqus：这个也有教程。关键在于，Disqus会给你一个类似于&lt;/p&gt;
-
-    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;js
- 'http://' + disqus_shortname + '.disqus.com/embed.js'
-&lt;/code&gt;&lt;/p&gt;
-
-    &lt;p&gt;脚本给你插入，但是Github只支持Https，因此我们需要把所有外链的js脚本(包括之前说的mathjax)都改成https来访问，不然会链接失败。如果你在本地的jekyll使用localhost访问正常，但是到Github Pages上面访问出错，很有可能就是由于使用Http外链js的原因。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
->>>>>>> b0bfdb68ab5603ce6e90cdd6f162b9c02946136c
 
 &lt;h3 id=&quot;section-3&quot;&gt;感谢&lt;/h3&gt;
 &lt;p&gt;  搭建博客的时候用了很多人的东西，特别感谢。谢谢你们创造出来了这些东西，谢谢你们把这些东西开源。&lt;/p&gt;
