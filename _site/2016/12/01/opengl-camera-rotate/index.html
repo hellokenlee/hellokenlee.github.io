@@ -156,17 +156,17 @@
 						</header>
 						<article class="post-content">
 							<ul id="markdown-toc">
-  <li><a href="#section" id="markdown-toc-section"><strong>前言</strong></a></li>
-  <li><a href="#section-1" id="markdown-toc-section-1"><strong>问题描述</strong></a></li>
-  <li><a href="#section-2" id="markdown-toc-section-2"><strong>思考过程</strong></a>    <ul>
-      <li><a href="#section-3" id="markdown-toc-section-3"><strong>欧拉角:</strong></a></li>
-      <li><a href="#section-4" id="markdown-toc-section-4"><strong>小学数学：</strong></a></li>
-      <li><a href="#section-5" id="markdown-toc-section-5"><strong>二维映射三维：</strong></a></li>
+  <li><a href="#前言" id="markdown-toc-前言"><strong>前言</strong></a></li>
+  <li><a href="#问题描述" id="markdown-toc-问题描述"><strong>问题描述</strong></a></li>
+  <li><a href="#思考过程" id="markdown-toc-思考过程"><strong>思考过程</strong></a>    <ul>
+      <li><a href="#欧拉角" id="markdown-toc-欧拉角"><strong>欧拉角:</strong></a></li>
+      <li><a href="#小学数学" id="markdown-toc-小学数学"><strong>小学数学：</strong></a></li>
+      <li><a href="#二维映射三维" id="markdown-toc-二维映射三维"><strong>二维映射三维：</strong></a></li>
     </ul>
   </li>
 </ul>
 
-<h3 id="section"><strong>前言</strong></h3>
+<h3 id="前言"><strong>前言</strong></h3>
 <p>  前一段时间在follow <a href="">LearOpenGL</a> 学习OpenGL的核心模式，主要是学习GLSL和与GLSL配套的OpenGL。当我看到 <a href="http://www.learnopengl.com/#!Getting-started/Camera">Camera</a> 这一章的时候，他在说明摄像机旋转的时候有说得不是很清楚(从原PO的下面评论区一堆人发问可以看出来)。其实原理是很简单的高中数学问题，在这和大家分享一下自己的思考过程。(原教程还是非常棒的，不想看原PO英文的同学推荐看中文版的教程<a href="https://learnopengl-cn.github.io/01%20Getting%20started/09%20Camera/">LearnOpenGL-CN</a>)</p>
 
 <p><img src="/images/question1.png" alt="pic" />
@@ -174,11 +174,11 @@
 
 <p>(下面的评论区很多人对这点发问)</p>
 
-<h3 id="section-1"><strong>问题描述</strong></h3>
+<h3 id="问题描述"><strong>问题描述</strong></h3>
 <p>  要设计一个第一人称视角的摄像机，摄像机无非2种操作：平移(玩家位置移动)，旋转(玩家视角变化，比如向左看，像右看…)。我们单纯考虑摄像机的旋转问题(平移比较简单，有兴趣可以看原Po或者看我下面给出的实现)。任何编程问题我们都需要明确我们的输入和输出是什么，那么我们得到的输入是：鼠标在水平和竖直两个方向的平移量，我们需要输出的是：摄像机的朝向，我们用一个从原点出发的三维向量(x,y,z)表示。</p>
 
-<h3 id="section-2"><strong>思考过程</strong></h3>
-<h4 id="section-3"><strong>欧拉角:</strong></h4>
+<h3 id="思考过程"><strong>思考过程</strong></h3>
+<h4 id="欧拉角"><strong>欧拉角:</strong></h4>
 <p>  我们先介绍欧拉角的概念，欧拉根据旋转轴的不同把旋转分为3种不同的旋转，分别是：类似于点头动作Pitch，和类似以摇头动作的Yaw，以及类似于在地上滚来滚去Roll。
 <img src="/images/eular.png" alt="pic" /></p>
 
@@ -186,7 +186,7 @@
 
 <p><img src="/images/head.jpg" alt="pci" /></p>
 
-<h4 id="section-4"><strong>小学数学：</strong></h4>
+<h4 id="小学数学"><strong>小学数学：</strong></h4>
 <p>  原文在这里出现了第一个难以理解的地方，原文的配图和描述是这样的：</p>
 
 <p><img src="/images/triangle.png" alt="pic" /></p>
@@ -199,7 +199,7 @@
 
 <p><img src="/images/triangle_fixed.png" alt="pic" /></p>
 
-<h4 id="section-5"><strong>二维映射三维：</strong></h4>
+<h4 id="二维映射三维"><strong>二维映射三维：</strong></h4>
 
 						</article>
 				</div>
@@ -234,7 +234,7 @@
 
 		<footer class="footer" role="contentinfo">
 	<div class="container" style="text-align: center;">
-		<p class="copyright">Copyright &copy; 2014-2016 <a href="/resume/"><code>KenLee</code></a>.</p>
+		<p class="copyright">Copyright &copy; 2014-2017 <a href="/resume/"><code>KenLee</code></a>.</p>
 		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
 	</div>
 </footer>

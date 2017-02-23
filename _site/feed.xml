@@ -5,24 +5,24 @@
     <description>Abstractness is the price of genarality.</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 08 Dec 2016 19:32:33 +0800</pubDate>
-    <lastBuildDate>Thu, 08 Dec 2016 19:32:33 +0800</lastBuildDate>
-    <generator>Jekyll v3.3.0</generator>
+    <pubDate>Thu, 23 Feb 2017 19:35:57 +0800</pubDate>
+    <lastBuildDate>Thu, 23 Feb 2017 19:35:57 +0800</lastBuildDate>
+    <generator>Jekyll v3.4.0</generator>
     
       <item>
         <title>OpenGL: 摄像机类的设计(摄像机旋转的公式推导)</title>
         <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;&lt;strong&gt;前言&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;&lt;strong&gt;问题描述&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-2&quot; id=&quot;markdown-toc-section-2&quot;&gt;&lt;strong&gt;思考过程&lt;/strong&gt;&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#section-3&quot; id=&quot;markdown-toc-section-3&quot;&gt;&lt;strong&gt;欧拉角:&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#section-4&quot; id=&quot;markdown-toc-section-4&quot;&gt;&lt;strong&gt;小学数学：&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#section-5&quot; id=&quot;markdown-toc-section-5&quot;&gt;&lt;strong&gt;二维映射三维：&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#前言&quot; id=&quot;markdown-toc-前言&quot;&gt;&lt;strong&gt;前言&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#问题描述&quot; id=&quot;markdown-toc-问题描述&quot;&gt;&lt;strong&gt;问题描述&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#思考过程&quot; id=&quot;markdown-toc-思考过程&quot;&gt;&lt;strong&gt;思考过程&lt;/strong&gt;&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#欧拉角&quot; id=&quot;markdown-toc-欧拉角&quot;&gt;&lt;strong&gt;欧拉角:&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#小学数学&quot; id=&quot;markdown-toc-小学数学&quot;&gt;&lt;strong&gt;小学数学：&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#二维映射三维&quot; id=&quot;markdown-toc-二维映射三维&quot;&gt;&lt;strong&gt;二维映射三维：&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;section&quot;&gt;&lt;strong&gt;前言&lt;/strong&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;前言&quot;&gt;&lt;strong&gt;前言&lt;/strong&gt;&lt;/h3&gt;
 &lt;p&gt;  前一段时间在follow &lt;a href=&quot;&quot;&gt;LearOpenGL&lt;/a&gt; 学习OpenGL的核心模式，主要是学习GLSL和与GLSL配套的OpenGL。当我看到 &lt;a href=&quot;http://www.learnopengl.com/#!Getting-started/Camera&quot;&gt;Camera&lt;/a&gt; 这一章的时候，他在说明摄像机旋转的时候有说得不是很清楚(从原PO的下面评论区一堆人发问可以看出来)。其实原理是很简单的高中数学问题，在这和大家分享一下自己的思考过程。(原教程还是非常棒的，不想看原PO英文的同学推荐看中文版的教程&lt;a href=&quot;https://learnopengl-cn.github.io/01%20Getting%20started/09%20Camera/&quot;&gt;LearnOpenGL-CN&lt;/a&gt;)&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/question1.png&quot; alt=&quot;pic&quot; /&gt;
@@ -30,11 +30,11 @@
 
 &lt;p&gt;(下面的评论区很多人对这点发问)&lt;/p&gt;
 
-&lt;h3 id=&quot;section-1&quot;&gt;&lt;strong&gt;问题描述&lt;/strong&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;问题描述&quot;&gt;&lt;strong&gt;问题描述&lt;/strong&gt;&lt;/h3&gt;
 &lt;p&gt;  要设计一个第一人称视角的摄像机，摄像机无非2种操作：平移(玩家位置移动)，旋转(玩家视角变化，比如向左看，像右看…)。我们单纯考虑摄像机的旋转问题(平移比较简单，有兴趣可以看原Po或者看我下面给出的实现)。任何编程问题我们都需要明确我们的输入和输出是什么，那么我们得到的输入是：鼠标在水平和竖直两个方向的平移量，我们需要输出的是：摄像机的朝向，我们用一个从原点出发的三维向量(x,y,z)表示。&lt;/p&gt;
 
-&lt;h3 id=&quot;section-2&quot;&gt;&lt;strong&gt;思考过程&lt;/strong&gt;&lt;/h3&gt;
-&lt;h4 id=&quot;section-3&quot;&gt;&lt;strong&gt;欧拉角:&lt;/strong&gt;&lt;/h4&gt;
+&lt;h3 id=&quot;思考过程&quot;&gt;&lt;strong&gt;思考过程&lt;/strong&gt;&lt;/h3&gt;
+&lt;h4 id=&quot;欧拉角&quot;&gt;&lt;strong&gt;欧拉角:&lt;/strong&gt;&lt;/h4&gt;
 &lt;p&gt;  我们先介绍欧拉角的概念，欧拉根据旋转轴的不同把旋转分为3种不同的旋转，分别是：类似于点头动作Pitch，和类似以摇头动作的Yaw，以及类似于在地上滚来滚去Roll。
 &lt;img src=&quot;/images/eular.png&quot; alt=&quot;pic&quot; /&gt;&lt;/p&gt;
 
@@ -42,7 +42,7 @@
 
 &lt;p&gt;&lt;img src=&quot;/images/head.jpg&quot; alt=&quot;pci&quot; /&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;section-4&quot;&gt;&lt;strong&gt;小学数学：&lt;/strong&gt;&lt;/h4&gt;
+&lt;h4 id=&quot;小学数学&quot;&gt;&lt;strong&gt;小学数学：&lt;/strong&gt;&lt;/h4&gt;
 &lt;p&gt;  原文在这里出现了第一个难以理解的地方，原文的配图和描述是这样的：&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/triangle.png&quot; alt=&quot;pic&quot; /&gt;&lt;/p&gt;
@@ -55,7 +55,7 @@
 
 &lt;p&gt;&lt;img src=&quot;/images/triangle_fixed.png&quot; alt=&quot;pic&quot; /&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;section-5&quot;&gt;&lt;strong&gt;二维映射三维：&lt;/strong&gt;&lt;/h4&gt;
+&lt;h4 id=&quot;二维映射三维&quot;&gt;&lt;strong&gt;二维映射三维：&lt;/strong&gt;&lt;/h4&gt;
 </description>
         <pubDate>Thu, 01 Dec 2016 20:16:00 +0800</pubDate>
         <link>http://localhost:4000/2016/12/01/opengl-camera-rotate/</link>
@@ -73,18 +73,18 @@
       <item>
         <title>第一篇博客</title>
         <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;&lt;strong&gt;为什么会有这一个博客&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;&lt;strong&gt;为什么选择在这里搭建&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-2&quot; id=&quot;markdown-toc-section-2&quot;&gt;&lt;strong&gt;怎么在这里搭建&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-3&quot; id=&quot;markdown-toc-section-3&quot;&gt;感谢&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#为什么会有这一个博客&quot; id=&quot;markdown-toc-为什么会有这一个博客&quot;&gt;&lt;strong&gt;为什么会有这一个博客?&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#为什么选择在这里搭建&quot; id=&quot;markdown-toc-为什么选择在这里搭建&quot;&gt;&lt;strong&gt;为什么选择在这里搭建&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#怎么在这里搭建&quot; id=&quot;markdown-toc-怎么在这里搭建&quot;&gt;&lt;strong&gt;怎么在这里搭建&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#感谢&quot; id=&quot;markdown-toc-感谢&quot;&gt;感谢&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;section&quot;&gt;&lt;strong&gt;为什么会有这一个博客&lt;/strong&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;为什么会有这一个博客&quot;&gt;&lt;strong&gt;为什么会有这一个博客?&lt;/strong&gt;&lt;/h3&gt;
 &lt;p&gt;  数了数有接近一年没写博客了，这一年发生了太多事情： 毕业，找工作，升学，分手…还有很多数不清的，麻烦的事情。感觉自己也变了很多，不像以前那样无忧无虑了。以前的同学大多数都去了工作，没有能像以前那样有那么多时间聚在一起玩。现在的同学倒也还不错，大家为了前程都非常努力学习。应了一句歌词 “朋友们都去了远方，我只能每天早上和树说话。” 从前玩得最好的几个同学都开始自给自足了，开始探讨买车买房结婚生子的人生大计。我呢，还在吭老读书，结婚生子的事情似乎比读本科的时候离得更加远了。&lt;/p&gt;
 
 &lt;p&gt;  不过，最近的生活也算是过得稳定而且充实吧～就想着更新一下博客。原来的博客是用worldpress搭建在新浪云SAE上面的，结果前几天登录上去他说我余额不足，然后把我的东西给删了。同时我前几天刚刚重装了系统，之前本地的备份也都没有了…自己的东西没备份好，怪不了其他人(喂谁把SAE给黑了好不好…)。不过这倒让我发现了WorldPress博客的弊端：WorldPress的博客数据是存在他的MySQL数据库里面的，必须要导出成XML才能备份，而且编辑也得用他的编辑器来编辑，格式才不会乱(尽管有插件兼容markdown或者其他语法)。没办法，塞翁失马，就让他失呗。从新开始也是一件好事，毕竟以前的写的博文幼稚又无知。&lt;/p&gt;
 
-&lt;h3 id=&quot;section-1&quot;&gt;&lt;strong&gt;为什么选择在这里搭建&lt;/strong&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;为什么选择在这里搭建&quot;&gt;&lt;strong&gt;为什么选择在这里搭建&lt;/strong&gt;&lt;/h3&gt;
 &lt;p&gt;  其实写博客就像是在浩瀚的网络中搭建一个家，出于经常玩Minecraft和饥荒的习惯，对家的选址总是非常谨慎，想了很多地方，注册了很多个账号(比如CSDN，博客园，163博客…)都觉得不太好。于是总结了一下自己对博客的需求：&lt;/p&gt;
 
 &lt;ul&gt;
@@ -116,7 +116,7 @@
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;section-2&quot;&gt;&lt;strong&gt;怎么在这里搭建&lt;/strong&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;怎么在这里搭建&quot;&gt;&lt;strong&gt;怎么在这里搭建&lt;/strong&gt;&lt;/h3&gt;
 &lt;p&gt;  我使用的是jekyll+Github Pages，没有为什么，因为Github只支持jekyll。教程网上一搜一大堆，我不在这细说。不过我倒是想说说我遇到的坑(估计是由于我完全不会ruby的缘故，特别是估计我以后都不会用到ruby，也懒得学)：&lt;/p&gt;
 
 &lt;ul&gt;
@@ -183,7 +183,7 @@
 
 &lt;p&gt;  的js脚本给你插入，但是Github只支持Https，因此我们需要把所有外链的js脚本(包括之前说的mathjax)都改成https来访问，不然会链接失败。如果你在本地的jekyll使用localhost访问正常，但是到Github Pages上面访问出错，很有可能就是由于使用Http外链js的原因。&lt;/p&gt;
 
-&lt;h3 id=&quot;section-3&quot;&gt;感谢&lt;/h3&gt;
+&lt;h3 id=&quot;感谢&quot;&gt;感谢&lt;/h3&gt;
 &lt;p&gt;  搭建博客的时候用了很多人的东西，特别感谢。谢谢你们创造出来了这些东西，谢谢你们把这些东西开源。&lt;/p&gt;
 
 &lt;ul&gt;
