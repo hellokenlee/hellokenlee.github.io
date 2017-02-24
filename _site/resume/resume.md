@@ -1,8 +1,7 @@
 ##### 个人信息
 
-- 姓名：李效良
+- 姓名：KenLee
 - 学历：硕士(研究生在读)
-- 电话：15521312112
 - Email：ken4000kl@gmail.com
 - Github：https://github.com/hellokenlee/
 

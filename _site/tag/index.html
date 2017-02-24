@@ -1,7 +1,21 @@
 <!DOCTYPE html>
 <head>
 	<title>HelloKenLee-Blog</title>
-	<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	<!-- mathjax config similar to math.stackexchange -->
+	<script type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+	    jax: ["input/TeX", "output/HTML-CSS"],
+	    tex2jax: {
+	        inlineMath: [ ['$', '$'] ],
+	        displayMath: [ ['$$', '$$']],
+	        processEscapes: true,
+	        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+	    },
+	    messageStyle: "none",
+	    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+	});
+	</script>
+	<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </head>
 <html>
 	<head>
@@ -113,9 +127,9 @@
 				  	 
 				  	<li><a href="#环境搭建-ref">环境搭建 <span style="color: #999999;" >(1)</span></a></li>
 				  	 
-				  	<li><a href="#数学-ref">数学 <span style="color: #999999;" >(1)</span></a></li>
+				  	<li><a href="#数学-ref">数学 <span style="color: #999999;" >(2)</span></a></li>
 				  	 
-				  	<li><a href="#图形学-ref">图形学 <span style="color: #999999;" >(1)</span></a></li>
+				  	<li><a href="#图形学-ref">图形学 <span style="color: #999999;" >(2)</span></a></li>
 				  	
 				
           	</ul>
@@ -174,6 +188,17 @@
     
     	
     	<ol class="breadcrumb">
+    		<li><a href="/2017/02/24/opengl-z-buffer/">OpenGL中真正的深度值——z-buffer探究</a></li>
+    		<li style="float:right;"><span>2017-02-24</span></li>
+    	</ol>
+    	
+    
+  
+
+  
+    
+    	
+    	<ol class="breadcrumb">
     		<li><a href="/2016/12/01/opengl-camera-rotate/">OpenGL: 摄像机类的设计(摄像机旋转的公式推导)</a></li>
     		<li style="float:right;"><span>2016-12-01</span></li>
     	</ol>
@@ -189,6 +214,17 @@
 			  <ul>
 			      
 			    
+  
+    
+    	
+    	<ol class="breadcrumb">
+    		<li><a href="/2017/02/24/opengl-z-buffer/">OpenGL中真正的深度值——z-buffer探究</a></li>
+    		<li style="float:right;"><span>2017-02-24</span></li>
+    	</ol>
+    	
+    
+  
+
   
     
     	

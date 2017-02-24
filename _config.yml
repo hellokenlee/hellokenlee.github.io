@@ -1,9 +1,10 @@
 # Site settings
 name: HelloKenLee
 email: ken_4000@qq.com
+title: HelloKenLee-Blog
 # site info
 author: KenLee
-url: https://www.hellokenlee.github.io
+url: https://hellokenlee.github.io
 resume_site: /resume/
 github: https://github.com/hellokenlee/
 baseurl: 
