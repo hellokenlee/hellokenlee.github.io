@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<head>
+	<title>HelloKenLee-Blog</title>
+	<!-- mathjax config similar to math.stackexchange -->
+	<script type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+	    jax: ["input/TeX", "output/HTML-CSS"],
+	    tex2jax: {
+	        inlineMath: [ ['$', '$'] ],
+	        displayMath: [ ['$$', '$$']],
+	        processEscapes: true,
+	        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+	    },
+	    messageStyle: "none",
+	    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+	});
+	</script>
+	<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Leetcode 297 Serialize and Deserialize Binary Tree 解题报告</title>
+
+	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
+	<link rel="icon" href="/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/styles/css/syntax.css">
+	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/2017/03/05/leetcode-297/">
+	<link rel="alternate" type="application/rss+xml" title="HelloKenLee" href="/feed.xml">
+	
+	<meta name="description" content="meta_des">
+
+	<script src="/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "//hm.baidu.com/hm.js?94be4b0f9fc5d94cc0d0415ea6761ae9";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+	<body class="index">
+		<header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+	<div class="navbar-header">
+	  <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+	  </button>
+	  <a href="/" class="navbar-brand">
+		<img src="/styles/images/logo.jpg">
+	  </a>
+	</div>
+	<nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+	  <ul class="nav navbar-nav">	
+		<li>
+		  <a href="/">首页</a>
+		</li>
+		<li>
+		  <a href="/categories/">分类</a>
+		</li>
+		<li>
+		  <a href="/tag/">标签</a>
+		</li>
+	  </ul>
+	  <ul class="nav navbar-nav navbar-right">
+		<li class="dropdown">
+		  <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+		  <ul class="dropdown-menu">
+			<li><a rel="nofollow" target="_blank" href="/resume/">AboutMe</a></li>
+			<li class="divider"></li>
+			<li><a rel="nofollow" target="_blank" href="https://github.com/hellokenlee/">Github</a></li>
+			<li><a rel="nofollow" href="/reference/">Links</a></li>
+			<li><a href="/feed.xml">Feed</a></li>
+		  </ul>
+		</li>
+	  </ul>
+	</nav>
+  </div>
+</header>
+
+		<div class="docs-header" id="content">
+  <div class="container">
+  	
+		    <h1>HelloKenLee</h1>
+    
+  </div>
+</div>
+		
+			
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#算法课解题报告-ref">算法课解题报告</a>	/
+    	<a href="/tag/#-ref"></a>
+    
+  </div>
+</div>
+
+		
+
+		<div class="container docs-container">
+	<div class="row">
+		<div class="col-md-3">
+			<div class="sidebar hidden-print" role="complementary">
+				<div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2017">2017</a>
+          <ul class="nav">
+            <li><a href="#month_2017_March">March</a></li>
+      
+
+      
+            
+          
+              <li><a href="#month_2017_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2016">2016</a>
+            <ul class="nav">
+              <li><a href="#month_2016_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_November">November</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+			</div>
+		</div>
+		<div class="col-md-9" role="main">
+			<div class="panel docs-content">
+				<div class="wrapper">
+						<header class="post-header">
+							<h1 class="post-title">Leetcode 297 Serialize and Deserialize Binary Tree 解题报告</h1>
+							<div class="meta">Posted on <span class="postdate">Mar 05, 2017</span> By <a target="_blank" href="http://localhost:4000">KenLee</a></div>
+							<br />
+						</header>
+						<article class="post-content">
+							<ul id="markdown-toc">
+  <li><a href="#题目信息" id="markdown-toc-题目信息">题目信息</a>    <ul>
+      <li><a href="#题目-297-serialize-and-deserialize-binary-tree" id="markdown-toc-题目-297-serialize-and-deserialize-binary-tree">题目： <a href="https://leetcode.com/problems/serialize-and-deserialize-binary-tree/?tab=Description">297. Serialize and Deserialize Binary Tree</a></a></li>
+      <li><a href="#难度-hard" id="markdown-toc-难度-hard">难度： Hard</a></li>
+      <li><a href="#正确率-322" id="markdown-toc-正确率-322">正确率： 32.2%</a></li>
+      <li><a href="#问题描述" id="markdown-toc-问题描述">问题描述:</a></li>
+      <li><a href="#相关题目449-serialize-and-deserialize-bst" id="markdown-toc-相关题目449-serialize-and-deserialize-bst">相关题目：<a href="https://leetcode.com/problems/serialize-and-deserialize-bst">449. Serialize and Deserialize BST</a></a></li>
+    </ul>
+  </li>
+  <li><a href="#问题分析" id="markdown-toc-问题分析">问题分析</a></li>
+  <li><a href="#解题思路" id="markdown-toc-解题思路">解题思路</a></li>
+  <li><a href="#结果分析" id="markdown-toc-结果分析">结果分析</a></li>
+  <li><a href="#主要数据结构和方法" id="markdown-toc-主要数据结构和方法">主要数据结构和方法</a></li>
+  <li><a href="#源代码" id="markdown-toc-源代码">源代码</a></li>
+</ul>
+
+<h3 id="题目信息">题目信息</h3>
+
+<h5 id="题目-297-serialize-and-deserialize-binary-tree">题目： <a href="https://leetcode.com/problems/serialize-and-deserialize-binary-tree/?tab=Description">297. Serialize and Deserialize Binary Tree</a></h5>
+
+<h5 id="难度-hard">难度： Hard</h5>
+
+<h5 id="正确率-322">正确率： 32.2%</h5>
+
+<h5 id="问题描述">问题描述:</h5>
+
+<p>Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.</p>
+
+<p>Design an algorithm to serialize and deserialize a binary tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized to a string and this string can be deserialized to the original tree structure.</p>
+
+<p>For example, you may serialize the following tree</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    1
+   / \
+  2   3
+     / \
+    4   5
+</code></pre>
+</div>
+
+<p>as “[1,2,3,null,null,4,5]”, just the same as how LeetCode OJ serializes a binary tree. You do not necessarily need to follow this format, so please be creative and come up with different approaches yourself.
+Note: Do not use class member/global/static variables to store states. Your serialize and deserialize algorithms should be stateless.</p>
+
+<h5 id="相关题目449-serialize-and-deserialize-bst">相关题目：<a href="https://leetcode.com/problems/serialize-and-deserialize-bst">449. Serialize and Deserialize BST</a></h5>
+
+<h3 id="问题分析">问题分析</h3>
+<p>　　问题的大意是说对于一棵普通的二叉树，如何把它序列化成一个字符串，而对于已经序列化后的二叉树字符串，如何反序列化回一个二叉树。要求是尽可能的少占用空间而且要求序列化后的二叉树一定能反序列化回去，结构和数据都不能够丢失。</p>
+
+<h3 id="解题思路">解题思路</h3>
+<p>　　这个问题的求解思路无非两点：1. 如何把二叉树型结构转成线性结构？ 2. 如何把节点值转成字符串？<br />
+　　<strong>如何把二叉树型结构转成线性结构：</strong> 这让我想起了很久以前在SOJ上做的一个问题，就是说要把一个二叉树还原，必须要有其中序遍历结果+前序或后序其中一种结果。不过事实上，对于一颗二叉树的任何一个非空节点，我们存储他的所有左右儿子的值，不管其儿子是否为空，这样我们只需要前序遍历的结果就能还原一个二叉树。或者我们把先序遍历叫做BFS或者层次遍历更为准确。</p>
+
+<p>　　<strong>如何把节点值转成字符串：</strong> 因为题目给出的二叉树其数据为int，因此一个很普通的思路就是直接把他转成字符串。比如，把<code class="highlighter-rouge">1234</code>-&gt;<code class="highlighter-rouge">"1234"</code>， 把<code class="highlighter-rouge">-256</code>-&gt;<code class="highlighter-rouge">"-256"</code>。这样子做的好处是序列化后的二叉树有一定的可读性。c++11后也提供了相应的转化函数比如：<code class="highlighter-rouge">stoi()</code>，<code class="highlighter-rouge">itos()</code>。然而这真的是比较优化的解决方法吗? 从时间上来说，这样子转化要做常数时间的乘法和加法；从空间上来说，这样子存储的长度取决于整数的长短，最长是<code class="highlighter-rouge">INT_MIN</code>，占11位；从复杂度的来说，这种处理方法除了处理数字以外，还需要约定分割符，比如<code class="highlighter-rouge">,</code> 或者 <code class="highlighter-rouge">#</code> 或者 <code class="highlighter-rouge">_</code>等等。<br />
+　　要插入分隔符的原因是我们存的数据是不定长的，假设我们采用定长的方式存储，我们就无需插入分割符。因为长度就是天然的分隔符。一个比较优化的解决方法是，一个<code class="highlighter-rouge">int</code>占4个byte，一个<code class="highlighter-rouge">char</code>占1个byte，因此我们可以直接用4个<code class="highlighter-rouge">char</code>来表示一个int。但是，我们还要区分该节点是不是空节点，因此我们需要多一个<code class="highlighter-rouge">char</code>来存储。那么对于一个二叉树节点，我们把其序列化为5个<code class="highlighter-rouge">char</code>。</p>
+
+<p>　　一个比较好用的技巧是，对于一个节点的<code class="highlighter-rouge">int</code>值，我们用一个<code class="highlighter-rouge">char*</code>指针来先后访问其0,1,2,3位，相当于把一个<code class="highlighter-rouge">int</code>分成4个8位的二进制数，并把该二进制数对于的ascii码字符存入结果字符串(尽管单个字符没实际意义)。同样的，对于一个字符串，我们每5位，每5位处理，用一个<code class="highlighter-rouge">int*</code>指针来访问，就能直接完成转换，而不用增加额外的函数。</p>
+
+<p>　　<strong>解决指针对齐问题：</strong> 上面的解决方法看上去很美好，但是事实上我们因为需要5个<code class="highlighter-rouge">char</code>才能表示一个二叉树节点，因此在某些环境上可能会报指针未对齐的运行时错误(比如Leetcode的辣鸡环境)。也很有道理，毕竟我们产生出来的字符串长度是5N个byte，而使用<code class="highlighter-rouge">int*</code>访问最好是4N个byte长度。关于这个问题，我想出了三个解决方案：</p>
+
+<ol>
+  <li>手写转换函数，也就是对于表示一个节点的5个<code class="highlighter-rouge">char</code>，我们通位运算<code class="highlighter-rouge">&lt;&lt;</code>和<code class="highlighter-rouge">&amp;</code>来转成一个<code class="highlighter-rouge">int</code>。因为是位运算，因此在时间上也很快。</li>
+  <li>使用缓存。把5个<code class="highlighter-rouge">char</code>中的后四位表示<code class="highlighter-rouge">int</code>的值通过<code class="highlighter-rouge">memcpy()</code>函数拷贝到缓存<code class="highlighter-rouge">char buffer[4]</code>中，这样在<code class="highlighter-rouge">buffer</code>中就是4byte对齐的，可以直接通过int访问。</li>
+  <li>新建一个结构体比如下，包含一个<code class="highlighter-rouge">char</code>和一个<code class="highlighter-rouge">int</code>。结构体的长度为5byte，然后我们使用<code class="highlighter-rouge">node* a</code>访问，<code class="highlighter-rouge">a-&gt;val</code>来取值。</li>
+</ol>
+
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code>	<span class="k">struct</span> <span class="n">node</span><span class="p">{</span>
+		<span class="kt">char</span> <span class="n">flag</span><span class="p">;</span>
+		<span class="kt">int</span> <span class="n">val</span><span class="p">;</span>
+	<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>　　后面的实现采用第二种方法，因为写起来最短。</p>
+
+<h3 id="结果分析">结果分析</h3>
+
+<ul>
+  <li>时间复杂度： O(N)，时间复杂度就是进行广度优先搜索的时间，N为二叉树的节点数。</li>
+  <li>空间复杂度： O(N)，采用队列来进行广度优先搜索，其最坏情况下是队列中存有所有节点的指针，复杂的为O(N)。还有就是序列化后的字符串长度，很明显，其长度为5N，也就是O(N)，其余空间使用均为常数。因此总的复杂的为O(N)。</li>
+  <li>通过时间： 22ms</li>
+  <li>排名： Beats 99.79% submissions. (截止至提交时间)</li>
+</ul>
+
+<h3 id="主要数据结构和方法">主要数据结构和方法</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">struct TreeNode</code>： 二叉树数据结构</li>
+  <li><code class="highlighter-rouge">string serialize(TreeNode* root)</code>： 把二叉树转换成字符串函数</li>
+  <li><code class="highlighter-rouge">TreeNode* deserialize(string data)</code>： 把一个字符串转换成二叉树，返回根节点</li>
+  <li><code class="highlighter-rouge">queue&lt;TreeNode*&gt; que</code>： 用于做先序遍历的队列</li>
+  <li><code class="highlighter-rouge">TreeNode* processNode(unsigned char* &amp;cptr,queue&lt;TreeNode*&gt; &amp;que)</code>： 把字符串中的5个byte数据转化成一个二叉树节点</li>
+</ul>
+
+<h3 id="源代码">源代码</h3>
+
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="cm">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */</span>
+<span class="k">class</span> <span class="nc">Codec</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">// Encodes a tree to a single string.
+</span>    <span class="n">string</span> <span class="n">serialize</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span> <span class="n">root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">string</span> <span class="n">res</span><span class="p">;</span>
+        <span class="c1">//BFS队列
+</span>        <span class="n">queue</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">*&gt;</span> <span class="n">que</span><span class="p">;</span>
+        <span class="c1">//根节点压入队列
+</span>        <span class="n">que</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">root</span><span class="p">);</span>
+        <span class="c1">//
+</span>        <span class="kt">char</span> <span class="n">zeros</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+        <span class="c1">//BFS
+</span>        <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">que</span><span class="p">.</span><span class="n">empty</span><span class="p">()){</span>
+            <span class="n">TreeNode</span><span class="o">*</span> <span class="n">now</span><span class="o">=</span><span class="n">que</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
+            <span class="n">que</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">now</span><span class="o">!=</span><span class="nb">nullptr</span><span class="p">){</span>
+                <span class="c1">//儿子节点压入队列
+</span>                <span class="n">que</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">now</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">);</span>
+                <span class="n">que</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">now</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span>
+                <span class="c1">//序列化该节点
+</span>                <span class="kt">char</span><span class="o">*</span> <span class="n">tmp</span><span class="o">=</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="n">now</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">);</span>
+                <span class="n">res</span><span class="p">.</span><span class="n">push_back</span><span class="p">((</span><span class="kt">char</span><span class="p">)</span><span class="mi">1</span><span class="p">);</span>
+                <span class="n">res</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+            <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+                <span class="c1">//序列化NULL
+</span>                <span class="n">res</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">zeros</span><span class="p">,</span><span class="mi">5</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Decodes your encoded data to tree.
+</span>    <span class="n">TreeNode</span><span class="o">*</span> <span class="n">deserialize</span><span class="p">(</span><span class="n">string</span> <span class="n">data</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">queue</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">*&gt;</span> <span class="n">que</span><span class="p">;</span>
+        <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">cptr</span><span class="o">=</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">data</span><span class="p">.</span><span class="n">c_str</span><span class="p">();</span>
+        <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">bound</span><span class="o">=</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">data</span><span class="p">.</span><span class="n">c_str</span><span class="p">()</span><span class="o">+</span><span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+        <span class="c1">//处理根节点
+</span>        <span class="n">TreeNode</span><span class="o">*</span> <span class="n">root</span><span class="o">=</span><span class="n">processNode</span><span class="p">(</span><span class="n">cptr</span><span class="p">,</span><span class="n">que</span><span class="p">);</span>
+        <span class="c1">//处理剩下的节点
+</span>        <span class="k">while</span><span class="p">(</span><span class="n">cptr</span><span class="o">&lt;</span><span class="n">bound</span><span class="p">){</span>
+            <span class="n">TreeNode</span><span class="o">*</span> <span class="n">now</span><span class="o">=</span><span class="n">que</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
+            <span class="n">que</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+            <span class="n">now</span><span class="o">-&gt;</span><span class="n">left</span><span class="o">=</span><span class="n">processNode</span><span class="p">(</span><span class="n">cptr</span><span class="p">,</span><span class="n">que</span><span class="p">);</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">cptr</span><span class="o">&gt;=</span><span class="n">bound</span><span class="p">)</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="n">now</span><span class="o">-&gt;</span><span class="n">right</span><span class="o">=</span><span class="n">processNode</span><span class="p">(</span><span class="n">cptr</span><span class="p">,</span><span class="n">que</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">root</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">char</span> <span class="n">buffer</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+    <span class="n">TreeNode</span><span class="o">*</span> <span class="n">processNode</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="o">&amp;</span><span class="n">cptr</span><span class="p">,</span><span class="n">queue</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">*&gt;</span> <span class="o">&amp;</span><span class="n">que</span><span class="p">){</span>
+        <span class="n">TreeNode</span> <span class="o">*</span><span class="n">res</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">((</span><span class="o">*</span><span class="n">cptr</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">){</span>
+            <span class="n">res</span><span class="o">=</span><span class="nb">nullptr</span><span class="p">;</span>
+        <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+            <span class="n">memcpy</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="n">cptr</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+            <span class="n">res</span><span class="o">=</span><span class="k">new</span> <span class="n">TreeNode</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)(</span><span class="n">cptr</span><span class="o">+</span><span class="mi">1</span><span class="p">));</span>
+            <span class="n">que</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">res</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">cptr</span><span class="o">+=</span><span class="mi">5</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+
+						</article>
+				</div>
+			</div>
+			<div class="panel docs-content">
+				<article class="post-content">
+					<div class="wrapper">
+						
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'hellokenlee'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+
+ 
+					</div>
+				</article>
+			</div>
+		</div>
+	</div>
+</div>
+
+		<footer class="footer" role="contentinfo">
+	<div class="container" style="text-align: center;">
+		<p class="copyright">Copyright &copy; 2014-2017 <a href="/resume/"><code>KenLee</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/styles/js/jquery.min.js"></script>
+<script src="/styles/js/bootstrap.min.js"></script>
+<script src="/styles/js/holder.min.js"></script>
+<script src="/styles/js/application.js"></script>
+<script src="/styles/js/lessismore.js"></script>
+	</body>
+</html>
