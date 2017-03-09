@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<head>
+	<title>HelloKenLee-Blog</title>
+	<!-- mathjax config similar to math.stackexchange -->
+	<script type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+	    jax: ["input/TeX", "output/HTML-CSS"],
+	    tex2jax: {
+	        inlineMath: [ ['$', '$'] ],
+	        displayMath: [ ['$$', '$$']],
+	        processEscapes: true,
+	        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+	    },
+	    messageStyle: "none",
+	    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+	});
+	</script>
+	<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>OpenGL: 摄像机类的设计(摄像机旋转的公式推导)</title>
+
+	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
+	<link rel="icon" href="/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/styles/css/syntax.css">
+	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/2016/12/01/opengl-camera-rotate/">
+	<link rel="alternate" type="application/rss+xml" title="HelloKenLee" href="/feed.xml">
+	
+	<meta name="description" content="meta_des">
+
+	<script src="/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "//hm.baidu.com/hm.js?94be4b0f9fc5d94cc0d0415ea6761ae9";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+	<body class="index">
+		<header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+	<div class="navbar-header">
+	  <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+	  </button>
+	  <a href="/" class="navbar-brand">
+		<img src="/styles/images/logo.jpg">
+	  </a>
+	</div>
+	<nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+	  <ul class="nav navbar-nav">	
+		<li>
+		  <a href="/">首页</a>
+		</li>
+		<li>
+		  <a href="/categories/">分类</a>
+		</li>
+		<li>
+		  <a href="/tag/">标签</a>
+		</li>
+	  </ul>
+	  <ul class="nav navbar-nav navbar-right">
+		<li class="dropdown">
+		  <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+		  <ul class="dropdown-menu">
+			<li><a rel="nofollow" target="_blank" href="/resume/">AboutMe</a></li>
+			<li class="divider"></li>
+			<li><a rel="nofollow" target="_blank" href="https://github.com/hellokenlee/">Github</a></li>
+			<li><a rel="nofollow" href="/reference/">Links</a></li>
+			<li><a href="/feed.xml">Feed</a></li>
+		  </ul>
+		</li>
+	  </ul>
+	</nav>
+  </div>
+</header>
+
+		<div class="docs-header" id="content">
+  <div class="container">
+  	
+		    <h1>HelloKenLee</h1>
+    
+  </div>
+</div>
+		
+			
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#OpenGL-ref">OpenGL</a>	/
+    	<a href="/tag/#-ref"></a>
+    
+  </div>
+</div>
+
+		
+
+		<div class="container docs-container">
+	<div class="row">
+		<div class="col-md-3">
+			<div class="sidebar hidden-print" role="complementary">
+				<div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2017">2017</a>
+          <ul class="nav">
+            <li><a href="#month_2017_March">March</a></li>
+      
+
+      
+            
+          
+              <li><a href="#month_2017_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2016">2016</a>
+            <ul class="nav">
+              <li><a href="#month_2016_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_November">November</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+			</div>
+		</div>
+		<div class="col-md-9" role="main">
+			<div class="panel docs-content">
+				<div class="wrapper">
+						<header class="post-header">
+							<h1 class="post-title">OpenGL: 摄像机类的设计(摄像机旋转的公式推导)</h1>
+							<div class="meta">Posted on <span class="postdate">Dec 01, 2016</span> By <a target="_blank" href="http://localhost:4000">KenLee</a></div>
+							<br />
+						</header>
+						<article class="post-content">
+							<ul id="markdown-toc">
+  <li><a href="#前言" id="markdown-toc-前言"><strong>前言</strong></a></li>
+  <li><a href="#问题描述" id="markdown-toc-问题描述"><strong>问题描述</strong></a></li>
+  <li><a href="#思考过程" id="markdown-toc-思考过程"><strong>思考过程</strong></a>    <ul>
+      <li><a href="#欧拉角" id="markdown-toc-欧拉角"><strong>欧拉角:</strong></a></li>
+      <li><a href="#小学数学" id="markdown-toc-小学数学"><strong>小学数学：</strong></a></li>
+      <li><a href="#二维映射三维" id="markdown-toc-二维映射三维"><strong>二维映射三维：</strong></a></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="前言"><strong>前言</strong></h3>
+<p>  前一段时间在follow <a href="">LearOpenGL</a> 学习OpenGL的核心模式，主要是学习GLSL和与GLSL配套的OpenGL。当我看到 <a href="http://www.learnopengl.com/#!Getting-started/Camera">Camera</a> 这一章的时候，他在说明摄像机旋转的时候有说得不是很清楚(从原PO的下面评论区一堆人发问可以看出来)。其实原理是很简单的高中数学问题，在这和大家分享一下自己的思考过程。(原教程还是非常棒的，不想看原PO英文的同学推荐看中文版的教程<a href="https://learnopengl-cn.github.io/01%20Getting%20started/09%20Camera/">LearnOpenGL-CN</a>)</p>
+
+<p><img src="/images/question1.png" alt="pic" />
+<img src="/images/question2.png" alt="pic" /></p>
+
+<p>(下面的评论区很多人对这点发问)</p>
+
+<h3 id="问题描述"><strong>问题描述</strong></h3>
+<p>  要设计一个第一人称视角的摄像机，摄像机无非2种操作：平移(玩家位置移动)，旋转(玩家视角变化，比如向左看，像右看…)。我们单纯考虑摄像机的旋转问题(平移比较简单，有兴趣可以看原Po或者看我下面给出的实现)。任何编程问题我们都需要明确我们的输入和输出是什么，那么我们得到的输入是：鼠标在水平和竖直两个方向的平移量，我们需要输出的是：摄像机的朝向，我们用一个从原点出发的三维向量(x,y,z)表示。</p>
+
+<h3 id="思考过程"><strong>思考过程</strong></h3>
+<h4 id="欧拉角"><strong>欧拉角:</strong></h4>
+<p>  我们先介绍欧拉角的概念，欧拉根据旋转轴的不同把旋转分为3种不同的旋转，分别是：类似于点头动作Pitch，和类似以摇头动作的Yaw，以及类似于在地上滚来滚去Roll。
+<img src="/images/eular.png" alt="pic" /></p>
+
+<p>  结合一下我们玩过的FPS游戏，在<strong>问题描述</strong>中的输入，鼠标在两个方向的移动分量事实上可以看做是摄像机的Pitch角以及Yaw角。为什么没有Roll角？你特么会在游戏中做<em>歪头</em>的动作啊？！就连现实也很少做好伐？!</p>
+
+<p><img src="/images/head.jpg" alt="pci" /></p>
+
+<h4 id="小学数学"><strong>小学数学：</strong></h4>
+<p>  原文在这里出现了第一个难以理解的地方，原文的配图和描述是这样的：</p>
+
+<p><img src="/images/triangle.png" alt="pic" /></p>
+
+<blockquote>
+  <p>If we define the hypotenuse to be of length 1 we know from trigonometry (soh cah toa) that the adjacant side’s length is cos x/h=cos x/1=cos xcos⁡ x/h=cos⁡ x/1=cos⁡ x and that the opposing side’s length is sin y/h=sin y/1=sin ysin⁡ y/h=sin⁡ y/1=sin⁡ y. This gives us some general formulas for retrieving the length in both the x and y directions, depending on the given angle.</p>
+</blockquote>
+
+<p>  我看完原文之后的表情和上面尔康是一样的(???)：为毛cosθ=x/h,然后直角边就变成了cosx啊？？？本来很简单的东西一下子就变懵逼了。我认为正确的理解应是这样：</p>
+
+<p><img src="/images/triangle_fixed.png" alt="pic" /></p>
+
+<h4 id="二维映射三维"><strong>二维映射三维：</strong></h4>
+
+						</article>
+				</div>
+			</div>
+			<div class="panel docs-content">
+				<article class="post-content">
+					<div class="wrapper">
+						
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'hellokenlee'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+
+ 
+					</div>
+				</article>
+			</div>
+		</div>
+	</div>
+</div>
+
+		<footer class="footer" role="contentinfo">
+	<div class="container" style="text-align: center;">
+		<p class="copyright">Copyright &copy; 2014-2017 <a href="/resume/"><code>KenLee</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/styles/js/jquery.min.js"></script>
+<script src="/styles/js/bootstrap.min.js"></script>
+<script src="/styles/js/holder.min.js"></script>
+<script src="/styles/js/application.js"></script>
+<script src="/styles/js/lessismore.js"></script>
+	</body>
+</html>
