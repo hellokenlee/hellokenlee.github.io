@@ -75,7 +75,7 @@ while(!glfwWindowShouldClose(window)){
 
   很明显，坑在Intel的Linux显卡驱动上。下面的几个小哥好像也遇到了类似的问题：  
   [https://learnopengl.com/#!Advanced-Lighting/Deferred-Shading](https://learnopengl.com/#!Advanced-Lighting/Deferred-Shading)  
-  ![](/iamges/q1.png)  
+  ![](/images/q1.png)  
   [https://www.opengl.org/discussion_boards/showthread.php/184723-Question-about-FBO-and-16Bit-RGB-Half-Float-textures](https://www.opengl.org/discussion_boards/showthread.php/184723-Question-about-FBO-and-16Bit-RGB-Half-Float-textures)  
   根据官方给出的文档，GL_INVALID_OPERATION出现的原因如下：  
   ![](/images/doc1.png)
