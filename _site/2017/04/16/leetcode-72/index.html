@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<head>
+	<title>HelloKenLee-Blog</title>
+	<!-- mathjax config similar to math.stackexchange -->
+	<script type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+	    jax: ["input/TeX", "output/HTML-CSS"],
+	    tex2jax: {
+	        inlineMath: [ ['$', '$'] ],
+	        displayMath: [ ['$$', '$$']],
+	        processEscapes: true,
+	        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+	    },
+	    messageStyle: "none",
+	    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+	});
+	</script>
+	<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Leetcode 72. Edit Distance 解题报告</title>
+
+	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
+	<link rel="icon" href="/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/styles/css/syntax.css">
+	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/2017/04/16/leetcode-72/">
+	<link rel="alternate" type="application/rss+xml" title="HelloKenLee" href="/feed.xml">
+	
+	<meta name="description" content="meta_des">
+
+	<script src="/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "//hm.baidu.com/hm.js?94be4b0f9fc5d94cc0d0415ea6761ae9";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+	<body class="index">
+		<header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+	<div class="navbar-header">
+	  <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+	  </button>
+	  <a href="/" class="navbar-brand">
+		<img src="/styles/images/logo.jpg">
+	  </a>
+	</div>
+	<nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+	  <ul class="nav navbar-nav">	
+		<li>
+		  <a href="/">首页</a>
+		</li>
+		<li>
+		  <a href="/categories/">分类</a>
+		</li>
+		<li>
+		  <a href="/tag/">标签</a>
+		</li>
+	  </ul>
+	  <ul class="nav navbar-nav navbar-right">
+		<li class="dropdown">
+		  <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+		  <ul class="dropdown-menu">
+			<li><a rel="nofollow" target="_blank" href="/resume/">AboutMe</a></li>
+			<li class="divider"></li>
+			<li><a rel="nofollow" target="_blank" href="https://github.com/hellokenlee/">Github</a></li>
+			<li><a rel="nofollow" href="/reference/">Links</a></li>
+			<li><a href="/feed.xml">Feed</a></li>
+		  </ul>
+		</li>
+	  </ul>
+	</nav>
+  </div>
+</header>
+
+		<div class="docs-header" id="content">
+  <div class="container">
+  	
+		    <h1>HelloKenLee</h1>
+    
+  </div>
+</div>
+		
+			
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#算法课解题报告-ref">算法课解题报告</a>	/
+    	<a href="/tag/#-ref"></a>
+    
+  </div>
+</div>
+
+		
+
+		<div class="container docs-container">
+	<div class="row">
+		<div class="col-md-3">
+			<div class="sidebar hidden-print" role="complementary">
+				<div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2017">2017</a>
+          <ul class="nav">
+            <li><a href="#month_2017_June">June</a></li>
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_April">April</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_March">March</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2016">2016</a>
+            <ul class="nav">
+              <li><a href="#month_2016_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_November">November</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+			</div>
+		</div>
+		<div class="col-md-9" role="main">
+			<div class="panel docs-content">
+				<div class="wrapper">
+						<header class="post-header">
+							<h1 class="post-title">Leetcode 72. Edit Distance 解题报告</h1>
+							<div class="meta">Posted on <span class="postdate">Apr 16, 2017</span> By <a target="_blank" href="http://localhost:4000">KenLee</a></div>
+							<br />
+						</header>
+						<article class="post-content">
+							<ul id="markdown-toc">
+  <li><a href="#题目信息" id="markdown-toc-题目信息">题目信息</a>    <ul>
+      <li><a href="#题目-72-edit-distance" id="markdown-toc-题目-72-edit-distance">题目： <a href="https://leetcode.com/problems/edit-distance/#/description">72. Edit Distance</a></a></li>
+      <li><a href="#难度-hard" id="markdown-toc-难度-hard">难度： Hard</a></li>
+      <li><a href="#正确率-31" id="markdown-toc-正确率-31">正确率： 31%</a></li>
+      <li><a href="#问题描述" id="markdown-toc-问题描述">问题描述:</a></li>
+    </ul>
+  </li>
+  <li><a href="#问题分析" id="markdown-toc-问题分析">问题分析</a></li>
+  <li><a href="#解题思路" id="markdown-toc-解题思路">解题思路</a></li>
+  <li><a href="#结果分析" id="markdown-toc-结果分析">结果分析</a></li>
+  <li><a href="#源代码" id="markdown-toc-源代码">源代码</a></li>
+</ul>
+
+<h3 id="题目信息">题目信息</h3>
+
+<h5 id="题目-72-edit-distance">题目： <a href="https://leetcode.com/problems/edit-distance/#/description">72. Edit Distance</a></h5>
+
+<h5 id="难度-hard">难度： Hard</h5>
+
+<h5 id="正确率-31">正确率： 31%</h5>
+
+<h5 id="问题描述">问题描述:</h5>
+
+<p>Given two words word1 and word2, find the minimum number of steps required to convert word1 to word2. (each operation is counted as 1 step.)</p>
+
+<p>You have the following 3 operations permitted on a word:</p>
+
+<ol>
+  <li>Insert a character</li>
+  <li>Delete a character</li>
+  <li>Replace a character</li>
+</ol>
+
+<h3 id="问题分析">问题分析</h3>
+<p>　　该题的大意是说给出两个字符串，求出他们的编辑距离。编辑距离的定义为修改一个字符，添加一个字符，或者插入一个字符的花费为1，求总花费。</p>
+
+<h3 id="解题思路">解题思路</h3>
+<p>　　典型的动态规划问题，假设两个字符串为<code class="highlighter-rouge">str1</code>和<code class="highlighter-rouge">str2</code>不妨定义<code class="highlighter-rouge">dp[i][j]</code>为<strong>str1的前i个字符组成的子串和str2的前j个组成的子串的编辑距离</strong>。<br />
+　　则有状态转移如下：</p>
+
+<p><script type="math/tex">dp[i][j]=min(dp[i-1][j-1] + (str1[i-1]==str2[j-1]),  dp[i-1][j] + 1, dp[i][j-1] + 1)</script><br />
+　　
+  其含义为:</p>
+
+<ul>
+  <li>$ dp[i-1][j-1] + (str1[i-1]==str2[j-1]) $ ： 是通过若干操作+最后一个replace操作得到的，即我们只需要把<code class="highlighter-rouge">str1[i-1]</code>替换成<code class="highlighter-rouge">str2[j-1]</code>，如果这两个字符相等，则花费为0。</li>
+  <li>$ dp[i-1][j] + 1 $ ： 是通过若干操作+最后一次操作得到的，最后一次操作为往<code class="highlighter-rouge">str1[0..i-1]</code>中添加<code class="highlighter-rouge">str2[j-1]</code>得到，操作花费为1。(或者理解为在<code class="highlighter-rouge">str2[0..j-1]</code>删除<code class="highlighter-rouge">str[j-1]</code>得到<code class="highlighter-rouge">str1[0..i-1]</code>， 两者是等效的)。</li>
+  <li>$ dp[i][j-1] + 1 $ ： 和上面一个意思，<code class="highlighter-rouge">str1</code>和<code class="highlighter-rouge">str2</code>互换。</li>
+</ul>
+
+<h3 id="结果分析">结果分析</h3>
+
+<ul>
+  <li>时间复杂度： $ O(N^2) $ ， 分成 $ N^2 $个子问题， 解决每一个子问题的复杂度为 $ O(1) $</li>
+  <li>空间复杂度： $ O(N^2) $， 可以优化为 $ O(N) $</li>
+  <li>通过时间： 9 ms</li>
+  <li>击败： 51.14%的提交</li>
+</ul>
+
+<h3 id="源代码">源代码</h3>
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="cm">/*
+        dp[i][j] 定义为 word1 的前i位变为 word2 的前j位需要的最小编辑距离；
+        有：
+        dp[i][i] = min(
+            dp[i-1][j-1] + (word1[i] == word[j]),//通过replace得到
+            dp[i-1][j] + 1,//通过往insert/delete得到
+            dp[i][j-1] + 1,//通过往insert/delete得到
+        )
+    */</span>
+    <span class="kt">int</span> <span class="n">minDistance</span><span class="p">(</span><span class="n">string</span> <span class="n">word1</span><span class="p">,</span> <span class="n">string</span> <span class="n">word2</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">word1</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">word2</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+        <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">dp</span><span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
+        <span class="c1">// init
+</span>        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+            <span class="n">dp</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+            <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="c1">// calc
+</span>        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+            <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+                <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">word1</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">word2</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]);</span>
+                <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">],</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+                <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">],</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">dp</span><span class="p">[</span><span class="n">word1</span><span class="p">.</span><span class="n">size</span><span class="p">()][</span><span class="n">word2</span><span class="p">.</span><span class="n">size</span><span class="p">()];</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+
+						</article>
+				</div>
+			</div>
+			<div class="panel docs-content">
+				<article class="post-content">
+					<div class="wrapper">
+						
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'hellokenlee'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+
+ 
+					</div>
+				</article>
+			</div>
+		</div>
+	</div>
+</div>
+
+		<footer class="footer" role="contentinfo">
+	<div class="container" style="text-align: center;">
+		<p class="copyright">Copyright &copy; 2014-2017 <a href="/resume/"><code>KenLee</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/styles/js/jquery.min.js"></script>
+<script src="/styles/js/bootstrap.min.js"></script>
+<script src="/styles/js/holder.min.js"></script>
+<script src="/styles/js/application.js"></script>
+<script src="/styles/js/lessismore.js"></script>
+	</body>
+</html>

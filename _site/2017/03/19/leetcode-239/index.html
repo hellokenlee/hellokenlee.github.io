@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<head>
+	<title>HelloKenLee-Blog</title>
+	<!-- mathjax config similar to math.stackexchange -->
+	<script type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+	    jax: ["input/TeX", "output/HTML-CSS"],
+	    tex2jax: {
+	        inlineMath: [ ['$', '$'] ],
+	        displayMath: [ ['$$', '$$']],
+	        processEscapes: true,
+	        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+	    },
+	    messageStyle: "none",
+	    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+	});
+	</script>
+	<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Leetcode 239 Sliding Window Maximum 解题报告</title>
+
+	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
+	<link rel="icon" href="/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/styles/css/syntax.css">
+	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/2017/03/19/leetcode-239/">
+	<link rel="alternate" type="application/rss+xml" title="HelloKenLee" href="/feed.xml">
+	
+	<meta name="description" content="meta_des">
+
+	<script src="/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "//hm.baidu.com/hm.js?94be4b0f9fc5d94cc0d0415ea6761ae9";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+	<body class="index">
+		<header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+	<div class="navbar-header">
+	  <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+	  </button>
+	  <a href="/" class="navbar-brand">
+		<img src="/styles/images/logo.jpg">
+	  </a>
+	</div>
+	<nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+	  <ul class="nav navbar-nav">	
+		<li>
+		  <a href="/">首页</a>
+		</li>
+		<li>
+		  <a href="/categories/">分类</a>
+		</li>
+		<li>
+		  <a href="/tag/">标签</a>
+		</li>
+	  </ul>
+	  <ul class="nav navbar-nav navbar-right">
+		<li class="dropdown">
+		  <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+		  <ul class="dropdown-menu">
+			<li><a rel="nofollow" target="_blank" href="/resume/">AboutMe</a></li>
+			<li class="divider"></li>
+			<li><a rel="nofollow" target="_blank" href="https://github.com/hellokenlee/">Github</a></li>
+			<li><a rel="nofollow" href="/reference/">Links</a></li>
+			<li><a href="/feed.xml">Feed</a></li>
+		  </ul>
+		</li>
+	  </ul>
+	</nav>
+  </div>
+</header>
+
+		<div class="docs-header" id="content">
+  <div class="container">
+  	
+		    <h1>HelloKenLee</h1>
+    
+  </div>
+</div>
+		
+			
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#算法课解题报告-ref">算法课解题报告</a>	/
+    	<a href="/tag/#-ref"></a>
+    
+  </div>
+</div>
+
+		
+
+		<div class="container docs-container">
+	<div class="row">
+		<div class="col-md-3">
+			<div class="sidebar hidden-print" role="complementary">
+				<div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2017">2017</a>
+          <ul class="nav">
+            <li><a href="#month_2017_June">June</a></li>
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_April">April</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_March">March</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2016">2016</a>
+            <ul class="nav">
+              <li><a href="#month_2016_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_November">November</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+			</div>
+		</div>
+		<div class="col-md-9" role="main">
+			<div class="panel docs-content">
+				<div class="wrapper">
+						<header class="post-header">
+							<h1 class="post-title">Leetcode 239 Sliding Window Maximum 解题报告</h1>
+							<div class="meta">Posted on <span class="postdate">Mar 19, 2017</span> By <a target="_blank" href="http://localhost:4000">KenLee</a></div>
+							<br />
+						</header>
+						<article class="post-content">
+							<ul id="markdown-toc">
+  <li><a href="#题目信息" id="markdown-toc-题目信息">题目信息</a>    <ul>
+      <li><a href="#题目-239-sliding-window-maximum" id="markdown-toc-题目-239-sliding-window-maximum">题目： <a href="https://leetcode.com/problems/sliding-window-maximum/#/description">239. Sliding Window Maximum</a></a></li>
+      <li><a href="#难度-hard" id="markdown-toc-难度-hard">难度： Hard</a></li>
+      <li><a href="#正确率-320" id="markdown-toc-正确率-320">正确率： 32.0%</a></li>
+      <li><a href="#问题描述" id="markdown-toc-问题描述">问题描述:</a></li>
+      <li><a href="#相关题目480-sliding-window-median" id="markdown-toc-相关题目480-sliding-window-median">相关题目：<a href="https://leetcode.com/problems/sliding-window-median">480. Sliding Window Median</a></a></li>
+    </ul>
+  </li>
+  <li><a href="#问题分析" id="markdown-toc-问题分析">问题分析</a></li>
+  <li><a href="#解题思路" id="markdown-toc-解题思路">解题思路</a></li>
+  <li><a href="#结果分析" id="markdown-toc-结果分析">结果分析</a></li>
+  <li><a href="#主要数据结构和方法" id="markdown-toc-主要数据结构和方法">主要数据结构和方法</a></li>
+  <li><a href="#源代码" id="markdown-toc-源代码">源代码</a></li>
+</ul>
+
+<h3 id="题目信息">题目信息</h3>
+
+<h5 id="题目-239-sliding-window-maximum">题目： <a href="https://leetcode.com/problems/sliding-window-maximum/#/description">239. Sliding Window Maximum</a></h5>
+
+<h5 id="难度-hard">难度： Hard</h5>
+
+<h5 id="正确率-320">正确率： 32.0%</h5>
+
+<h5 id="问题描述">问题描述:</h5>
+
+<p>Given an array nums, there is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position.</p>
+
+<p>For example,
+Given nums = [1,3,-1,-3,5,3,6,7], and k = 3.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>Window position                Max
+---------------               -----
+[1  3  -1] -3  5  3  6  7       3
+ 1 [3  -1  -3] 5  3  6  7       3
+ 1  3 [-1  -3  5] 3  6  7       5
+ 1  3  -1 [-3  5  3] 6  7       5
+ 1  3  -1  -3 [5  3  6] 7       6
+ 1  3  -1  -3  5 [3  6  7]      7
+</code></pre>
+</div>
+<p>Therefore, return the max sliding window as [3,3,5,5,6,7].</p>
+
+<h5 id="相关题目480-sliding-window-median">相关题目：<a href="https://leetcode.com/problems/sliding-window-median">480. Sliding Window Median</a></h5>
+
+<h3 id="问题分析">问题分析</h3>
+<p>　　问题的大意是说给定一个长度为N的数组和一个窗口大小K，窗口会在数组移动，每次移动一个数。我们要求出每一次移动之前窗口内的K个数的最大值。</p>
+
+<h3 id="解题思路">解题思路</h3>
+<p>　　对于这个题目，最朴素的想法是一个O(N*K)的解法，其思路很简单，对于每个位置扫一次窗口，得到最大值。
+　　但是事实上我们每一次只改变一个窗口内的元素，因此每一次窗口移动比较K个元素是很不划算的，我们稍稍改进一下可以得到一个O(N*log(K))的算法。其核心思路是我们使用一个大根堆表示窗口K。当窗口移动的时候，我们把移出窗口的元素值改为移入窗口的元素值，然后对该元素进行上升或者下降来保持堆的性质。复杂度为log(K)，做N次，所以为O(N*log(K))。
+　　最后我使用的是一个叫做<strong>单调对列</strong>的数据结构来完成一个O(N)的算法。其核心思路很简单，就是一个比较大的数进入窗口中的时候，所有在窗口中下标在他前面而且比他小的数都是没有用的，都可以被移出窗口。因此我们使用一个双向对列<code class="highlighter-rouge">dequeue&lt;int&gt;</code>实现该功能，双向对列存储窗口中的数的下标。每当窗口移动，我们先插入新的数，即在对列后面采用<code class="highlighter-rouge">pop</code>操作直到对列的最后一个元素比新的数大。为了模拟窗口移动的时候删除数，我们还需要对对列前的数进行处理，如果对列头的下标比当新的数在数组中的下标小k的话，表示他应该不在窗口内，把它从对列前面<code class="highlighter-rouge">pop</code>掉。</p>
+
+<p>　　</p>
+<h3 id="结果分析">结果分析</h3>
+
+<ul>
+  <li>时间复杂度： O(N)，因为每一个数最多只被<code class="highlighter-rouge">push</code>进对列一次，<code class="highlighter-rouge">pop</code>出对列一次。</li>
+  <li>空间复杂度： O(K)，对列的最大长度不超过K。</li>
+  <li>通过时间： 66 ms</li>
+  <li>击败：86.64%提交(截止到提交时间)</li>
+</ul>
+
+<h3 id="主要数据结构和方法">主要数据结构和方法</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">deque&lt;int&gt; dq</code>: 一个双向对列，模拟单调对列，也就是滑动的窗口。里面存储的是元素在数组中的下标。</li>
+</ul>
+
+<h3 id="源代码">源代码</h3>
+
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="c1">//单调队列
+</span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">maxSlidingWindow</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">deque</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">dq</span><span class="p">;</span><span class="c1">//存储元素下标
+</span>        <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">res</span><span class="p">;</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">right</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">right</span><span class="o">&lt;</span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="o">++</span><span class="n">right</span><span class="p">){</span>
+            <span class="c1">//插入操作
+</span>            <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">dq</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="p">[</span><span class="n">dq</span><span class="p">.</span><span class="n">back</span><span class="p">()]</span><span class="o">&lt;</span><span class="n">nums</span><span class="p">[</span><span class="n">right</span><span class="p">]){</span>
+                <span class="n">dq</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="n">dq</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">right</span><span class="p">);</span>
+            <span class="c1">//处理最大元素不在window内
+</span>            <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">dq</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">right</span><span class="o">-</span><span class="n">dq</span><span class="p">.</span><span class="n">front</span><span class="p">()</span><span class="o">&gt;=</span><span class="n">k</span><span class="p">){</span>
+                <span class="n">dq</span><span class="p">.</span><span class="n">pop_front</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="c1">//跳过前k-1次
+</span>            <span class="k">if</span><span class="p">(</span><span class="n">right</span><span class="o">&gt;=</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">res</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">dq</span><span class="p">.</span><span class="n">front</span><span class="p">()]);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+
+						</article>
+				</div>
+			</div>
+			<div class="panel docs-content">
+				<article class="post-content">
+					<div class="wrapper">
+						
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'hellokenlee'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+
+ 
+					</div>
+				</article>
+			</div>
+		</div>
+	</div>
+</div>
+
+		<footer class="footer" role="contentinfo">
+	<div class="container" style="text-align: center;">
+		<p class="copyright">Copyright &copy; 2014-2017 <a href="/resume/"><code>KenLee</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/styles/js/jquery.min.js"></script>
+<script src="/styles/js/bootstrap.min.js"></script>
+<script src="/styles/js/holder.min.js"></script>
+<script src="/styles/js/application.js"></script>
+<script src="/styles/js/lessismore.js"></script>
+	</body>
+</html>

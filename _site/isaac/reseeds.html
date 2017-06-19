@@ -1,0 +1,412 @@
+<!doctype html>
+<html id="ht" class="dark"><head>
+<title>reSeeds - IceCat</title>
+<meta name="description" content="All the new transformations from the Afterbirth DLC and their special effects.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<link rel="stylesheet" type="text/css" href="assets/main.css?v=10">
+<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+<link href="assets/css?family=Open+Sans:300,400" rel="stylesheet" type="text/css">
+<!--<meta http-equiv="expires" content="Sun, 01 Jan 2014 00:00:00 GMT"/>
+<meta http-equiv="pragma" content="no-cache" />-->
+<script async src="js/analytics.js"></script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','js/analytics.js','ga');
+
+  ga('create', 'UA-42133651-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<script>
+function sC(e,t,n){var r=gC("nocookie");if(r=="y"||e=="nocookie"){var i=new Date;i.setTime(i.getTime()+n*24*60*60*1e3);var s="expires="+i.toGMTString();document.cookie=e+"="+t+"; "+s}}function gC(e){var t=e+"=";var n=document.cookie.split(";");for(var r=0;r<n.length;r++){var i=n[r].trim();if(i.indexOf(t)==0)return i.substring(t.length,i.length)}return""}function cC(){var e=gC("nocookie");if(e=="y"){var t=gC("night");var n=document.getElementById("night-on");var r=document.getElementById("night-off");if(t=="on"){var i=document.getElementById("ht");i.className="dark";if(r!==undefined&&n!==undefined&&r!==null&&n!==null){r.checked=false;n.checked=true}}else if(t=="off"){var i=document.getElementById("ht");i.className="";if(r!==undefined&&n!==undefined&&r!==null&&n!==null){r.checked=true;n.checked=false}}else{var i=document.getElementById("ht");i.className="";if(r!==undefined&&n!==undefined&&r!==null&&n!==null){r.checked=true;n.checked=false}}}}function checkPP(){var e=gC("nocookie");if(e!=="y"){var t=document.getElementById("pp");}}
+</script>
+<link type="text/css" rel="stylesheet" href="chrome-extension://ckphchjljlekndhjifdfpmmnlaijimcd/style.css"></head>
+<body screen_capture_injected="true" style="zoom: 1;">
+<div class="overlay" id="darkback"></div>
+<header>
+	<div class="container full">
+    	<div class="mobile-nav">▼</div>
+        <div class="mobile-nav-container" style="">
+		  <p><a class="nav-item" href="index.html">主页</a>
+             <a class="nav-item" href="TRANSFORMATIONS.html">套装一览</a>
+             <a class="nav-item" href="sacrifice-rooms.html">献祭房机制</a>
+                <a class="nav-item nav-dd active">有趣的种子</a>
+          <ul class="afterbirth-nav-list">
+                <li><a class="nav-item" href="reseeds.html">重生</a></li>
+                <li><a class="nav-item" href="abseeds.html">AB</a></li>
+          </ul>
+          <!--
+          <a class="nav-item nav-dd">Original ▼</a>		  </p>
+				<ul class="main-nav-list">
+				  <li><a class="nav-item" href="original">Items</a></li>
+							<li><a class="nav-item" href="synergies">Synergies</a></li>
+		        	<li><a class="nav-item" href="calculator">Calculator</a></li>
+		        </ul>
+	        <a class="nav-item nav-dd">Rebirth ▼</a>
+		        <ul class="rebirth-nav-list">
+							<li><a class="nav-item" href="rebirth">Items</a></li>
+		        	<li><a class="nav-item" href="rebirth-info">Info</a></li>
+		        	<li><a class="nav-item" href="rebirth-seeds">Seeds</a></li>
+	            <li><a class="nav-item" href="babies">Babies</a></li>
+		        </ul>
+						<a class="nav-item nav-dd">Afterbirth ▼</a>
+			        <ul class="afterbirth-nav-list">
+								<li><a class="nav-item" href="afterbirth">Items</a></li>
+			        	<li><a class="nav-item" href="afterbirth-info">Info</a></li>
+								<li><a class="nav-item" href="afterbirth-seeds">Seeds</a></li>
+			        </ul>
+					<a class="nav-item nav-new nav-dd">Mechanics ▼</a>
+		        <ul class="mechanics-nav-list">
+							<li><a class="nav-item" href="devil-room">Devil room</a></li>
+		        	<li><a class="nav-item" href="angel-room">Angel room</a></li>
+							<li><a class="nav-item nav-new-item really-close active" href="transformations">Transformations</a></li>
+		        </ul>
+                -->
+      </div>
+			<div class="navigation">
+				<a class="nav-item nav-new" href="index.html">主页</a>
+                <a class="nav-item nav-new" href="TRANSFORMATIONS.html">套装一览</a>
+                <a class="nav-item" href="sacrifice-rooms.html">献祭房机制</a>
+                <a class="nav-item nav-dd">有趣的种子</a>
+                <ul class="afterbirth-nav-list">
+                <li><a class="nav-item" href="reseeds.html">重生</a></li>
+                <li><a class="nav-item" href="abseeds.html">AB</a></li>
+                </ul>
+                <!--
+				<a class="nav-item nav-dd">Original ▼</a>
+	        <ul class="main-nav-list">
+						<li><a class="nav-item" href="original">Items</a></li>
+						<li><a class="nav-item" href="synergies">Synergies</a></li>
+	        	<li><a class="nav-item" href="calculator">Calculator</a></li>
+	        </ul>
+        <a class="nav-item nav-dd">Rebirth ▼</a>
+	        <ul class="rebirth-nav-list">
+						<li><a class="nav-item" href="rebirth">Items</a></li>
+	        	<li><a class="nav-item" href="rebirth-info">Info</a></li>
+	        	<li><a class="nav-item" href="rebirth-seeds">Seeds</a></li>
+            <li><a class="nav-item" href="babies">Babies</a></li>
+	        </ul>
+				<a class="nav-item nav-dd">Afterbirth ▼</a>
+					<ul class="afterbirth-nav-list">
+						<li><a class="nav-item" href="afterbirth">Items</a></li>
+						<li><a class="nav-item" href="afterbirth-info">Info</a></li>
+						<li><a class="nav-item" href="afterbirth-seeds">Seeds</a></li>
+					</ul>
+				<a class="nav-item nav-new nav-dd">Mechanics ▼</a>
+	        <ul class="mechanics-nav-list">
+						<li><a class="nav-item" href="devil-room">Devil room</a></li>
+	        	<li><a class="nav-item" href="angel-room">Angel room</a></li>
+						<li><a class="nav-item nav-new-item really-close active" href="transformations">Transformations</a></li>
+	        </ul>
+            -->
+			</div>
+
+      <div class="search">
+      	          <div class="option-expander"></div>
+          <div class="option-container" style="">
+          	<ul class="options-show">
+              	<li class="fade"><h3>显示:</h3></li>
+                  <label class="fade">道具<input type="checkbox" name="section_items" id="item-check" checked=""></label>
+                  <label class="fade">饰品<input type="checkbox" name="section_trink" id="trinket-check" checked=""></label>
+                  <label class="last-item fade">卡片<input type="checkbox" name="section_cards" id="card-check" checked=""></label>
+                  <li><h3>夜间模式:</h3></li>
+                  <label>开<input type="radio" name="night" id="night-on" checked="" onClick="sC('night','on',360)"></label>
+              </ul>
+              <ul class="options-show fade">
+              	<li><h3>排序:</h3></li>
+                  <label id="iid-label">道具 ID<div class="itemid-hoverdiv" style="display:none">The same order as the in-game collection page</div><input type="radio" name="sort" id="itemid" onClick="sC('sort','id',360)"></label>
+                  <label>颜色<input type="radio" name="sort" id="colour" onClick="sC('sort','co',360)"></label>
+                  <label class="last-item">英文字母<input type="radio" name="sort" id="alphabet" onClick="sC('sort','az',360)" checked=""></label>
+                  <li><h3>过滤器风格:</h3></li>
+                  <label>隐藏<input type="radio" name="filter" id="remove" onClick="sC('filter','r',60)"></label>
+                  <label>淡化<input type="radio" name="filter" id="fade" checked="" onClick="sC('filter','f',60)"></label>
+              </ul>
+              <ul class="options-show fade">
+              	<li><h3>图标大小:</h3></li>
+                  <label>更小<input type="radio" name="size" id="small" onClick="sC('size','s',360)"></label>
+                  <label class="last-item">默认<input type="radio" name="size" id="medium" checked="" onClick="sC('size','m',360)"></label>
+                  <li><h3>图标间隔:</h3></li>
+                  <label>紧凑<input type="radio" name="spacing" id="closer"></label>
+                  <label>普通<input type="radio" name="spacing" id="spaced" checked=""></label>
+              </ul>
+                           <div class="option-pools" style="display: none;">
+              	<h2>Item pools</h2>
+              	<div class="pool-itm">Item Room</div>
+                  <div class="pool-shop">Shop</div>
+                  <div class="pool-boss">Boss Room</div>
+                  <div class="pool-devil">Devil Room</div>
+                  <div class="pool-angel">Angel Room</div>
+
+                  <div class="pool-secret">Secret Room</div>
+                  <div class="pool-lib">Library</div>
+                  <div class="pool-gold">Golden Chest</div>
+                  <div class="pool-red">Red Chest</div>
+                  <div class="pool-curse">Curse Room</div>
+
+                  <div class="pool-nbeggar">Beggar</div>
+                  <div class="pool-dbeggar">Demon Beggar</div>
+                  <div class="pool-kbeggar">Key Beggar</div>
+              </div>
+          </div>
+      </div>
+	</div>
+</header>
+<script>cC();</script>
+<div align="center" class="seeds">
+<h1>以撒的结合图鉴</h1>
+<h2>有趣的地图种子 (Rebirth)</h2>
+
+<p>在以撒的结合中,种子决定了每一件道具,敌人,房间和每一层的布局。在玩种子时，你无法正常解锁任何游戏里的秘密。但你可以分享地图种子给你的朋友，，然后游玩同一地图。</p>
+<p>Rebirth的种子组合有超过40亿个种,其中有部分预先分配的种子对游戏模式有特殊的改动。 这个页面整理了所有开发人员预先添加秘密种子和相应的效果,。</p>
+<p>Note: 所有的种子都是8位字符，因为I,O,U和V太容易认错，所以不会出现这是个字符。</p>
+<h3>Seeds 数量: <span class="seed-ttl"></span></h3>
+<table width="963" border="2" cellspacing="1" bordercolor="#999999">
+	<thead>
+    <tr>
+    	<td width="84">这里是神奇的种子</td>
+        <td width="356">描述 / 效果</td>
+        <td width="501">动图<span class="seeds-hide-img"> (开关)</span></td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    	<td>1MNO<br>BODY</td>
+        <td>你的人物是完全隐形的，但是你仍然可以通过身上的效果定位到自己。</td>
+        <td><img src="images/seeds/1MNOBODY.jpg" alt="The effect of the 1MNO BODY seed" width="435" height="435" /></td>
+    </tr>
+    <tr>
+    	<td>30M1<br>N1TS</td>
+        <td>你有30分钟时间通关这一局游戏，经过29分45秒后定时器开始计时，30分钟以后，每秒人物都会扣血。</td>
+        <td>(没有图片)</td>
+    </tr>
+    <tr>
+    	<td>ALLE<br>GR0</td>
+        <td>音乐全程加速播放</td>
+        <td>(没有图片)</td>
+    </tr>
+    <tr>
+    	<td>ANDA<br>NTE</td>
+        <td>音乐全程减速播放</td>
+        <td>(没有图片)</td>
+    </tr>
+    <tr>
+    	<td>BASE<br>MENT</td>
+        <td>无止境的游戏，每一层都是第一层，由于道具生成的机制，在道具池用尽之后，所有的道具都将是早餐（牛俗称奶）。</td>
+        <td><img src="images/seeds/BASEMENT.jpg" alt="The effect of the BASE MENT seed" width="461" height="304" /></td>
+    </tr>
+    <tr>
+    	<td>BL1N<br>DEYE</td>
+        <td>把所有的敌人变成隐形。</td>
+        <td><img src="images/seeds/BL1NDEYE.jpg" alt="The effect of the BL1N DEYE seed" width="465" height="264" /></td>
+    </tr>
+    <tr>
+    	<td>BL00<br>00DY</td>
+        <td>增加当敌人被杀死时产生的血块，满地大姨妈。</td>
+        <td><img src="images/seeds/BL0000DY.gif" alt="The effect of the BL00 00DY seed" /></td>
+    </tr>
+    <tr>
+    	<td>B00B<br>T00B</td>
+        <td>老电视的显示效果</td>
+        <td><img src="images/seeds/B00BT00B.jpg" alt="The effect of the B00B T00B seed" /></td>
+    </tr>
+    <tr>
+    	<td>BRTL<br>B0NS</td>
+        <td>一碰就死</td>
+        <td><img src="images/seeds/BRTLB0NS.gif" alt="The effect of the BRTL B0NS seed" /></td>
+    </tr>
+    <tr>
+    	<td>BRWN<br>SNKE</td>
+        <td>随地大便</td>
+        <td><img src="images/seeds/BRWNSNKE.gif" alt="The effect of the BRWN SNKE seed" /></td>
+    </tr>
+    <tr>
+    	<td>CAM0<br>F0ES</td>
+        <td>掉落物与地板颜色相近，难以被看到。</td>
+        <td><img src="images/seeds/CAM0DR0P.jpg" alt="The effect of the CAM0 DR0P seed" /></td>
+    </tr>
+    <tr>
+    	<td>CAMO<br>K1DD</td>
+        <td>角色变颜色与地板颜色相近（半透明）</td>
+        <td><img src="images/seeds/CAMOK1DD.jpg" alt="The effect of the CAM0 K1DD seed" width="413" height="413" /></td>
+    </tr>
+    <tr>
+    	<td>CHAM<br>P1ON</td>
+        <td> 所有怪物都变成精英怪</td>
+        <td><img src="images/seeds/CHAMP1ON.jpg" alt="The effect of the CHAM P1ON seed" width="446" height="446" /></td>
+    </tr>
+    <tr>
+    	<td>CHRS<br>TMAS</td>
+        <td>带上圣诞帽! (与'H0H0 H0H0'效果相同 - 增加于 v1.04)</td>
+        <td><img src="images/seeds/H0H0H0H0.jpg" alt="The effect of the H0H0 H0H0 seed" /></td>
+    </tr>
+    <tr>
+    	<td>C0CK<br>FGHT<br></td>
+        <td>所有敌人都被魅惑</td>
+        <td><img src="images/seeds/COCKFGHT.jpg" alt="The effect of the C0CK FGHT seed" /></td>
+    </tr>
+    <tr>
+    	<td>C0ME<br>BACK</td>
+        <td>当你离开房间再回来时，所有敌人重生。</td>
+        <td>(没有图片)</td>
+    </tr>
+    <tr>
+    	<td>C0NF<br>ETT1</td>
+        <td>所有敌人都被赋予眩晕状态</td>
+        <td><img src="images/seeds/C0NFETT1.jpg" alt="The effect of the C0NF ETT1 seed" /></td>
+    </tr>
+    <tr>
+    	<td>C0PY<br>C0PY</td>
+        <td>每一层给予未知诅咒curse of the unknown</td>
+        <td>(没有图片)</td>
+    </tr>
+    <tr>
+    	<td>D0NT<br>ST0P</td>
+        <td>角色不动就会受到伤害</td>
+        <td>(没有图片)</td>
+    </tr>
+    <tr>
+    	<td>DRAW<br>KCAB</td>
+        <td>交换移动和发射眼泪的按键</td>
+        <td>(没有图片)</td>
+    </tr>
+    <tr>
+    	<td>DYSL<br>EX1C</td>
+        <td>重新安排游戏中的文本</td>
+        <td><img src="images/seeds/DYSLEX1C.jpg" alt="The effect of the DYSL EX1C seed" /></td>
+    </tr>
+    <tr>
+    	<td>FACE<br>D0WN</td>
+        <td>所有的塔罗牌都是背面朝上，无法知晓效果。</td>
+        <td>(没有图片)</td>
+    </tr>
+    <tr>
+    	<td>FART<br>SNDS</td>
+        <td>所有音效变成放屁声</td>
+        <td>(没有图片)</td>
+    </tr>
+    <tr>
+    	<td>FEAR<br>M1NT</td>
+        <td>所有的敌人都被恐惧。</td>
+        <td><img src="images/seeds/FEARMINT.jpg" alt="The effect of the FEAR M1NT seed" /></td>
+    </tr>
+    <tr>
+    	<td>FRA1<br>DN0T</td>
+        <td>每隔几秒所有怪物就会被恐惧一次</td>
+        <td><img src="images/seeds/FRA1DN0T.jpg" alt="The effect of the FRA1 DM0T seed" /></td>
+    </tr>
+    <tr>
+    	<td>FREE<br>2PAY</td>
+        <td>开局给你69个硬币，捡起任何的掉落物和道具都需要支部硬币。</td>
+        <td><img src="images/seeds/FREE2PAY.jpg" alt="The effect of the FREE 2PAY seed" /></td>
+    </tr>
+    <tr>
+    	<td>HARD<br>HARD</td>
+        <td>所有的伤害都变为1颗心</td>
+        <td>(没有图片)</td>
+    </tr>
+    <tr>
+    	<td>HART<br>BEAT</td>
+        <td>生命值越低，音乐越慢。</td>
+        <td>(没有图片)</td>
+    </tr>
+    <tr>
+    	<td>H0H0<br>H0H0</td>
+        <td>圣诞帽获得! (和 'CHRS TMAS'效果相同 - 添加于 v1.04)</td>
+        <td><img src="images/seeds/H0H0H0H0.jpg" alt="The effect of the H0H0 H0H0 seed" /></td>
+    </tr>
+    <tr>
+    	<td>KAPP<br>A</td>
+        <td>把角色变成灰色（与twitch上的kappa表情）</td>
+        <td><img src="images/seeds/KAPPA.jpg" alt="The effect of the KAPP A seed" /></td>
+    </tr>
+    <tr>
+    	<td>KEEP<br>AWAY</td>
+        <td>掉落物随角色一起移动</td>
+        <td><img src="images/seeds/KEEPAWAY.gif" alt="The effect of the KEEP AWAY seed" width="500" height="351" /></td>
+    </tr>
+    <tr>
+    	<td>KEEP<br>TRAK</td>
+        <td>移除所有的UI</td>
+        <td>(没有图片)</td>
+    </tr>
+    <tr>
+    	<td>K1DS<br>M0DE</td>
+        <td>给予2P的宝宝无敌效果</td>
+        <td>(没有图片)</td>
+    </tr>
+    <tr>
+    	<td>LARG<br>HET0</td>
+        <td>减速播放音乐 (比 ANDANTE 更慢).</td>
+        <td>(没有图片)</td>
+    </tr>
+    <tr>
+    	<td>MED1<br>C1NE</td>
+        <td>所有的药丸名称和描述全被替换为???</td>
+        <td><img src="images/seeds/MED1C1NE.jpg" alt="The effect of the MED1 C1NE seed" /></td>
+    </tr>
+    <tr>
+    	<td>PAC1<br>F1SM</td>
+        <td>所有的敌人和BOSS无法被杀死，所有的门都是开着的，BOSS的生命会自己慢慢减少。</td>
+        <td>(没有图片)</td>
+    </tr>
+    <tr>
+    	<td>PRES<br>T0</td>
+        <td>加速播放音乐(比 ALLE GR0 更快).</td>
+        <td>(没有图片)</td>
+    </tr>
+    <tr>
+    	<td>PTCH<br>BLCK</td>
+        <td>把角色变成一个黑色的阴影。</td>
+        <td><img src="images/seeds/PTCHBLCK.jpg" alt="The effect of the PTCH BLCK seed" width="500" height="500" /></td>
+    </tr>
+    <tr>
+    	<td>SLOW<br>4ME2</td>
+        <td>音乐的速度取决于角色的移动速度</td>
+        <td>(没有图片)</td>
+    </tr>
+    <tr>
+    	<td>TEAR<br>GL0W</td>
+        <td>眼泪发光 (不引人注意，除非你有黑暗的诅咒Curse of Darkness).</td>
+        <td><img src="images/seeds/TEARGL0W.jpg" alt="The effect of the TEAR GL0W seed" /></td>
+    </tr>
+    <tr>
+    	<td>THEB<br>LANK</td>
+        <td>角色没有脸</td>
+        <td><img src="images/seeds/THEBLANK.jpg" alt="The effect of the THEB LANK seed" /></td>
+    </tr>
+    <tr>
+    	<td>THEG<br>H0ST</td>
+        <td>每隔45秒将会听到倒计时，再过5秒后角色受到伤害。</td>
+        <td>(没有图片)</td>
+    </tr>
+    <tr>
+    	<td>T1NY<br>D0ME</td>
+        <td>小头爸爸（误</td>
+        <td><img src="images/seeds/T1NYD0ME.jpg" alt="The effect of the T1NY D0ME seed" /></td>
+    </tr>
+    <tr>
+    	<td>T0PH<br>EAVY</td>
+        <td>大头儿子（误</td>
+        <td><img src="images/seeds/T0PHEAVY.jpg" alt="The effect of the TOPH EAVY seed" /></td>
+    </tr>
+    <tr>
+    	<td>WH0A<br>WHAT</td>
+        <td>角色、敌人、掉落物和道具都变成半透明(和CAM0 K1DD / CAM0 F0ES 相似).</td>
+        <td><img src="images/seeds/WH0AWHAT.jpg" alt="The effect of the WH0A WHAT seed" /></td>
+    </tr>
+    </tbody>
+</table>
+
+
+
+</div>
+
+<footer></footer>
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery.easing.min.js"></script>
+<script src="js/jquery.tinysort.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<head>
+	<title>HelloKenLee-Blog</title>
+	<!-- mathjax config similar to math.stackexchange -->
+	<script type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+	    jax: ["input/TeX", "output/HTML-CSS"],
+	    tex2jax: {
+	        inlineMath: [ ['$', '$'] ],
+	        displayMath: [ ['$$', '$$']],
+	        processEscapes: true,
+	        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+	    },
+	    messageStyle: "none",
+	    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+	});
+	</script>
+	<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Leetcode 582. Kill Process 解题报告</title>
+
+	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
+	<link rel="icon" href="/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/styles/css/syntax.css">
+	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/2017/04/23/leetcode-582/">
+	<link rel="alternate" type="application/rss+xml" title="HelloKenLee" href="/feed.xml">
+	
+	<meta name="description" content="meta_des">
+
+	<script src="/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "//hm.baidu.com/hm.js?94be4b0f9fc5d94cc0d0415ea6761ae9";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+	<body class="index">
+		<header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+	<div class="navbar-header">
+	  <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+	  </button>
+	  <a href="/" class="navbar-brand">
+		<img src="/styles/images/logo.jpg">
+	  </a>
+	</div>
+	<nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+	  <ul class="nav navbar-nav">	
+		<li>
+		  <a href="/">首页</a>
+		</li>
+		<li>
+		  <a href="/categories/">分类</a>
+		</li>
+		<li>
+		  <a href="/tag/">标签</a>
+		</li>
+	  </ul>
+	  <ul class="nav navbar-nav navbar-right">
+		<li class="dropdown">
+		  <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+		  <ul class="dropdown-menu">
+			<li><a rel="nofollow" target="_blank" href="/resume/">AboutMe</a></li>
+			<li class="divider"></li>
+			<li><a rel="nofollow" target="_blank" href="https://github.com/hellokenlee/">Github</a></li>
+			<li><a rel="nofollow" href="/reference/">Links</a></li>
+			<li><a href="/feed.xml">Feed</a></li>
+		  </ul>
+		</li>
+	  </ul>
+	</nav>
+  </div>
+</header>
+
+		<div class="docs-header" id="content">
+  <div class="container">
+  	
+		    <h1>HelloKenLee</h1>
+    
+  </div>
+</div>
+		
+			
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#算法课解题报告-ref">算法课解题报告</a>	/
+    	<a href="/tag/#-ref"></a>
+    
+  </div>
+</div>
+
+		
+
+		<div class="container docs-container">
+	<div class="row">
+		<div class="col-md-3">
+			<div class="sidebar hidden-print" role="complementary">
+				<div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2017">2017</a>
+          <ul class="nav">
+            <li><a href="#month_2017_June">June</a></li>
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_April">April</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_March">March</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2016">2016</a>
+            <ul class="nav">
+              <li><a href="#month_2016_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_November">November</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+			</div>
+		</div>
+		<div class="col-md-9" role="main">
+			<div class="panel docs-content">
+				<div class="wrapper">
+						<header class="post-header">
+							<h1 class="post-title">Leetcode 582. Kill Process 解题报告</h1>
+							<div class="meta">Posted on <span class="postdate">Apr 23, 2017</span> By <a target="_blank" href="http://localhost:4000">KenLee</a></div>
+							<br />
+						</header>
+						<article class="post-content">
+							<ul id="markdown-toc">
+  <li><a href="#题目信息" id="markdown-toc-题目信息">题目信息</a>    <ul>
+      <li><a href="#题目-582-kill-process" id="markdown-toc-题目-582-kill-process">题目： <a href="https://leetcode.com/problems/kill-process/#/description">582. Kill Process</a></a></li>
+      <li><a href="#难度-medium" id="markdown-toc-难度-medium">难度： Medium</a></li>
+      <li><a href="#正确率-464" id="markdown-toc-正确率-464">正确率： 46.4%</a></li>
+      <li><a href="#问题描述" id="markdown-toc-问题描述">问题描述:</a></li>
+    </ul>
+  </li>
+  <li><a href="#问题分析" id="markdown-toc-问题分析">问题分析</a></li>
+  <li><a href="#解题思路" id="markdown-toc-解题思路">解题思路</a></li>
+  <li><a href="#结果分析" id="markdown-toc-结果分析">结果分析</a></li>
+  <li><a href="#源代码" id="markdown-toc-源代码">源代码</a></li>
+</ul>
+
+<h3 id="题目信息">题目信息</h3>
+
+<h5 id="题目-582-kill-process">题目： <a href="https://leetcode.com/problems/kill-process/#/description">582. Kill Process</a></h5>
+
+<h5 id="难度-medium">难度： Medium</h5>
+
+<h5 id="正确率-464">正确率： 46.4%</h5>
+
+<h5 id="问题描述">问题描述:</h5>
+
+<p>Given n processes, each process has a unique PID (process id) and its PPID (parent process id).</p>
+
+<p>Each process only has one parent process, but may have one or more children processes. This is just like a tree structure. Only one process has PPID that is 0, which means this process has no parent process. All the PIDs will be distinct positive integers.</p>
+
+<p>We use two list of integers to represent a list of processes, where the first list contains PID for each process and the second list contains the corresponding PPID.</p>
+
+<p>Now given the two lists, and a PID representing a process you want to kill, return a list of PIDs of processes that will be killed in the end. You should assume that when a process is killed, all its children processes will be killed. No order is required for the final answer.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Input: 
+pid =  [1, 3, 10, 5]
+ppid = [3, 0, 5, 3]
+kill = 5
+Output: [5,10]
+Explanation: 
+           3
+         /   \
+        1     5
+             /
+            10
+Kill 5 will also kill 10.
+</code></pre>
+</div>
+
+<p><strong>Note:</strong></p>
+
+<p>The given kill id is guaranteed to be one of the given PIDs.
+n &gt;= 1.</p>
+
+<h3 id="问题分析">问题分析</h3>
+
+<p>　　该问题的意思给你一堆进程的进程编号pid以及他们的父进程的进程编号ppid。而且每一个进程只有一个父进程。在这道题目中，如果一个进程的ppid是0，假装这个进程没有父进程。我们要做的是模拟操作系统kill指令的部分过程。即它给出一个需要被kill掉的pid，我们需要找出这个进程以及其所有子孙进程的pid，用数组返回。</p>
+
+<h3 id="解题思路">解题思路</h3>
+
+<p>　　一道模仿操作系统原理的题目，最近非常喜欢做这样子的题目。在Linux中，内核进程<code class="highlighter-rouge">idle</code>的pid是0， 我们当然不能把内核kill掉，所以这道题目设计的合情合理。题目不难，一个进程及他的子孙进程组成了一颗进程树(在Linux中可以使用pstree命令查看)，我们需要从儿子-父亲关系重构这颗树。</p>
+
+<p>　　因此当然可以使用多叉树来存储。我的没有另外写数据结构，我直接采用了一个key-value为pid-childrenPids的哈希表来存储。通过遍历pid和ppid数组，把一个进程对应的所以儿子进程存储到一个数组中，然后用一个队列进行BFS找出所有的子孙进程。因为每一个进程只有一个父进程，所以不用担心有重复和循环搜索，因此无需设置visited标志。</p>
+
+<h3 id="结果分析">结果分析</h3>
+
+<ul>
+  <li>时间复杂度： $ O(N) $ 遍历复杂度为2次 O(N) $， BFS的复杂度小于$ O(N) $</li>
+  <li>空间复杂度： $ O(N) $ 每个PID存储了2次且最多进对列一次</li>
+  <li>通过时间： 172 ms</li>
+  <li>击败： 89.68%的提交</li>
+</ul>
+
+<h3 id="源代码">源代码</h3>
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">killProcess</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">pid</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">ppid</span><span class="p">,</span> <span class="kt">int</span> <span class="n">kill</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">res</span><span class="p">;</span>
+        <span class="n">unordered_map</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">childPid</span><span class="p">;</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ppid</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+            <span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">childPid</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">ppid</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">it</span> <span class="o">==</span> <span class="n">childPid</span><span class="p">.</span><span class="n">end</span><span class="p">()){</span>
+                <span class="n">childPid</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">make_pair</span><span class="p">(</span><span class="n">ppid</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">pid</span><span class="p">[</span><span class="n">i</span><span class="p">])));</span>
+            <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+                <span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">pid</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="n">queue</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">killQueue</span><span class="p">;</span>
+        <span class="n">killQueue</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">kill</span><span class="p">);</span>
+        <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">killQueue</span><span class="p">.</span><span class="n">empty</span><span class="p">()){</span>
+            <span class="kt">int</span> <span class="n">nowPid</span> <span class="o">=</span> <span class="n">killQueue</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
+            <span class="n">killQueue</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+            <span class="n">res</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">nowPid</span><span class="p">);</span>
+
+            <span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">childPid</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">nowPid</span><span class="p">);</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">it</span> <span class="o">!=</span> <span class="n">childPid</span><span class="p">.</span><span class="n">end</span><span class="p">()){</span>
+                <span class="c1">// 有子进程
+</span>                <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">p</span> <span class="o">:</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">){</span>
+                    <span class="n">killQueue</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+
+						</article>
+				</div>
+			</div>
+			<div class="panel docs-content">
+				<article class="post-content">
+					<div class="wrapper">
+						
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'hellokenlee'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+
+ 
+					</div>
+				</article>
+			</div>
+		</div>
+	</div>
+</div>
+
+		<footer class="footer" role="contentinfo">
+	<div class="container" style="text-align: center;">
+		<p class="copyright">Copyright &copy; 2014-2017 <a href="/resume/"><code>KenLee</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/styles/js/jquery.min.js"></script>
+<script src="/styles/js/bootstrap.min.js"></script>
+<script src="/styles/js/holder.min.js"></script>
+<script src="/styles/js/application.js"></script>
+<script src="/styles/js/lessismore.js"></script>
+	</body>
+</html>

@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<head>
+	<title>HelloKenLee-Blog</title>
+	<!-- mathjax config similar to math.stackexchange -->
+	<script type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+	    jax: ["input/TeX", "output/HTML-CSS"],
+	    tex2jax: {
+	        inlineMath: [ ['$', '$'] ],
+	        displayMath: [ ['$$', '$$']],
+	        processEscapes: true,
+	        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+	    },
+	    messageStyle: "none",
+	    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+	});
+	</script>
+	<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Leetcode 432 All O one Data Structure 解题报告</title>
+
+	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
+	<link rel="icon" href="/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/styles/css/syntax.css">
+	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/2017/03/12/leetcode-432/">
+	<link rel="alternate" type="application/rss+xml" title="HelloKenLee" href="/feed.xml">
+	
+	<meta name="description" content="meta_des">
+
+	<script src="/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "//hm.baidu.com/hm.js?94be4b0f9fc5d94cc0d0415ea6761ae9";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+	<body class="index">
+		<header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+	<div class="navbar-header">
+	  <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+	  </button>
+	  <a href="/" class="navbar-brand">
+		<img src="/styles/images/logo.jpg">
+	  </a>
+	</div>
+	<nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+	  <ul class="nav navbar-nav">	
+		<li>
+		  <a href="/">首页</a>
+		</li>
+		<li>
+		  <a href="/categories/">分类</a>
+		</li>
+		<li>
+		  <a href="/tag/">标签</a>
+		</li>
+	  </ul>
+	  <ul class="nav navbar-nav navbar-right">
+		<li class="dropdown">
+		  <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+		  <ul class="dropdown-menu">
+			<li><a rel="nofollow" target="_blank" href="/resume/">AboutMe</a></li>
+			<li class="divider"></li>
+			<li><a rel="nofollow" target="_blank" href="https://github.com/hellokenlee/">Github</a></li>
+			<li><a rel="nofollow" href="/reference/">Links</a></li>
+			<li><a href="/feed.xml">Feed</a></li>
+		  </ul>
+		</li>
+	  </ul>
+	</nav>
+  </div>
+</header>
+
+		<div class="docs-header" id="content">
+  <div class="container">
+  	
+		    <h1>HelloKenLee</h1>
+    
+  </div>
+</div>
+		
+			
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#算法课解题报告-ref">算法课解题报告</a>	/
+    	<a href="/tag/#-ref"></a>
+    
+  </div>
+</div>
+
+		
+
+		<div class="container docs-container">
+	<div class="row">
+		<div class="col-md-3">
+			<div class="sidebar hidden-print" role="complementary">
+				<div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2017">2017</a>
+          <ul class="nav">
+            <li><a href="#month_2017_June">June</a></li>
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_April">April</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_March">March</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2016">2016</a>
+            <ul class="nav">
+              <li><a href="#month_2016_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_November">November</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+			</div>
+		</div>
+		<div class="col-md-9" role="main">
+			<div class="panel docs-content">
+				<div class="wrapper">
+						<header class="post-header">
+							<h1 class="post-title">Leetcode 432 All O one Data Structure 解题报告</h1>
+							<div class="meta">Posted on <span class="postdate">Mar 12, 2017</span> By <a target="_blank" href="http://localhost:4000">KenLee</a></div>
+							<br />
+						</header>
+						<article class="post-content">
+							<ul id="markdown-toc">
+  <li><a href="#题目信息" id="markdown-toc-题目信息">题目信息</a>    <ul>
+      <li><a href="#题目-432-all-o-one-data-structure" id="markdown-toc-题目-432-all-o-one-data-structure">题目： <a href="https://leetcode.com/problems/all-oone-data-structure/?tab=Description">432. All O one Data Structure</a></a></li>
+      <li><a href="#难度-hard" id="markdown-toc-难度-hard">难度： Hard</a></li>
+      <li><a href="#正确率--277" id="markdown-toc-正确率--277">正确率： 	27.7%</a></li>
+      <li><a href="#问题描述" id="markdown-toc-问题描述">问题描述:</a></li>
+      <li><a href="#相关题目380-insert-delete-getrandom-o1-381-insert-delete-getrandom-o1---duplicates-allowed" id="markdown-toc-相关题目380-insert-delete-getrandom-o1-381-insert-delete-getrandom-o1---duplicates-allowed">相关题目：<a href="https://leetcode.com/problems/insert-delete-getrandom-o1/?tab=Description">380. Insert Delete GetRandom O(1)</a>; <a href="https://leetcode.com/problems/insert-delete-getrandom-o1-duplicates-allowed/?tab=Description">381. Insert Delete GetRandom O(1) - Duplicates allowed</a></a></li>
+    </ul>
+  </li>
+  <li><a href="#问题分析" id="markdown-toc-问题分析">问题分析</a></li>
+  <li><a href="#解题思路" id="markdown-toc-解题思路">解题思路</a></li>
+  <li><a href="#结果分析" id="markdown-toc-结果分析">结果分析</a></li>
+  <li><a href="#主要数据结构和方法" id="markdown-toc-主要数据结构和方法">主要数据结构和方法</a></li>
+  <li><a href="#源代码" id="markdown-toc-源代码">源代码</a></li>
+</ul>
+
+<h3 id="题目信息">题目信息</h3>
+
+<h5 id="题目-432-all-o-one-data-structure">题目： <a href="https://leetcode.com/problems/all-oone-data-structure/?tab=Description">432. All O one Data Structure</a></h5>
+
+<h5 id="难度-hard">难度： Hard</h5>
+
+<h5 id="正确率--277">正确率： 	27.7%</h5>
+
+<h5 id="问题描述">问题描述:</h5>
+
+<p>Implement a data structure supporting the following operations:</p>
+
+<ol>
+  <li>Inc(Key) - Inserts a new key with value 1. Or increments an existing key by 1. Key is guaranteed to be a non-empty string.</li>
+  <li>Dec(Key) - If Key’s value is 1, remove it from the data structure. Otherwise decrements an existing key by 1. If the key does not exist, this function does nothing. Key is guaranteed to be a non-empty string.</li>
+  <li>GetMaxKey() - Returns one of the keys with maximal value. If no element exists, return an empty string “”.</li>
+  <li>GetMinKey() - Returns one of the keys with minimal value. If no element exists, return an empty string “”.</li>
+</ol>
+
+<p>Challenge: Perform all these in O(1) time complexity.</p>
+
+<h5 id="相关题目380-insert-delete-getrandom-o1-381-insert-delete-getrandom-o1---duplicates-allowed">相关题目：<a href="https://leetcode.com/problems/insert-delete-getrandom-o1/?tab=Description">380. Insert Delete GetRandom O(1)</a>; <a href="https://leetcode.com/problems/insert-delete-getrandom-o1-duplicates-allowed/?tab=Description">381. Insert Delete GetRandom O(1) - Duplicates allowed</a></h5>
+
+<h3 id="问题分析">问题分析</h3>
+<p>　　问题的大意是说让我们设计一种key-value数据结构，使得这种数据结构的插入，删除，查询都是O(1)的时间复杂度。key是一个string，value是某一个key在数据结构中的数量。<code class="highlighter-rouge">Inc(key)</code>是插入操作，如果数据结构中没有该key，插入该key，如果有则把该key的数量加一。<code class="highlighter-rouge">Dec(key)</code>是删除操作，把该key的数量减一，如果某个key数量为0，则清除该key。<code class="highlighter-rouge">GetMaxKey()</code>是返回value(数量)最多的key，如果没有返回空字符串。<code class="highlighter-rouge">GetMinKey()</code>类似，返回数量最少的，没有则返回空。</p>
+
+<h3 id="解题思路">解题思路</h3>
+<p>　　一看到要求是O(1)的插入删除查询，基本的思路都是哈希。换而言之，我们数据结构中至少得有一个<code class="highlighter-rouge">unordered_map&lt;string, xxx&gt;</code>类似的东西，来进行插入删除操作。这很容易就让人想到Leetcode 380题和381题，也是要求插入删除查找都为O(1)，而且查找是随机查找，返回一个随机值，可以使用一个哈希表+一个数组实现，其中数组是无序的。然而，现在由于有<code class="highlighter-rouge">GetMaxKey()</code>和<code class="highlighter-rouge">GetMinKey()</code>存在，这表明我们除了要有哈希的地方，还得有一个按照value(数量)排序的有序表。然而，世界上根本没有任意插入删除查询都为O(1)的完美有序表。<strong>题目的关键在于，插入和删除都只会在有序表的表未进行。</strong>因为删除操作只会在次数为1的时候进行，新插入的元素的次数也只可能是1。因此数组(似乎)满足这个要求，因为在数组尾部插入和删除元素的操作可以近似看做O(1)。那么可以设计核心的数据结构如下：</p>
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code>	<span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">string</span><span class="o">&gt;&gt;</span> <span class="n">values</span><span class="p">;</span><span class="c1">//按照value排序的有序表
+</span>	<span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">string</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">hashMap</span><span class="p">;</span><span class="c1">//对key哈希的哈希表，表值为有序表的下标
+</span></code></pre>
+</div>
+<p>　　举个栗子：对于插入<code class="highlighter-rouge">"b,a,b,a,c,a,d"</code>来说，其逻辑结构如下：</p>
+
+<p><img src="/images/solution1.png" style="text-align: center;clear: both;display: block;margin: auto; max-width: 50%;" /></p>
+
+<p>　　如果是查询操作，可以返回数组头或数组未的字符串值，其复杂度为O(1)。<br />
+　　如果是插入操作，当哈希表有存在该key的时候，对应数组下标的计数值加1，如果计数值比数组中的前一个数大，那么交换这两个元素的位置，同时交换这两个keys对应的哈希表的值(即下标值)；当不存在该key的时候，新建一个key插入到哈希表，其值对应的是数组的末尾，再把一个计数为1，字符串为该key的值插入到数组尾部，其复杂度为O(1)。<br />
+　　如果是删除操作，当哈希表存在这个key的时候，对应表值(下标值)的数组元素计数值减一，如果计数值比数组中的后一个值小，交换两个元素位置，同时交换两个keys对应的哈希表的值(下标值)；当计数值为0的时候这个数一定处在数组末尾，因此在哈希表中删除值，同时把数组的末尾元素去掉即可。这样(<strong>似乎</strong>)时间复杂度也是O(1)。<br />
+　　当在各个keys对应的次数不一样的时候，删除操作的时间复杂度肯定是常数，问题出在如果有很多次数相同的keys，这样子我们数组内的元素的并不一定能在常数次交换而达到正确的位置，举个栗子：对于插入<code class="highlighter-rouge">"b,a,b,a,c,d,c,d"</code>来说：</p>
+
+<p><img src="/images/test1.png" style="text-align: center;clear: both;display: block;margin: auto; max-width: 50%;" /></p>
+
+<p>　　这时我们要执行删除<code class="highlighter-rouge">b</code>的操作，b的次数变为1，应该处于数组的末尾。但是b必须与整个数组的元素依次进行交换，才能够到达数组末尾！<strong>因此在极端情况下，比如整个数据结构里面n个key的次数相同，删除的时间复杂度是O(n)而非O(1)!</strong><br />
+　　上述数据结构的缺陷在于，不能正确的处理计数值相等的keys的删除操作，原因在于对于一个次数为n的key，它的数组的下一个元素的次数不一定比n小，因此没办法进行有效的swap操作。那么一个可能的改进方法则是，我把次数相同的keys放在数组的一个元素中，这样保证了数组中前面的元素的次数一定比后面的元素的次数大。但是这引入了个新的问题：经过若干次插入删除之后，某些次数的可能没有key在里面，需要删除这个元素才能保证查询的正确性。因此我们需要一种能在常数时间内删除任意元素的线性表，所以需要把原来的数组改成双向链表。由于时间关系，直接给出改进后的数据结构如下：</p>
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code>    <span class="n">list</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">unordered_set</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;&gt;&gt;</span> <span class="n">values</span><span class="p">;</span>
+    <span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">string</span><span class="p">,</span><span class="n">list</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">unordered_set</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;&gt;::</span><span class="n">iterator</span><span class="o">&gt;</span> <span class="n">hashMap</span><span class="p">;</span>
+</code></pre>
+</div>
+<p>　　比如插入顺序为<code class="highlighter-rouge">"a,b,c,c,d,d,e,e,e"</code>，其逻辑结构为：</p>
+
+<p><img src="/images/solution2.png" style="text-align: center;clear: both;display: block;margin: auto; max-width: 50%;" /></p>
+
+<p>　　如果是查询操作，直接返回链表头/链表尾的元素set中的任意一个key即可，O(1)。<br />
+　　如果是插入/删除操作，在某一个元素的set中删除该key，在相邻的链表节点的set中插入该key即可，O(1)。<br />
+　　特殊情况1，对于多个相等次数的key，删除某一个key，也能在常数时间内完成。比如刚刚的例子中删除d，整个数据结构变为：（变化的地方用红色标出）</p>
+
+<p><img src="/images/test2.png" style="text-align: center;clear: both;display: block;margin: auto; max-width: 50%;" /></p>
+
+<p>　　特殊情况2，对于删除之后的set为空，对于链表也很好解决，比如说接着上面的数据，我要删除c，整个数据结构变为：（变化的地方用红色标出）</p>
+
+<p><img src="/images/test3.png" style="text-align: center;clear: both;display: block;margin: auto; max-width: 50%;" /></p>
+
+<p>　　</p>
+<h3 id="结果分析">结果分析</h3>
+
+<ul>
+  <li>时间复杂度： 全O(1)，原因上面已经给出。</li>
+  <li>空间复杂度： 平均O(N)，最坏O(N^4)。根据C++ STL 官网给出的分析，<code class="highlighter-rouge">unordered_map</code>的空间复杂度平均是线性的，最坏可能达到四次，这和他的哈希函数有关。</li>
+  <li>通过时间： 36ms</li>
+  <li>思考和改进： 进一步来说，假设我<code class="highlighter-rouge">void inc(string key)</code>函数和<code class="highlighter-rouge">void dec(string key)</code>函数不仅仅是插入或删除一个，而是插入或删除n个，能不能实现O(1)呢？ 仔细思考一下应该是可以的，我们需要再用一个<code class="highlighter-rouge">unordered_map</code>来取代现在的链表，类似于<code class="highlighter-rouge">unordered_map&lt;string key,int times&gt;</code>-&gt;<code class="highlighter-rouge">unordered&lt;int times,unordered_ste&lt;string keys&gt;&gt;</code>这样一个三层哈希的结构。</li>
+</ul>
+
+<h3 id="主要数据结构和方法">主要数据结构和方法</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">unordered_map&lt;string,list&lt;pair&lt;unordered_set&lt;string&gt;,int&gt;&gt;::iterator&gt; hashMap</code>:一个key为字符串，value为list指针的哈希表，用于映射key和key对应的list元素之间的关系。</li>
+  <li><code class="highlighter-rouge">list&lt;pair&lt;int,unordered_set&lt;string&gt;&gt;&gt; values</code>： 一个双向链表，节点值为一个<code class="highlighter-rouge">pair</code>。<code class="highlighter-rouge">pair</code>的第一个值为该节点表示的次数t，后一个值表示整个数据结构中次数为t的所有字符串(key)的集合。</li>
+  <li><code class="highlighter-rouge">void inc(string key)</code>： 插入一个key。</li>
+  <li><code class="highlighter-rouge">void dec(string key)</code>： 删除一个key。</li>
+  <li><code class="highlighter-rouge">string getMaxKey()/string getMinKey()</code>： 返回次数最多/最小的key。</li>
+</ul>
+
+<h3 id="源代码">源代码</h3>
+
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">AllOne</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="cm">/** Initialize your data structure here. */</span>
+    <span class="n">AllOne</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">values</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+        <span class="n">hashMap</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="cm">/** Inserts a new key &lt;Key&gt; with value 1. Or increments an existing key by 1. */</span>
+    <span class="kt">void</span> <span class="n">inc</span><span class="p">(</span><span class="n">string</span> <span class="n">key</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">hashMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">==</span><span class="n">hashMap</span><span class="p">.</span><span class="n">end</span><span class="p">()){</span>
+            <span class="c1">//如果数据库中没有找到这个key
+</span>            <span class="k">if</span><span class="p">(</span><span class="n">values</span><span class="p">.</span><span class="n">back</span><span class="p">().</span><span class="n">second</span><span class="o">!=</span><span class="mi">1</span><span class="p">){</span>
+                <span class="c1">//如果数据库中没有次数为1的值，新建一个次数为1的节点
+</span>                <span class="n">values</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">make_pair</span><span class="p">(</span><span class="n">unordered_set</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(),</span><span class="mi">1</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="n">values</span><span class="p">.</span><span class="n">back</span><span class="p">().</span><span class="n">first</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+            <span class="n">hashMap</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="n">prev</span><span class="p">(</span><span class="n">values</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+        <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+            <span class="c1">//如果数据库中有这个key，排名上浮
+</span>            <span class="k">auto</span> <span class="n">oldIt</span><span class="o">=</span><span class="n">hashMap</span><span class="p">[</span><span class="n">key</span><span class="p">];</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">oldIt</span><span class="o">==</span><span class="n">values</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">||</span> <span class="n">prev</span><span class="p">(</span><span class="n">oldIt</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">second</span><span class="o">!=</span><span class="n">oldIt</span><span class="o">-&gt;</span><span class="n">second</span><span class="o">+</span><span class="mi">1</span><span class="p">){</span>
+                <span class="c1">//如果数据库中没有该key的次数+1的节点，新建一个
+</span>                <span class="n">values</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">oldIt</span><span class="p">,</span><span class="n">make_pair</span><span class="p">(</span><span class="n">unordered_set</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(),</span><span class="n">oldIt</span><span class="o">-&gt;</span><span class="n">second</span><span class="o">+</span><span class="mi">1</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="n">oldIt</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+            <span class="n">prev</span><span class="p">(</span><span class="n">oldIt</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+            <span class="n">hashMap</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="n">prev</span><span class="p">(</span><span class="n">oldIt</span><span class="p">);</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">oldIt</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">.</span><span class="n">empty</span><span class="p">()){</span>
+                <span class="c1">//优化内存使用：删除字符串集为空的节点
+</span>                <span class="n">values</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">oldIt</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/** Decrements an existing key by 1. If Key's value is 1, remove it from the data structure. */</span>
+    <span class="kt">void</span> <span class="n">dec</span><span class="p">(</span><span class="n">string</span> <span class="n">key</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">hashMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">==</span><span class="n">hashMap</span><span class="p">.</span><span class="n">end</span><span class="p">()){</span>
+            <span class="c1">//如果没有这个key
+</span>            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+            <span class="c1">//如果有这个key，排名下降
+</span>            <span class="k">auto</span> <span class="n">oldIt</span><span class="o">=</span><span class="n">hashMap</span><span class="p">[</span><span class="n">key</span><span class="p">];</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">oldIt</span><span class="o">-&gt;</span><span class="n">second</span><span class="o">==</span><span class="mi">1</span><span class="p">){</span>
+                <span class="c1">//如果key次数为1，删除
+</span>                <span class="n">oldIt</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+                <span class="n">hashMap</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+            <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+                <span class="c1">//如果次数不为1,，下调排名
+</span>                <span class="k">if</span><span class="p">(</span><span class="n">next</span><span class="p">(</span><span class="n">oldIt</span><span class="p">)</span><span class="o">==</span><span class="n">values</span><span class="p">.</span><span class="n">end</span><span class="p">()</span> <span class="o">||</span> <span class="n">next</span><span class="p">(</span><span class="n">oldIt</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">second</span><span class="o">!=</span><span class="n">oldIt</span><span class="o">-&gt;</span><span class="n">second</span><span class="o">-</span><span class="mi">1</span><span class="p">){</span>
+                    <span class="c1">//如果没有该key次数减一的node，新建一个
+</span>                    <span class="n">values</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">next</span><span class="p">(</span><span class="n">oldIt</span><span class="p">),</span><span class="n">make_pair</span><span class="p">(</span><span class="n">unordered_set</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(),</span><span class="n">oldIt</span><span class="o">-&gt;</span><span class="n">second</span><span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+                <span class="p">}</span>
+                <span class="n">oldIt</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+                <span class="n">next</span><span class="p">(</span><span class="n">oldIt</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+                <span class="n">hashMap</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="n">next</span><span class="p">(</span><span class="n">oldIt</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">oldIt</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">.</span><span class="n">empty</span><span class="p">()){</span>
+                <span class="c1">//优化内存使用：删除字符串集为空的节点
+</span>                <span class="n">values</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">oldIt</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/** Returns one of the keys with maximal value. */</span>
+    <span class="n">string</span> <span class="n">getMaxKey</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">values</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">==</span><span class="mi">0</span><span class="o">?</span><span class="s">""</span><span class="o">:*</span><span class="p">(</span><span class="n">values</span><span class="p">.</span><span class="n">front</span><span class="p">().</span><span class="n">first</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+    <span class="p">}</span>
+
+    <span class="cm">/** Returns one of the keys with Minimal value. */</span>
+    <span class="n">string</span> <span class="n">getMinKey</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">values</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">==</span><span class="mi">0</span><span class="o">?</span><span class="s">""</span><span class="o">:*</span><span class="p">(</span><span class="n">values</span><span class="p">.</span><span class="n">back</span><span class="p">().</span><span class="n">first</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+    <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">list</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">unordered_set</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">values</span><span class="p">;</span>
+    <span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">string</span><span class="p">,</span><span class="n">list</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">unordered_set</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;&gt;::</span><span class="n">iterator</span><span class="o">&gt;</span> <span class="n">hashMap</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+
+						</article>
+				</div>
+			</div>
+			<div class="panel docs-content">
+				<article class="post-content">
+					<div class="wrapper">
+						
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'hellokenlee'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+
+ 
+					</div>
+				</article>
+			</div>
+		</div>
+	</div>
+</div>
+
+		<footer class="footer" role="contentinfo">
+	<div class="container" style="text-align: center;">
+		<p class="copyright">Copyright &copy; 2014-2017 <a href="/resume/"><code>KenLee</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/styles/js/jquery.min.js"></script>
+<script src="/styles/js/bootstrap.min.js"></script>
+<script src="/styles/js/holder.min.js"></script>
+<script src="/styles/js/application.js"></script>
+<script src="/styles/js/lessismore.js"></script>
+	</body>
+</html>

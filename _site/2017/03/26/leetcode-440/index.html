@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<head>
+	<title>HelloKenLee-Blog</title>
+	<!-- mathjax config similar to math.stackexchange -->
+	<script type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+	    jax: ["input/TeX", "output/HTML-CSS"],
+	    tex2jax: {
+	        inlineMath: [ ['$', '$'] ],
+	        displayMath: [ ['$$', '$$']],
+	        processEscapes: true,
+	        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+	    },
+	    messageStyle: "none",
+	    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+	});
+	</script>
+	<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Leetcode 440 K-th Smallest in Lexicographical Order 解题报告</title>
+
+	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
+	<link rel="icon" href="/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/styles/css/syntax.css">
+	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/2017/03/26/leetcode-440/">
+	<link rel="alternate" type="application/rss+xml" title="HelloKenLee" href="/feed.xml">
+	
+	<meta name="description" content="meta_des">
+
+	<script src="/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "//hm.baidu.com/hm.js?94be4b0f9fc5d94cc0d0415ea6761ae9";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+	<body class="index">
+		<header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+	<div class="navbar-header">
+	  <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+	  </button>
+	  <a href="/" class="navbar-brand">
+		<img src="/styles/images/logo.jpg">
+	  </a>
+	</div>
+	<nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+	  <ul class="nav navbar-nav">	
+		<li>
+		  <a href="/">首页</a>
+		</li>
+		<li>
+		  <a href="/categories/">分类</a>
+		</li>
+		<li>
+		  <a href="/tag/">标签</a>
+		</li>
+	  </ul>
+	  <ul class="nav navbar-nav navbar-right">
+		<li class="dropdown">
+		  <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+		  <ul class="dropdown-menu">
+			<li><a rel="nofollow" target="_blank" href="/resume/">AboutMe</a></li>
+			<li class="divider"></li>
+			<li><a rel="nofollow" target="_blank" href="https://github.com/hellokenlee/">Github</a></li>
+			<li><a rel="nofollow" href="/reference/">Links</a></li>
+			<li><a href="/feed.xml">Feed</a></li>
+		  </ul>
+		</li>
+	  </ul>
+	</nav>
+  </div>
+</header>
+
+		<div class="docs-header" id="content">
+  <div class="container">
+  	
+		    <h1>HelloKenLee</h1>
+    
+  </div>
+</div>
+		
+			
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#算法课解题报告-ref">算法课解题报告</a>	/
+    	<a href="/tag/#-ref"></a>
+    
+  </div>
+</div>
+
+		
+
+		<div class="container docs-container">
+	<div class="row">
+		<div class="col-md-3">
+			<div class="sidebar hidden-print" role="complementary">
+				<div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2017">2017</a>
+          <ul class="nav">
+            <li><a href="#month_2017_June">June</a></li>
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_April">April</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_March">March</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2016">2016</a>
+            <ul class="nav">
+              <li><a href="#month_2016_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_November">November</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+			</div>
+		</div>
+		<div class="col-md-9" role="main">
+			<div class="panel docs-content">
+				<div class="wrapper">
+						<header class="post-header">
+							<h1 class="post-title">Leetcode 440 K-th Smallest in Lexicographical Order 解题报告</h1>
+							<div class="meta">Posted on <span class="postdate">Mar 26, 2017</span> By <a target="_blank" href="http://localhost:4000">KenLee</a></div>
+							<br />
+						</header>
+						<article class="post-content">
+							<ul id="markdown-toc">
+  <li><a href="#题目信息" id="markdown-toc-题目信息">题目信息</a>    <ul>
+      <li><a href="#题目-440-k-th-smallest-in-lexicographical-order" id="markdown-toc-题目-440-k-th-smallest-in-lexicographical-order">题目： <a href="https://leetcode.com/problems/k-th-smallest-in-lexicographical-order/#/description">440. K-th Smallest in Lexicographical Order</a></a></li>
+      <li><a href="#难度-hard" id="markdown-toc-难度-hard">难度： Hard</a></li>
+      <li><a href="#正确率-230" id="markdown-toc-正确率-230">正确率： 23.0%</a></li>
+      <li><a href="#问题描述" id="markdown-toc-问题描述">问题描述:</a></li>
+      <li><a href="#相关题目386-lexicographical-numbers" id="markdown-toc-相关题目386-lexicographical-numbers">相关题目：<a href="https://leetcode.com/problems/lexicographical-numbers/#/description">386. Lexicographical Numbers</a></a></li>
+    </ul>
+  </li>
+  <li><a href="#问题分析" id="markdown-toc-问题分析">问题分析</a></li>
+  <li><a href="#解题思路" id="markdown-toc-解题思路">解题思路</a></li>
+  <li><a href="#结果分析" id="markdown-toc-结果分析">结果分析</a></li>
+  <li><a href="#主要数据结构和方法" id="markdown-toc-主要数据结构和方法">主要数据结构和方法</a></li>
+  <li><a href="#源代码" id="markdown-toc-源代码">源代码</a></li>
+</ul>
+
+<h3 id="题目信息">题目信息</h3>
+
+<h5 id="题目-440-k-th-smallest-in-lexicographical-order">题目： <a href="https://leetcode.com/problems/k-th-smallest-in-lexicographical-order/#/description">440. K-th Smallest in Lexicographical Order</a></h5>
+
+<h5 id="难度-hard">难度： Hard</h5>
+
+<h5 id="正确率-230">正确率： 23.0%</h5>
+
+<h5 id="问题描述">问题描述:</h5>
+
+<p>Given integers n and k, find the lexicographically k-th smallest integer in the range from 1 to n.</p>
+
+<p>Note: 1 ≤ k ≤ n ≤ 109.<br />
+Example:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>Input:
+n: 13   k: 2
+
+Output:
+10
+
+Explanation:
+The lexicographical order is [1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9], so the second smallest number is 10.
+</code></pre>
+</div>
+
+<h5 id="相关题目386-lexicographical-numbers">相关题目：<a href="https://leetcode.com/problems/lexicographical-numbers/#/description">386. Lexicographical Numbers</a></h5>
+
+<h3 id="问题分析">问题分析</h3>
+<p>　　该问题大意是，给出一个正整数n，要求对1到n的正整数按照字典序排序(即 1&gt;10&gt;100&gt;1000&gt;…&gt;11&gt;110…)，求出排好序中的第k位的数。</p>
+
+<h3 id="解题思路">解题思路</h3>
+<p>　　这个问题看上去不难，最笨的方法是根据字典序排好序。然后选第k个，时间复杂度为O(nlogn)。<br />
+　　不过因为只要选第K个，因此使用堆来优化的话很容易做到O(klogn)。然而如果这么简单的话这题就不会是Hard难度而且只有23%的正确率了…(&gt;.&lt;)<br />
+　　仔细观察一下其实字典序的数是有生成规律的，这让我回想起很久之前做的一题也就是<a href="">386. Lexicographical Numbers</a>。一个数a的字典序的后一个数可以在常数时间内递推出来，因此其实能做到O(n)的时间复杂度。然而肯定没有这么简单…我提交了一下O(n)的解法，果然，超时了。(毕竟386才是median难度…)<br />
+　　这样只能找找规律希望能达到O(logn)甚至O(1)的解法了。<br />
+　　下面记录一下我心酸痛苦的找规律过程：<br />
+　　1. 首先我们不考虑k，先考虑n。先考虑n比较大，比如n=5000,我们可以写出前几项(蓝色为数字，灰色为序号)：  <br />
+<img src="/images/analysis.jpg" style="text-align: center;clear: both;display: block;margin: auto; max-width: 100%; max-height: 100%;" /><br />
+　　我们可以发现一个比较明显的规律，数字可以分为4层，每层分别是连续的1位数，2位数，3位数，4位数。而且每层相邻的数的间隔是有规律的，比如说数字<code class="highlighter-rouge">1000</code>和<code class="highlighter-rouge">1001</code>只相差了1；而<code class="highlighter-rouge">100</code>和<code class="highlighter-rouge">101</code>相差了11；<code class="highlighter-rouge">10</code>和<code class="highlighter-rouge">11</code>相差了111；<code class="highlighter-rouge">1</code>和<code class="highlighter-rouge">2</code>相差了1111。因此，如果我们要找的第k个数是小于n的时候，我们可以”跳着”来找：比如我们要找第k=1120个数，我们发现k&gt;1111，因此这个数肯定不是在[1~2]这1112个数之间，而会在[2~3]之间。<strong>也就是说，我们相当于从2开始找第8(1120-1-1111)个数。</strong> 类似的，因为8 &lt; 111，所以相当于从20开始找第7个数；因为 7 &lt; 11， 所以相当于从200开始找第6个数，同理，最后相当于从2000开始找第5个数，因此为2005。<br />
+　　然而，上面的方法只是适用于我们要找的第k个数在字典序上排n前面的情况。那么如果我要找的数在n之后呢？比如n=2345，我要找排2345之后的某一个数的值是否还遵循上面规律呢？写一下数字2345的字典序前后几项：<br />
+<img src="/images/analysis2.jpg" style="text-align: center;clear: both;display: block;margin: auto;max-width: 100%; max-height: 100%;" /><br />
+　　从上面我们可以看出，在数字2345之后，因为少了4位数那一层，所以连续的x位数的序列号相差比原来少了：所有的3位数相差1；所有的2位数相差11；所有的1位数相差111。而且我们还能计算出数字2345排第几位：因为1位数前序为2，所以跳过1开始的1111个数。因为2位数前序为23，所以跳过20开头到22开头的333个数。因为234开头，所以跳过230～到233的44个数。最后跳过2340到2344的5个数。加上2,23,234，2345这4个数。所以2345排<code class="highlighter-rouge">k=1×1111+3×111+4×11+5×1+4=1497</code>位<br />
+　　有了上面的规律，我们可以看出来基本上分两种情况来考虑</p>
+<ol>
+  <li>若找的第k位字典序在n之前：按照最高位到最低位的间隔”跳过”寻找即可</li>
+  <li>若找的第k位字典序在n之后：先找的n在第几位，然后所有间隔减少一层，再重复跳过寻找即可
+　　
+    <h3 id="结果分析">结果分析</h3>
+  </li>
+</ol>
+
+<ul>
+  <li>时间复杂度： O(logN), 准确来说是O(log10(N))，因为按照十进制位数来分可以想象成一棵10叉数，在上面进行查找。</li>
+  <li>空间复杂度： O(1)，没有用到额外空间。</li>
+  <li>通过时间： 66 ms</li>
+</ul>
+
+<h3 id="主要数据结构和方法">主要数据结构和方法</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">int gap;</code>： 记录某一层的”间隔”</li>
+  <li><code class="highlighter-rouge">int level;</code> 用来求出n的x位前序的辅助变量</li>
+  <li><code class="highlighter-rouge">int now;</code> 当前查找到的数字</li>
+  <li><code class="highlighter-rouge">int k;</code> 以now为起点，还需要查找k位求得所求的数</li>
+  <li><code class="highlighter-rouge">bool passN;</code> 记录now在n之前还是在n之后。因为在n之后的话”间隔”会改变</li>
+</ul>
+
+<h3 id="源代码">源代码</h3>
+
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">findKthNumber</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">gap</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">res</span><span class="o">=</span><span class="n">n</span><span class="p">;</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">res</span><span class="o">&gt;=</span><span class="mi">10</span><span class="p">){</span>
+            <span class="n">level</span><span class="o">*=</span><span class="mi">10</span><span class="p">;</span>
+            <span class="n">gap</span><span class="o">=</span><span class="mi">10</span><span class="o">*</span><span class="n">gap</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+            <span class="n">res</span><span class="o">/=</span><span class="mi">10</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kt">long</span> <span class="kt">long</span> <span class="n">now</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+        <span class="o">--</span><span class="n">k</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">passN</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">k</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">){</span>
+            <span class="kt">long</span> <span class="kt">long</span> <span class="n">limit</span><span class="o">=</span><span class="n">passN</span><span class="o">?</span><span class="p">(</span><span class="n">now</span><span class="o">-</span><span class="n">now</span><span class="o">%</span><span class="mi">10</span><span class="p">)</span><span class="o">+</span><span class="mi">9</span><span class="o">:</span><span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="n">level</span><span class="p">);</span>
+            <span class="k">while</span><span class="p">(</span><span class="n">now</span><span class="o">&lt;</span><span class="n">limit</span> <span class="o">&amp;&amp;</span> <span class="n">k</span><span class="o">&gt;=</span><span class="n">gap</span><span class="p">){</span>
+                <span class="o">++</span><span class="n">now</span><span class="p">;</span>
+                <span class="n">k</span><span class="o">-=</span><span class="n">gap</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">k</span><span class="o">==</span><span class="mi">0</span><span class="p">){</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">passN</span> <span class="o">&amp;&amp;</span> <span class="n">k</span><span class="o">&gt;=</span><span class="n">gap</span><span class="p">){</span>
+                    <span class="n">k</span><span class="o">-=</span><span class="n">gap</span><span class="p">;</span>
+                    <span class="k">while</span><span class="p">(</span><span class="n">now</span><span class="o">%</span><span class="mi">10</span><span class="o">==</span><span class="mi">9</span><span class="p">){</span>
+                        <span class="n">now</span><span class="o">/=</span><span class="mi">10</span><span class="p">;</span>
+                        <span class="n">gap</span><span class="o">=</span><span class="n">gap</span><span class="o">*</span><span class="mi">10</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="o">++</span><span class="n">now</span><span class="p">;</span>
+                <span class="p">}</span><span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">now</span><span class="o">==</span><span class="n">n</span><span class="p">){</span>
+                    <span class="n">now</span><span class="o">=</span><span class="n">now</span><span class="o">/</span><span class="mi">10</span><span class="p">;</span>
+                    <span class="k">if</span><span class="p">(</span><span class="n">now</span><span class="o">%</span><span class="mi">10</span><span class="o">!=</span><span class="mi">9</span><span class="p">){</span>
+                        <span class="o">++</span><span class="n">now</span><span class="p">;</span>
+                        <span class="n">k</span><span class="o">--</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="n">passN</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+                <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+                    <span class="n">now</span><span class="o">*=</span><span class="mi">10</span><span class="p">;</span>
+                    <span class="n">level</span><span class="o">/=</span><span class="mi">10</span><span class="p">;</span>
+                    <span class="n">gap</span><span class="o">/=</span><span class="mi">10</span><span class="p">;</span>
+                    <span class="o">--</span><span class="n">k</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">now</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="p">};</span>
+</code></pre>
+</div>
+
+						</article>
+				</div>
+			</div>
+			<div class="panel docs-content">
+				<article class="post-content">
+					<div class="wrapper">
+						
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'hellokenlee'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+
+ 
+					</div>
+				</article>
+			</div>
+		</div>
+	</div>
+</div>
+
+		<footer class="footer" role="contentinfo">
+	<div class="container" style="text-align: center;">
+		<p class="copyright">Copyright &copy; 2014-2017 <a href="/resume/"><code>KenLee</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/styles/js/jquery.min.js"></script>
+<script src="/styles/js/bootstrap.min.js"></script>
+<script src="/styles/js/holder.min.js"></script>
+<script src="/styles/js/application.js"></script>
+<script src="/styles/js/lessismore.js"></script>
+	</body>
+</html>

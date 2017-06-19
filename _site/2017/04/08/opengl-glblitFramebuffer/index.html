@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<head>
+	<title>HelloKenLee-Blog</title>
+	<!-- mathjax config similar to math.stackexchange -->
+	<script type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+	    jax: ["input/TeX", "output/HTML-CSS"],
+	    tex2jax: {
+	        inlineMath: [ ['$', '$'] ],
+	        displayMath: [ ['$$', '$$']],
+	        processEscapes: true,
+	        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+	    },
+	    messageStyle: "none",
+	    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+	});
+	</script>
+	<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>在MSAA中关于 glBlitFramebuffer 函数出现 Invalid Operation 的解析</title>
+
+	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
+	<link rel="icon" href="/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/styles/css/syntax.css">
+	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/2017/04/08/opengl-glblitFramebuffer/">
+	<link rel="alternate" type="application/rss+xml" title="HelloKenLee" href="/feed.xml">
+	
+	<meta name="description" content="meta_des">
+
+	<script src="/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "//hm.baidu.com/hm.js?94be4b0f9fc5d94cc0d0415ea6761ae9";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+	<body class="index">
+		<header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+	<div class="navbar-header">
+	  <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+	  </button>
+	  <a href="/" class="navbar-brand">
+		<img src="/styles/images/logo.jpg">
+	  </a>
+	</div>
+	<nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+	  <ul class="nav navbar-nav">	
+		<li>
+		  <a href="/">首页</a>
+		</li>
+		<li>
+		  <a href="/categories/">分类</a>
+		</li>
+		<li>
+		  <a href="/tag/">标签</a>
+		</li>
+	  </ul>
+	  <ul class="nav navbar-nav navbar-right">
+		<li class="dropdown">
+		  <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+		  <ul class="dropdown-menu">
+			<li><a rel="nofollow" target="_blank" href="/resume/">AboutMe</a></li>
+			<li class="divider"></li>
+			<li><a rel="nofollow" target="_blank" href="https://github.com/hellokenlee/">Github</a></li>
+			<li><a rel="nofollow" href="/reference/">Links</a></li>
+			<li><a href="/feed.xml">Feed</a></li>
+		  </ul>
+		</li>
+	  </ul>
+	</nav>
+  </div>
+</header>
+
+		<div class="docs-header" id="content">
+  <div class="container">
+  	
+		    <h1>HelloKenLee</h1>
+    
+  </div>
+</div>
+		
+			
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#OpenGL-ref">OpenGL</a>	/
+    	<a href="/tag/#-ref"></a>
+    
+  </div>
+</div>
+
+		
+
+		<div class="container docs-container">
+	<div class="row">
+		<div class="col-md-3">
+			<div class="sidebar hidden-print" role="complementary">
+				<div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2017">2017</a>
+          <ul class="nav">
+            <li><a href="#month_2017_June">June</a></li>
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_April">April</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_March">March</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2016">2016</a>
+            <ul class="nav">
+              <li><a href="#month_2016_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_November">November</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+			</div>
+		</div>
+		<div class="col-md-9" role="main">
+			<div class="panel docs-content">
+				<div class="wrapper">
+						<header class="post-header">
+							<h1 class="post-title">在MSAA中关于 glBlitFramebuffer 函数出现 Invalid Operation 的解析</h1>
+							<div class="meta">Posted on <span class="postdate">Apr 08, 2017</span> By <a target="_blank" href="http://localhost:4000">KenLee</a></div>
+							<br />
+						</header>
+						<article class="post-content">
+							<ul id="markdown-toc">
+  <li><a href="#前言" id="markdown-toc-前言">前言</a></li>
+  <li><a href="#错误分析" id="markdown-toc-错误分析">错误分析</a></li>
+  <li><a href="#解决方案" id="markdown-toc-解决方案">解决方案</a></li>
+  <li><a href="#参考资料" id="markdown-toc-参考资料">参考资料</a></li>
+</ul>
+
+<p><strong><em>原创文章，未经作者(ken_4000@qq.com)授权，禁止转载。违者视为侵权，保留追究其法律责任的权利。</em></strong></p>
+
+<h3 id="前言">前言</h3>
+<p>  跟着<a href="https://learnopengl.com/#!Advanced-OpenGL/Anti-Aliasing">LearnOpenGL-AntiAliasing</a>章节做了一下多重采样抗据齿，使用第一种方法，即调用GLFW的<code class="highlighter-rouge">glfwWindowHint(GLFW_SAMPLES, 4)</code>来使用多重采样抗据齿是没有问题的。然而，当我做到第二种方法的时候，即现在一个Multisample的Framebuffer中绘制出我想绘制的图形，然后调用<code class="highlighter-rouge">glBlitFramebuffer(...)</code>函数来块传输我的MSAA帧缓冲到默认缓冲(显示帧缓冲)的时候，屏幕出现黑屏，我调用<code class="highlighter-rouge">glGetError()</code>查看错误的时候，出现了<code class="highlighter-rouge">Invalid Operation</code>的错误。<br />
+  主要错误代码如下(不相关代码被省略)：</p>
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="c1">//绑定块缓冲代码如下 屏幕大小800x600 4xMSAA
+</span><span class="n">GLuint</span> <span class="n">MSAAfbo</span><span class="p">;</span>
+<span class="n">glGenFramebuffers</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">MSAAfbo</span><span class="p">);</span>
+<span class="n">glBindFramebuffer</span><span class="p">(</span><span class="n">GL_FRAMEBUFFER</span><span class="p">,</span> <span class="n">MSAAfbo</span><span class="p">);</span>
+	<span class="c1">// 创建多重采样纹理
+</span>	<span class="n">GLuint</span> <span class="n">MSAAtex</span><span class="p">;</span>
+	<span class="n">glGenTextures</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">MSAAtex</span><span class="p">);</span>
+	<span class="n">glBindTexture</span><span class="p">(</span><span class="n">GL_TEXTURE_2D_MULTISAMPLE</span><span class="p">,</span> <span class="n">MSAAtex</span><span class="p">);</span>
+		<span class="n">glTexImage2DMultisample</span><span class="p">(</span><span class="n">GL_TEXTURE_2D_MULTISAMPLE</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">GL_RGB</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="n">GL_TRUE</span><span class="p">);</span>
+	<span class="n">glBindTexture</span><span class="p">(</span><span class="n">GL_TEXTURE_2D_MULTISAMPLE</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="c1">// 附加到FB上
+</span>	<span class="n">glFramebufferTexture2D</span><span class="p">(</span><span class="n">GL_FRAMEBUFFER</span><span class="p">,</span> <span class="n">GL_COLOR_ATTACHMENT0</span><span class="p">,</span> <span class="n">GL_TEXTURE_2D_MULTISAMPLE</span><span class="p">,</span> <span class="n">MSAAtex</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="c1">// 生产Render Buffer Object
+</span>	<span class="n">GLuint</span> <span class="n">MSAArbo</span><span class="p">;</span>
+	<span class="n">glGenRenderbuffers</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">MSAArbo</span><span class="p">);</span>
+	<span class="n">glBindRenderbuffer</span><span class="p">(</span><span class="n">GL_RENDERBUFFER</span><span class="p">,</span> <span class="n">MSAArbo</span><span class="p">);</span>
+		<span class="n">glRenderbufferStorageMultisample</span><span class="p">(</span><span class="n">GL_RENDERBUFFER</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">GL_DEPTH24_STENCIL8</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">);</span>
+	<span class="n">glBindRenderbuffer</span><span class="p">(</span><span class="n">GL_RENDERBUFFER</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="c1">// 附加到FB上
+</span>	<span class="n">glFramebufferRenderbuffer</span><span class="p">(</span><span class="n">GL_FRAMEBUFFER</span><span class="p">,</span> <span class="n">GL_DEPTH_STENCIL_ATTACHMENT</span><span class="p">,</span> <span class="n">GL_RENDERBUFFER</span><span class="p">,</span> <span class="n">MSAArbo</span><span class="p">);</span>
+	<span class="c1">//错误检查
+</span>	<span class="k">if</span><span class="p">(</span><span class="n">glCheckFramebufferStatus</span><span class="p">(</span><span class="n">GL_FRAMEBUFFER</span><span class="p">)</span><span class="o">!=</span><span class="n">GL_FRAMEBUFFER_COMPLETE</span><span class="p">){</span>
+		<span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"ERROR:: FRAMEBUFFER init faild!"</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="n">glBindFramebuffer</span><span class="p">(</span><span class="n">GL_FRAMEBUFFER</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="c1">//主循环代码(绘制循环)如下：
+</span><span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">glfwWindowShouldClose</span><span class="p">(</span><span class="n">window</span><span class="p">)){</span>
+	<span class="n">glfwPollEvents</span><span class="p">();</span>
+	<span class="c1">// 在MSAAFB上绘制
+</span>	<span class="n">glBindFramebuffer</span><span class="p">(</span><span class="n">GL_FRAMEBUFFER</span><span class="p">,</span> <span class="n">MSAAfbo</span><span class="p">);</span>
+	<span class="n">glClearColor</span><span class="p">(</span><span class="mf">0.1</span><span class="n">f</span><span class="p">,</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">,</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">,</span> <span class="mf">1.0</span><span class="n">f</span><span class="p">);</span>
+	<span class="n">glClear</span><span class="p">(</span><span class="n">GL_COLOR_BUFFER_BIT</span> <span class="o">|</span> <span class="n">GL_DEPTH_BUFFER_BIT</span><span class="p">);</span>
+	<span class="n">cube</span><span class="p">.</span><span class="n">draw</span><span class="p">();</span><span class="c1">//draw call
+</span>	<span class="c1">// 转移结果到默认FB
+</span>	<span class="n">glBindFramebuffer</span><span class="p">(</span><span class="n">GL_READ_FRAMEBUFFER</span><span class="p">,</span> <span class="n">MSAAfbo</span><span class="p">);</span>
+	<span class="n">glBindFramebuffer</span><span class="p">(</span><span class="n">GL_DRAW_FRAMEBUFFER</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="n">glBlitFramebuffer</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="n">GL_COLOR_BUFFER_BIT</span><span class="p">,</span> <span class="n">GL_NEAREST</span><span class="p">);</span>
+	<span class="n">checkError</span><span class="p">();</span><span class="c1">//此处出现了 GL_INVALID_OPERATION
+</span>	<span class="c1">// 交换
+</span>	<span class="n">glfwSwapBuffers</span><span class="p">(</span><span class="n">window</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<h3 id="错误分析">错误分析</h3>
+<p>  结果是我Debug了一个晚上，也没有找出我哪里写错了。 更加神奇的是，之后我换了一台PC， 用编译运行同样的代码， 居然成功显示了。因而我觉得是显卡驱动的问题，我手头上有3块GPU，对于上述代码，运行结果如下：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>GPU</th>
+      <th>OS</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Intel® Haswell i5 4570</td>
+      <td>Ubuntu 14.04</td>
+      <td>失败： GL_INVALID_OPERATION</td>
+    </tr>
+    <tr>
+      <td>Intel® Ivy Bridge i7 3630QM</td>
+      <td>Windows 7</td>
+      <td>成功</td>
+    </tr>
+    <tr>
+      <td>nVidia GT650M</td>
+      <td>Windows 7</td>
+      <td>成功</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>  很明显，坑在Intel的Linux显卡驱动上。下面的几个小哥好像也遇到了类似的问题：<br />
+  <a href="https://learnopengl.com/#!Advanced-Lighting/Deferred-Shading">https://learnopengl.com/#!Advanced-Lighting/Deferred-Shading</a><br />
+  <img src="/images/q1.png" alt="" /><br />
+  <a href="https://www.opengl.org/discussion_boards/showthread.php/184723-Question-about-FBO-and-16Bit-RGB-Half-Float-textures">https://www.opengl.org/discussion_boards/showthread.php/184723-Question-about-FBO-and-16Bit-RGB-Half-Float-textures</a><br />
+  根据官方给出的文档，GL_INVALID_OPERATION出现的原因如下：<br />
+  <img src="/images/doc1.png" alt="" />
+  我个人的猜测是在Intel HD4600显卡驱动上，<code class="highlighter-rouge">glBlitFramebuffer(...)</code>MSAA Framebuffer中的值的类型和默认FrameBuffer中的类型不一样， 其驱动实现的函数不能自动转换，因此抛出一个<code class="highlighter-rouge">GL_ERROR</code>。</p>
+
+<h3 id="解决方案">解决方案</h3>
+<p>  尝试了几次之后发现了一个简单而且神奇的解决方案，我们需要定义2块帧缓冲，第一块缓冲是MSAA的缓冲，第二块是常规的帧缓冲。在每次绘制的时候我们做2次Blit操作， 第一次从 MSAA FBO -&gt; Intermediate FBO； 第二次从 Intermediate FBO -&gt; Default FBO(0)。 至于为什么work我也不太清楚…具体代码如下：</p>
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="c1">// FBO声明代码
+// 创建MSAA缓冲
+</span><span class="n">GLuint</span> <span class="n">MSAAfbo</span><span class="p">;</span>
+<span class="n">glGenFramebuffers</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">MSAAfbo</span><span class="p">);</span>
+<span class="n">glBindFramebuffer</span><span class="p">(</span><span class="n">GL_FRAMEBUFFER</span><span class="p">,</span> <span class="n">MSAAfbo</span><span class="p">);</span>
+	<span class="c1">// 创建多重采样纹理
+</span>	<span class="n">GLuint</span> <span class="n">MSAAtex</span><span class="p">;</span>
+	<span class="n">glGenTextures</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">MSAAtex</span><span class="p">);</span>
+	<span class="n">glBindTexture</span><span class="p">(</span><span class="n">GL_TEXTURE_2D_MULTISAMPLE</span><span class="p">,</span> <span class="n">MSAAtex</span><span class="p">);</span>
+		<span class="n">glTexImage2DMultisample</span><span class="p">(</span><span class="n">GL_TEXTURE_2D_MULTISAMPLE</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">GL_RGB</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="n">GL_TRUE</span><span class="p">);</span>
+	<span class="n">glBindTexture</span><span class="p">(</span><span class="n">GL_TEXTURE_2D_MULTISAMPLE</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="c1">// 附加到FB上
+</span>	<span class="n">glFramebufferTexture2D</span><span class="p">(</span><span class="n">GL_FRAMEBUFFER</span><span class="p">,</span> <span class="n">GL_COLOR_ATTACHMENT0</span><span class="p">,</span> <span class="n">GL_TEXTURE_2D_MULTISAMPLE</span><span class="p">,</span> <span class="n">MSAAtex</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="c1">// 生产Render Buffer Object
+</span>	<span class="n">GLuint</span> <span class="n">MSAArbo</span><span class="p">;</span>
+	<span class="n">glGenRenderbuffers</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">MSAArbo</span><span class="p">);</span>
+	<span class="n">glBindRenderbuffer</span><span class="p">(</span><span class="n">GL_RENDERBUFFER</span><span class="p">,</span> <span class="n">MSAArbo</span><span class="p">);</span>
+		<span class="n">glRenderbufferStorageMultisample</span><span class="p">(</span><span class="n">GL_RENDERBUFFER</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">GL_DEPTH24_STENCIL8</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">);</span>
+	<span class="n">glBindRenderbuffer</span><span class="p">(</span><span class="n">GL_RENDERBUFFER</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="c1">// 附加到FB上
+</span>	<span class="n">glFramebufferRenderbuffer</span><span class="p">(</span><span class="n">GL_FRAMEBUFFER</span><span class="p">,</span> <span class="n">GL_DEPTH_STENCIL_ATTACHMENT</span><span class="p">,</span> <span class="n">GL_RENDERBUFFER</span><span class="p">,</span> <span class="n">MSAArbo</span><span class="p">);</span>
+<span class="n">glBindFramebuffer</span><span class="p">(</span><span class="n">GL_FRAMEBUFFER</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">//创建中间帧缓冲对象
+</span><span class="n">GLuint</span> <span class="n">fbo</span><span class="p">;</span>
+<span class="n">glGenFramebuffers</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">fbo</span><span class="p">);</span>
+<span class="n">glBindFramebuffer</span><span class="p">(</span><span class="n">GL_FRAMEBUFFER</span><span class="p">,</span> <span class="n">fbo</span><span class="p">);</span>
+	<span class="c1">//创建纹理缓冲附件对象
+</span>	<span class="n">GLuint</span> <span class="n">texColorBuffer</span><span class="p">;</span>
+	<span class="n">glGenTextures</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">texColorBuffer</span><span class="p">);</span>
+	<span class="n">glBindTexture</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="n">texColorBuffer</span><span class="p">);</span>
+		<span class="n">glTexImage2D</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">GL_RGB</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">GL_RGB</span><span class="p">,</span> <span class="n">GL_UNSIGNED_BYTE</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+		<span class="n">glTexParameteri</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="n">GL_TEXTURE_MIN_FILTER</span><span class="p">,</span> <span class="n">GL_LINEAR</span><span class="p">);</span>
+		<span class="n">glTexParameteri</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="n">GL_TEXTURE_MAG_FILTER</span><span class="p">,</span> <span class="n">GL_LINEAR</span><span class="p">);</span>
+	<span class="n">glBindTexture</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="c1">//附着到帧缓冲对象上
+</span>	<span class="n">glFramebufferTexture2D</span><span class="p">(</span><span class="n">GL_FRAMEBUFFER</span><span class="p">,</span> <span class="n">GL_COLOR_ATTACHMENT0</span><span class="p">,</span> <span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="n">texColorBuffer</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="c1">//创建深度测试和模板测试缓冲附件，以便于GL在绘制该FB的时候可以进行深度测试和模板测试
+</span>	<span class="n">GLuint</span> <span class="n">renderBuffer</span><span class="p">;</span>
+	<span class="n">glGenRenderbuffers</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">renderBuffer</span><span class="p">);</span>
+	<span class="n">glBindRenderbuffer</span><span class="p">(</span><span class="n">GL_RENDERBUFFER</span><span class="p">,</span> <span class="n">renderBuffer</span><span class="p">);</span>
+		<span class="c1">//分配内存
+</span>		<span class="n">glRenderbufferStorage</span><span class="p">(</span><span class="n">GL_RENDERBUFFER</span><span class="p">,</span> <span class="n">GL_DEPTH24_STENCIL8</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">);</span>
+	<span class="n">glBindRenderbuffer</span><span class="p">(</span><span class="n">GL_RENDERBUFFER</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="c1">//附着到帧缓冲对象上
+</span>	<span class="n">glFramebufferRenderbuffer</span><span class="p">(</span><span class="n">GL_FRAMEBUFFER</span><span class="p">,</span> <span class="n">GL_DEPTH_STENCIL_ATTACHMENT</span><span class="p">,</span> <span class="n">GL_RENDERBUFFER</span><span class="p">,</span> <span class="n">renderBuffer</span><span class="p">);</span>
+<span class="n">glBindFramebuffer</span><span class="p">(</span><span class="n">GL_FRAMEBUFFER</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="c1">// 绘制循环
+</span><span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">glfwWindowShouldClose</span><span class="p">(</span><span class="n">window</span><span class="p">)){</span>
+	<span class="n">glfwPollEvents</span><span class="p">();</span>
+	<span class="c1">// 在MSAAFB上绘制
+</span>	<span class="n">glBindFramebuffer</span><span class="p">(</span><span class="n">GL_FRAMEBUFFER</span><span class="p">,</span> <span class="n">MSAAfbo</span><span class="p">);</span>
+	<span class="n">glClearColor</span><span class="p">(</span><span class="mf">0.1</span><span class="n">f</span><span class="p">,</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">,</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">,</span> <span class="mf">1.0</span><span class="n">f</span><span class="p">);</span>
+	<span class="n">glClear</span><span class="p">(</span><span class="n">GL_COLOR_BUFFER_BIT</span> <span class="o">|</span> <span class="n">GL_DEPTH_BUFFER_BIT</span><span class="p">);</span>
+	<span class="n">cube</span><span class="p">.</span><span class="n">draw</span><span class="p">();</span><span class="c1">// draw call
+</span>
+	<span class="c1">// 转移结果到中间
+</span>	<span class="n">glBindFramebuffer</span><span class="p">(</span><span class="n">GL_READ_FRAMEBUFFER</span><span class="p">,</span> <span class="n">MSAAfbo</span><span class="p">);</span>
+	<span class="n">glBindFramebuffer</span><span class="p">(</span><span class="n">GL_DRAW_FRAMEBUFFER</span><span class="p">,</span> <span class="n">fbo</span><span class="p">);</span>
+	<span class="n">glBlitFramebuffer</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="n">GL_COLOR_BUFFER_BIT</span><span class="p">,</span> <span class="n">GL_NEAREST</span><span class="p">);</span>
+	<span class="n">checkError</span><span class="p">();</span><span class="c1">// no error
+</span>	<span class="c1">// 将中间转移到默认缓冲
+</span>	<span class="n">glBindFramebuffer</span><span class="p">(</span><span class="n">GL_READ_FRAMEBUFFER</span><span class="p">,</span> <span class="n">fbo</span><span class="p">);</span>
+	<span class="n">glBindFramebuffer</span><span class="p">(</span><span class="n">GL_DRAW_FRAMEBUFFER</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="n">glBlitFramebuffer</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="n">GL_COLOR_BUFFER_BIT</span><span class="p">,</span> <span class="n">GL_NEAREST</span><span class="p">);</span>
+	<span class="n">checkError</span><span class="p">();</span><span class="c1">// no error
+</span>	<span class="c1">// 显示
+</span>	<span class="n">glfwSwapBuffers</span><span class="p">(</span><span class="n">window</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<h3 id="参考资料">参考资料</h3>
+<ol>
+  <li><a href="https://learnopengl.com/#!Advanced-OpenGL/Anti-Aliasing">https://learnopengl.com/#!Advanced-OpenGL/Anti-Aliasing</a></li>
+  <li><a href="http://stackoverflow.com/questions/11915267/glblitframebuffer-invalid-operation">http://stackoverflow.com/questions/11915267/glblitframebuffer-invalid-operation</a></li>
+  <li><a href="https://www.opengl.org/discussion_boards/showthread.php/179909-MSAA-with-maginification-s-simple-question">https://www.opengl.org/discussion_boards/showthread.php/179909-MSAA-with-maginification-s-simple-question</a></li>
+  <li><a href="http://opengl.developpez.com/docs/man/man/glBlitFramebuffer">http://opengl.developpez.com/docs/man/man/glBlitFramebuffer</a></li>
+</ol>
+
+						</article>
+				</div>
+			</div>
+			<div class="panel docs-content">
+				<article class="post-content">
+					<div class="wrapper">
+						
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'hellokenlee'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+
+ 
+					</div>
+				</article>
+			</div>
+		</div>
+	</div>
+</div>
+
+		<footer class="footer" role="contentinfo">
+	<div class="container" style="text-align: center;">
+		<p class="copyright">Copyright &copy; 2014-2017 <a href="/resume/"><code>KenLee</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/styles/js/jquery.min.js"></script>
+<script src="/styles/js/bootstrap.min.js"></script>
+<script src="/styles/js/holder.min.js"></script>
+<script src="/styles/js/application.js"></script>
+<script src="/styles/js/lessismore.js"></script>
+	</body>
+</html>
