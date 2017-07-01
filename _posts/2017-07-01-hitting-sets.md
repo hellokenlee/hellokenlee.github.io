@@ -53,7 +53,7 @@ $$
 
 构造无向图$G$如下：
 
-<img src="/images.graph.png" style="text-align: center;clear: both;display: block;margin: auto;">
+<img src="/images/graph.png" style="text-align: center;clear: both;display: block;margin: auto;">
 
 我们从图$G$中找小于预算$b$的顶点覆盖$H$。假设存在这样一个顶点覆盖，那么该图$G$的所有边都会被覆盖到，由构造过程知，每一条边的两个顶点都属于{$S_1...S_n$}中的一个集合，因此{$S_1...S_n$}中的每一个集合必定会至少有一个顶点在$H$中，因此顶点覆盖$H$即为所求碰撞集。
 
