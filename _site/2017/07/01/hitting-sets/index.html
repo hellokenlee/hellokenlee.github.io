@@ -22,7 +22,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title></title>
+	<title>Hitting Set问题NP-Complete 证明</title>
 
 	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
 	<link rel="icon" href="/styles/images/favicon.jpg">
@@ -30,7 +30,7 @@
 	<link rel="stylesheet" href="/styles/css/syntax.css">
 	<link rel="stylesheet" href="/styles/css/index.css">
 	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
-	<link rel="canonical" href="/resume/">
+	<link rel="canonical" href="/2017/07/01/hitting-sets/">
 	<link rel="alternate" type="application/rss+xml" title="HelloKenLee" href="/feed.xml">
 	
 	<meta name="description" content="meta_des">
@@ -101,19 +101,36 @@
 		<div class="docs-header" id="content">
   <div class="container">
   	
-	    <h1>HelloKenLee</h1>
-	    <p>Abstractness is the price of genarality.</p>
+		    <h1>HelloKenLee</h1>
     
   </div>
 </div>
 		
+			
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#算法课解题报告-ref">算法课解题报告</a>	/
+    	<a href="/tag/#-ref"></a>
+    
+  </div>
+</div>
 
-		<head><title>个人简历-HelloKenLee</title></head>
+		
+
+		<style type="text/css">
+	img{
+		text-align: center;
+		clear: both;
+		display: block;
+		margin: auto;
+	}
+</style>
 <div class="container docs-container">
-  <div class="row">
-	<div class="col-md-3">
-	  <div class="sidebar hidden-print" role="complementary">
-		<div id="navigation">
+	<div class="row">
+		<div class="col-md-3">
+			<div class="sidebar hidden-print" role="complementary">
+				<div id="navigation">
   <h1>目录</h1>
   <ul class="nav sidenav">
 <!--
@@ -452,131 +469,112 @@
 -->
   </ul>
 </div> 
-	  </div>
-	</div>
-	<div class="col-md-9" role="main">
-	  <div class="panel docs-content">
-		<div class="wrapper">
-			<header class="post-header">
-			  <h1 class="post-title"></h1>
-
-			  <div class="meta">Posted on <span class="postdate"></span> By <a target="_blank" href="http://localhost:4000">KenLee</a></div>
-			  <br />
-			</header>
-			<article class="post-content">
-			  <ul id="markdown-toc">
-  <li><a href="#个人信息" id="markdown-toc-个人信息">个人信息</a></li>
-  <li><a href="#教育经历" id="markdown-toc-教育经历">教育经历</a></li>
-  <li><a href="#语言能力" id="markdown-toc-语言能力">语言能力</a></li>
-  <li><a href="#专业技能" id="markdown-toc-专业技能">专业技能</a></li>
-  <li><a href="#项目经历" id="markdown-toc-项目经历">项目经历</a></li>
-  <li><a href="#其他经历" id="markdown-toc-其他经历">其他经历</a></li>
-</ul>
-
-<h3 id="个人信息">个人信息</h3>
-
-<ul>
-  <li>姓名：KenLee</li>
-  <li>学历：硕士(研究生在读)</li>
-  <li>Email：ken4000kl@gmail.com</li>
-  <li>Github：https://github.com/hellokenlee/</li>
-</ul>
-
-<h3 id="教育经历">教育经历</h3>
-
-<ul>
-  <li>2012~2016：中山大学 数据科学与计算机学院 软件工程 本科
-    <ul>
-      <li>2013~2014年度 校级二等奖学金</li>
-    </ul>
-  </li>
-  <li>2016~2018：中山大学 数据科学与计算机学院 软件工程 硕士研究生(在读)</li>
-</ul>
-
-<h3 id="语言能力">语言能力</h3>
-
-<ul>
-  <li>英语：CET4/CET6/TOFEL
-    <ul>
-      <li>能流畅阅读国外的专业书籍，英文文档和会议/期刊论文</li>
-      <li>能无字幕观看专业公开课视频</li>
-      <li>能在StackOverflow, Github等社区以及在电子邮件上使用英文正常交流</li>
-    </ul>
-  </li>
-  <li>粤语：母语</li>
-</ul>
-
-<h3 id="专业技能">专业技能</h3>
-
-<ul>
-  <li>C/C++
-    <ul>
-      <li>熟悉多种平台环境下的C/C++的编写和构建，清楚其的编译和运行原理</li>
-      <li>熟悉使用STL进行开发，熟悉C++11标准，能够使用Boost进行开发</li>
-      <li>熟悉面向对象设计方法和设计模式，能进行简单的架构设计</li>
-      <li>熟悉使用C++进行OpenGL开发，能够在即时模式和核心模式下开发，能够编写GLSL，了解OpenGL的工作原理</li>
-    </ul>
-  </li>
-  <li>Python
-    <ul>
-      <li>能使用tornado进行简单的服务器后台开发</li>
-      <li>能使用numpy，scipy，mathplot等科学计算库</li>
-      <li>能使用pillow，opencv等库进行图像处理</li>
-      <li>熟悉Python下的面向对象方法和实现</li>
-    </ul>
-  </li>
-  <li>HTML/CSS
-    <ul>
-      <li>能使用HTML/CSS/JavaScript进行简单的Web前端开发</li>
-    </ul>
-  </li>
-  <li>Nasm
-    <ul>
-      <li>能在Nasm标准下编写x86的汇编程序，包括系统引导和模式跳转等</li>
-    </ul>
-  </li>
-  <li>其他
-    <ul>
-      <li>四年的Linux使用经验，熟悉常用命令和配置，能编写简单的Shell脚本</li>
-      <li>具有良好的计算机科学和数学基础</li>
-      <li>熟练使用Markdown进行文档/论文编写</li>
-      <li>熟练使用gcc，make，git等工具，编辑器一般使用Sublime/Vim，IDE一般使用Code::Blocks，也乐于尝试新的工具</li>
-      <li>具有硬件描述语言的编写经历，曾参与设计一个多级流水线的CPU</li>
-    </ul>
-  </li>
-</ul>
-
-<h3 id="项目经历">项目经历</h3>
-<ul>
-  <li>C/C++:
-    <ul>
-      <li>仿Minecraft游戏：基于 OpenGL 实现了 Minecraft 的部分功能，包括模型管理，摄像机漫游，天空盒，光照，粒子效果等</li>
-      <li>3D模型查看工具：基于OpenGL和QT5实现了Obj格式的模型查看器。可用操作包括但不限于：旋转，平移，缩放，添加光照，纹理，查看线框模型等</li>
-      <li>卷积神经网络设计与实现： 设计并实现了一个类似于caffe的深度学习库，用于Minist手写数据集的识别</li>
-      <li>无线视频传输系统：使用 Linux 的 V4L2 以及 boost::asio 库实现的无线视频流传输</li>
-    </ul>
-  </li>
-  <li>Python:
-    <ul>
-      <li>可视化二维码生成系统：在线生成一张类似于图片但是可以被识别的二维码， 校级优秀本科毕业论文</li>
-      <li>课程交流网站：编写了一个高校课程管理和作业交流网站AnswerMe，软件创新赛获奖项目</li>
-    </ul>
-  </li>
-</ul>
-
-<h3 id="其他经历">其他经历</h3>
-<ul>
-  <li>本科曾担任学生会副主席，并荣获校级优秀学生干部奖</li>
-  <li>曾担任计算机组成原理，Web程序设计，计算机图形学等多门核心课程教学助理</li>
-  <li>在校ACM编程比赛，软件开发比赛多次获奖</li>
-</ul>
-
-			</article>
+			</div>
 		</div>
-	  </div>
-	  </div>
+		<div class="col-md-9" role="main">
+			<div class="panel docs-content">
+				<div class="wrapper">
+						<header class="post-header">
+							<h1 class="post-title">Hitting Set问题NP-Complete 证明</h1>
+							<div class="meta">Posted on <span class="postdate">Jul 01, 2017</span> By <a target="_blank" href="http://localhost:4000">KenLee</a></div>
+							<br />
+						</header>
+						<article class="post-content">
+							<ul id="markdown-toc">
+  <li><a href="#问题定义" id="markdown-toc-问题定义">问题定义</a>    <ul>
+      <li><a href="#hitting-set碰撞集问题" id="markdown-toc-hitting-set碰撞集问题">Hitting Set(碰撞集)问题</a></li>
+      <li><a href="#vertex-cover顶点覆盖问题" id="markdown-toc-vertex-cover顶点覆盖问题">Vertex Cover(顶点覆盖)问题</a></li>
+    </ul>
+  </li>
+  <li><a href="#证明" id="markdown-toc-证明">证明</a>    <ul>
+      <li><a href="#1-np性证明" id="markdown-toc-1-np性证明">1. NP性证明</a></li>
+      <li><a href="#2-np难证明" id="markdown-toc-2-np难证明">2. NP难证明</a></li>
+      <li><a href="#结论" id="markdown-toc-结论">结论</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="问题定义">问题定义</h2>
+
+<h3 id="hitting-set碰撞集问题">Hitting Set(碰撞集)问题</h3>
+<p>定义为： 给出若干集合{$S_1,S_2…S_n$}和一个预算$b$， 我们希望构造一个新的集合$H$，使得$H$集合的元素个数小于等于$b$，而且$H$和所有$S_i$有交集且交集非空。</p>
+
+<p>我们希望证明这个问题为NP-完全问题。</p>
+
+<h3 id="vertex-cover顶点覆盖问题">Vertex Cover(顶点覆盖)问题</h3>
+
+<p>给出一个无向图$G$，以及一个值$b$。 要求选择一个顶点的集合$S$，$S$包含的元素个数小于$b$， 且$S$中的顶点能够覆盖图$G$的所有边。换句话说，要求$G$中的所有边连接的两个顶点至少有一个在集合$S$中。</p>
+
+<p>该问题在书(《算法概论》)上已经被证明为NP完全问题。</p>
+
+<h2 id="证明">证明</h2>
+
+<p>要证明碰撞集问题为NP完全问题，我们得分别证明该问题是NP的，而且该问题是NP难的。</p>
+
+<h3 id="1-np性证明">1. NP性证明</h3>
+
+<p>给出一个集合$H$，我们很容易在多项式时间内证明其是否一个碰撞集。我们只需要遍历整个$H$，看其元素个数是否小于$b$。接着我们遍历给出的集合们{$S_1…S_n$}，分别和$H$求交，看是否为空即可。如果$S_i$集合的大小上限为$m$，时间复杂度为$O(bmn)$， 通过哈希表记录$H$可以把时间复杂度优化成$O(mn)$。</p>
+
+<h3 id="2-np难证明">2. NP难证明</h3>
+
+<p>要证明碰撞集问题是NP难的，我们选择把它归约成一个已知的NP难的问题。我们选择的是顶点覆盖问题。</p>
+
+<p>对于一个碰撞集问题，我们构造一个图$G,~st.$每一个顶点为集合{$S_1…S_n$}中的元素。当2个顶点同属{$S_1…S_n$}的任意一个集合的时候，我们为这两个元素添加一条无向边。(如果两个元素同属多个集合不增加额外的边，因此是一个非膨胀图。)</p>
+
+<p>例子，对于集合们：</p>
+
+<script type="math/tex; mode=display">S_1=\{a,b,c\}</script>
+
+<script type="math/tex; mode=display">S_2=\{b,c,d\}</script>
+
+<script type="math/tex; mode=display">S_3=\{e,f,g\}</script>
+
+<p>构造无向图$G$如下：</p>
+
+<p><img src="/images/graph.png" style="text-align: center;clear: both;display: block;margin: auto;" /></p>
+
+<p>我们从图$G$中找小于预算$b$的顶点覆盖$H$。假设存在这样一个顶点覆盖，那么该图$G$的所有边都会被覆盖到，由构造过程知，每一条边的两个顶点都属于{$S_1…S_n$}中的一个集合，因此{$S_1…S_n$}中的每一个集合必定会至少有一个顶点在$H$中，因此顶点覆盖$H$即为所求碰撞集。</p>
+
+<p>比如上述例子中，我们在图$G$中求得其中一个最小顶点覆盖为$H={b,e}$，不难验证$H$即所求的一个碰撞集： $H \cap S_1 = {b}, ~~H \cap S_2 = {b}, H \cap S_3 = {e}$。</p>
+
+<p>不难知道我们构造图$G$的时间复杂度是多项式的，我们只需要遍历所有集合构造即可。时间复杂度为$O(nm^2)$, $m为S_i$集合的大小上限。</p>
+
+<p>因此假设我们有一个算法能在多项式时间内找到顶点覆盖问题的解，我们就能在这个时间加$O(nm^2)$的时间内找到碰撞集的解。然而顶点覆盖是NP难的，因此碰撞集问题也是NP难的。</p>
+
+<h3 id="结论">结论</h3>
+
+<p>综合上述1,2两点，碰撞集问题是NP完全问题。</p>
+
+
+						</article>
+				</div>
+			</div>
+			<div class="panel docs-content">
+				<article class="post-content">
+					<div class="wrapper">
+						
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'hellokenlee'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+
+ 
+					</div>
+				</article>
+			</div>
+		</div>
 	</div>
-  </div>
 </div>
 
 		<footer class="footer" role="contentinfo">

@@ -22,7 +22,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Leetcode 72. Edit Distance 解题报告</title>
+	<title>Leetcode 51. N-Queens 解题报告</title>
 
 	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
 	<link rel="icon" href="/styles/images/favicon.jpg">
@@ -30,7 +30,7 @@
 	<link rel="stylesheet" href="/styles/css/syntax.css">
 	<link rel="stylesheet" href="/styles/css/index.css">
 	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
-	<link rel="canonical" href="/2017/04/16/leetcode-72/">
+	<link rel="canonical" href="/2017/05/28/leetcode-51/">
 	<link rel="alternate" type="application/rss+xml" title="HelloKenLee" href="/feed.xml">
 	
 	<meta name="description" content="meta_des">
@@ -475,16 +475,16 @@
 			<div class="panel docs-content">
 				<div class="wrapper">
 						<header class="post-header">
-							<h1 class="post-title">Leetcode 72. Edit Distance 解题报告</h1>
-							<div class="meta">Posted on <span class="postdate">Apr 16, 2017</span> By <a target="_blank" href="http://localhost:4000">KenLee</a></div>
+							<h1 class="post-title">Leetcode 51. N-Queens 解题报告</h1>
+							<div class="meta">Posted on <span class="postdate">May 28, 2017</span> By <a target="_blank" href="http://localhost:4000">KenLee</a></div>
 							<br />
 						</header>
 						<article class="post-content">
 							<ul id="markdown-toc">
   <li><a href="#题目信息" id="markdown-toc-题目信息">题目信息</a>    <ul>
-      <li><a href="#题目-72-edit-distance" id="markdown-toc-题目-72-edit-distance">题目： <a href="https://leetcode.com/problems/edit-distance/#/description">72. Edit Distance</a></a></li>
+      <li><a href="#题目-51-n-queens" id="markdown-toc-题目-51-n-queens">题目： <a href="https://leetcode.com/problems/n-queens/#/description">51. N-Queens</a></a></li>
       <li><a href="#难度-hard" id="markdown-toc-难度-hard">难度： Hard</a></li>
-      <li><a href="#正确率-31" id="markdown-toc-正确率-31">正确率： 31%</a></li>
+      <li><a href="#正确率-3043" id="markdown-toc-正确率-3043">正确率： 30.43%</a></li>
       <li><a href="#问题描述" id="markdown-toc-问题描述">问题描述:</a></li>
     </ul>
   </li>
@@ -496,79 +496,106 @@
 
 <h3 id="题目信息">题目信息</h3>
 
-<h5 id="题目-72-edit-distance">题目： <a href="https://leetcode.com/problems/edit-distance/#/description">72. Edit Distance</a></h5>
+<h5 id="题目-51-n-queens">题目： <a href="https://leetcode.com/problems/n-queens/#/description">51. N-Queens</a></h5>
 
 <h5 id="难度-hard">难度： Hard</h5>
 
-<h5 id="正确率-31">正确率： 31%</h5>
+<h5 id="正确率-3043">正确率： 30.43%</h5>
 
 <h5 id="问题描述">问题描述:</h5>
 
-<p>Given two words word1 and word2, find the minimum number of steps required to convert word1 to word2. (each operation is counted as 1 step.)</p>
+<p>The n-queens puzzle is the problem of placing n queens on an n×n chessboard such that no two queens attack each other.</p>
 
-<p>You have the following 3 operations permitted on a word:</p>
+<p>Given an integer n, return all distinct solutions to the n-queens puzzle.</p>
 
-<ol>
-  <li>Insert a character</li>
-  <li>Delete a character</li>
-  <li>Replace a character</li>
-</ol>
+<p>Each solution contains a distinct board configuration of the n-queens’ placement, where <code class="highlighter-rouge">'Q' </code>and <code class="highlighter-rouge">'.'</code> both indicate a queen and an empty space respectively.</p>
+
+<p>For example,
+There exist two distinct solutions to the 4-queens puzzle:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[
+ [".Q..",  // Solution 1
+  "...Q",
+  "Q...",
+  "..Q."],
+
+ ["..Q.",  // Solution 2
+  "Q...",
+  "...Q",
+  ".Q.."]
+]
+</code></pre>
+</div>
 
 <h3 id="问题分析">问题分析</h3>
-<p>　　该题的大意是说给出两个字符串，求出他们的编辑距离。编辑距离的定义为修改一个字符，添加一个字符，或者插入一个字符的花费为1，求总花费。</p>
+
+<p>　　经典的8皇后问题。扩展为N皇后</p>
 
 <h3 id="解题思路">解题思路</h3>
-<p>　　典型的动态规划问题，假设两个字符串为<code class="highlighter-rouge">str1</code>和<code class="highlighter-rouge">str2</code>不妨定义<code class="highlighter-rouge">dp[i][j]</code>为<strong>str1的前i个字符组成的子串和str2的前j个组成的子串的编辑距离</strong>。<br />
-　　则有状态转移如下：</p>
 
-<p><script type="math/tex">dp[i][j]=min(dp[i-1][j-1] + (str1[i-1]==str2[j-1]),  dp[i-1][j] + 1, dp[i][j-1] + 1)</script><br />
-　　
-  其含义为:</p>
-
-<ul>
-  <li>$ dp[i-1][j-1] + (str1[i-1]==str2[j-1]) $ ： 是通过若干操作+最后一个replace操作得到的，即我们只需要把<code class="highlighter-rouge">str1[i-1]</code>替换成<code class="highlighter-rouge">str2[j-1]</code>，如果这两个字符相等，则花费为0。</li>
-  <li>$ dp[i-1][j] + 1 $ ： 是通过若干操作+最后一次操作得到的，最后一次操作为往<code class="highlighter-rouge">str1[0..i-1]</code>中添加<code class="highlighter-rouge">str2[j-1]</code>得到，操作花费为1。(或者理解为在<code class="highlighter-rouge">str2[0..j-1]</code>删除<code class="highlighter-rouge">str[j-1]</code>得到<code class="highlighter-rouge">str1[0..i-1]</code>， 两者是等效的)。</li>
-  <li>$ dp[i][j-1] + 1 $ ： 和上面一个意思，<code class="highlighter-rouge">str1</code>和<code class="highlighter-rouge">str2</code>互换。</li>
-</ul>
+<p>　　主要使用DFS+回溯法解决。分别使用3个数组记录使用了的行，列，对角线。</p>
 
 <h3 id="结果分析">结果分析</h3>
 
 <ul>
-  <li>时间复杂度： $ O(N^2) $ ， 分成 $ N^2 $个子问题， 解决每一个子问题的复杂度为 $ O(1) $</li>
-  <li>空间复杂度： $ O(N^2) $， 可以优化为 $ O(N) $</li>
-  <li>通过时间： 9 ms</li>
-  <li>击败： 51.14%的提交</li>
+  <li>时间复杂度： $ O(2^N) $。</li>
+  <li>空间复杂度： $ O(N^2) $。</li>
+  <li>通过时间： 6 ms</li>
+  <li>击败： 33.42%</li>
 </ul>
 
 <h3 id="源代码">源代码</h3>
+
 <div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="cm">/*
-        dp[i][j] 定义为 word1 的前i位变为 word2 的前j位需要的最小编辑距离；
-        有：
-        dp[i][i] = min(
-            dp[i-1][j-1] + (word1[i] == word[j]),//通过replace得到
-            dp[i-1][j] + 1,//通过往insert/delete得到
-            dp[i][j-1] + 1,//通过往insert/delete得到
-        )
-    */</span>
-    <span class="kt">int</span> <span class="n">minDistance</span><span class="p">(</span><span class="n">string</span> <span class="n">word1</span><span class="p">,</span> <span class="n">string</span> <span class="n">word2</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">const</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">word1</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">word2</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
-        <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">dp</span><span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
-        <span class="c1">// init
-</span>        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
-            <span class="n">dp</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
-            <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;&gt;</span> <span class="n">solveNQueens</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//init
+</span>        <span class="n">results</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+        
+        <span class="n">usedCols</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+        <span class="n">usedCols</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="nb">false</span><span class="p">);</span>
+        
+        <span class="n">usedDiags</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+        <span class="n">usedDiags</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span><span class="nb">false</span><span class="p">);</span>
+        
+        <span class="n">usedBackDiags</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+        <span class="n">usedBackDiags</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span><span class="nb">false</span><span class="p">);</span>
+        
+        <span class="n">board</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+        <span class="n">board</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">string</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="sc">'.'</span><span class="p">));</span>
+        
+        <span class="k">this</span><span class="o">-&gt;</span><span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">;</span>
+        <span class="n">search</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">results</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;&gt;</span> <span class="n">results</span><span class="p">;</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">usedCols</span><span class="p">;</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">usedDiags</span><span class="p">;</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">usedBackDiags</span><span class="p">;</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+    <span class="c1">//按行DFS搜索
+</span>    <span class="kt">void</span> <span class="n">search</span><span class="p">(</span><span class="kt">int</span> <span class="n">r</span><span class="p">){</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">r</span><span class="o">&gt;=</span><span class="n">n</span><span class="p">){</span>
+            <span class="n">results</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">board</span><span class="p">);</span>
+            <span class="k">return</span><span class="p">;</span>
         <span class="p">}</span>
-        <span class="c1">// calc
-</span>        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
-            <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
-                <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">word1</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">word2</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]);</span>
-                <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">],</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
-                <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">],</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">c</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="o">++</span><span class="n">c</span><span class="p">){</span>
+            <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">usedCols</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">usedDiags</span><span class="p">[</span><span class="n">r</span><span class="o">-</span><span class="n">c</span><span class="o">+</span><span class="n">n</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">usedBackDiags</span><span class="p">[</span><span class="n">r</span><span class="o">+</span><span class="n">c</span><span class="p">]){</span>
+                <span class="c1">//r行c列和上面无冲突,向下搜索
+</span>                <span class="n">usedCols</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+                <span class="n">usedDiags</span><span class="p">[</span><span class="n">r</span><span class="o">-</span><span class="n">c</span><span class="o">+</span><span class="n">n</span><span class="p">]</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+                <span class="n">usedBackDiags</span><span class="p">[</span><span class="n">r</span><span class="o">+</span><span class="n">c</span><span class="p">]</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+                <span class="n">board</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">c</span><span class="p">]</span><span class="o">=</span><span class="sc">'Q'</span><span class="p">;</span>
+                <span class="n">search</span><span class="p">(</span><span class="n">r</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+                <span class="c1">//恢复
+</span>                <span class="n">usedCols</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span>
+                <span class="n">usedDiags</span><span class="p">[</span><span class="n">r</span><span class="o">-</span><span class="n">c</span><span class="o">+</span><span class="n">n</span><span class="p">]</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span>
+                <span class="n">usedBackDiags</span><span class="p">[</span><span class="n">r</span><span class="o">+</span><span class="n">c</span><span class="p">]</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span>
+                <span class="n">board</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">c</span><span class="p">]</span><span class="o">=</span><span class="sc">'.'</span><span class="p">;</span>
             <span class="p">}</span>
         <span class="p">}</span>
-        <span class="k">return</span> <span class="n">dp</span><span class="p">[</span><span class="n">word1</span><span class="p">.</span><span class="n">size</span><span class="p">()][</span><span class="n">word2</span><span class="p">.</span><span class="n">size</span><span class="p">()];</span>
     <span class="p">}</span>
 <span class="p">};</span>
 </code></pre>

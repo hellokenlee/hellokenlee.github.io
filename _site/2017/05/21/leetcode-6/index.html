@@ -22,7 +22,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Leetcode 547. Friend Circles 解题报告</title>
+	<title>Leetcode 6. ZigZag Conversion 解题报告</title>
 
 	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
 	<link rel="icon" href="/styles/images/favicon.jpg">
@@ -30,7 +30,7 @@
 	<link rel="stylesheet" href="/styles/css/syntax.css">
 	<link rel="stylesheet" href="/styles/css/index.css">
 	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
-	<link rel="canonical" href="/2017/04/30/leetcode-547/">
+	<link rel="canonical" href="/2017/05/21/leetcode-6/">
 	<link rel="alternate" type="application/rss+xml" title="HelloKenLee" href="/feed.xml">
 	
 	<meta name="description" content="meta_des">
@@ -475,16 +475,16 @@
 			<div class="panel docs-content">
 				<div class="wrapper">
 						<header class="post-header">
-							<h1 class="post-title">Leetcode 547. Friend Circles 解题报告</h1>
-							<div class="meta">Posted on <span class="postdate">Apr 30, 2017</span> By <a target="_blank" href="http://localhost:4000">KenLee</a></div>
+							<h1 class="post-title">Leetcode 6. ZigZag Conversion 解题报告</h1>
+							<div class="meta">Posted on <span class="postdate">May 21, 2017</span> By <a target="_blank" href="http://localhost:4000">KenLee</a></div>
 							<br />
 						</header>
 						<article class="post-content">
 							<ul id="markdown-toc">
   <li><a href="#题目信息" id="markdown-toc-题目信息">题目信息</a>    <ul>
-      <li><a href="#题目-547-friend-circles" id="markdown-toc-题目-547-friend-circles">题目： <a href="https://leetcode.com/problems/friend-circles/#/description">547. Friend Circles</a></a></li>
+      <li><a href="#题目-6-zigzag-conversion" id="markdown-toc-题目-6-zigzag-conversion">题目： <a href="https://leetcode.com/problems/zigzag-conversion/#/description">6. ZigZag Conversion</a></a></li>
       <li><a href="#难度-medium" id="markdown-toc-难度-medium">难度： Medium</a></li>
-      <li><a href="#正确率-488" id="markdown-toc-正确率-488">正确率： 48.8%</a></li>
+      <li><a href="#正确率-2663" id="markdown-toc-正确率-2663">正确率： 26.63%</a></li>
       <li><a href="#问题描述" id="markdown-toc-问题描述">问题描述:</a></li>
     </ul>
   </li>
@@ -496,95 +496,86 @@
 
 <h3 id="题目信息">题目信息</h3>
 
-<h5 id="题目-547-friend-circles">题目： <a href="https://leetcode.com/problems/friend-circles/#/description">547. Friend Circles</a></h5>
+<h5 id="题目-6-zigzag-conversion">题目： <a href="https://leetcode.com/problems/zigzag-conversion/#/description">6. ZigZag Conversion</a></h5>
 
 <h5 id="难度-medium">难度： Medium</h5>
 
-<h5 id="正确率-488">正确率： 48.8%</h5>
+<h5 id="正确率-2663">正确率： 26.63%</h5>
 
 <h5 id="问题描述">问题描述:</h5>
 
-<p>There are N students in a class. Some of them are friends, while some are not. Their friendship is transitive in nature. For example, if A is a direct friend of B, and B is a direct friend of C, then A is an indirect friend of C. And we defined a friend circle is a group of students who are direct or indirect friends.</p>
-
-<p>Given a N*N matrix M representing the friend relationship between students in the class. If M[i][j] = 1, then the ith and jth students are direct friends with each other, otherwise not. And you have to output the total number of friend circles among all the students.</p>
-
-<p><strong>Example 1:</strong></p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>Input: 
-[[1,1,0],
- [1,1,0],
- [0,0,1]]
-Output: 2
-Explanation:The 0th and 1st students are direct friends, so they are in a friend circle. 
-The 2nd student himself is in a friend circle. So return 2.
+<p>The string “PAYPALISHIRING” is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>P   A   H   N
+A P L S I I G
+Y   I   R
 </code></pre>
 </div>
-
-<p><strong>Example 2:</strong></p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>Input: 
-[[1,1,0],
- [1,1,1],
- [0,1,1]]
-Output: 1
-Explanation:The 0th and 1st students are direct friends, the 1st and 2nd students are direct friends, 
-so the 0th and 2nd students are indirect friends. All of them are in the same friend circle, so return 1.
+<p>And then read line by line: “PAHNAPLSIIGYIR”
+Write the code that will take a string and make this conversion given a number of rows:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>string convert(string text, int nRows);
 </code></pre>
 </div>
-
-<p><strong>Note:</strong></p>
-
-<ol>
-  <li>N is in range [1,200].</li>
-  <li>M[i][i] = 1 for all students.</li>
-  <li>If M[i][j] = 1, then M[j][i] = 1.</li>
-</ol>
+<p>convert(“PAYPALISHIRING”, 3) should return “PAHNAPLSIIGYIR”.</p>
 
 <h3 id="问题分析">问题分析</h3>
 
-<p>　　题目的意思是给你一个无向图的NxN邻接矩阵M，表示N个人的朋友关系，如果i和j是朋友关系，M[i][j]和M[j][i]就是1，反之是0。 朋友关系有传递性， A和B是朋友，B和C也是朋友，那么A和C也是属于朋友。 题目希望找出给出的图中有多少个“朋友圈”， 即朋友圈中的人互相是直接或者间接的朋友。</p>
+<p>　　该问题的意思是，给出一个字符串，要求把他转换成zigzag样式。</p>
 
 <h3 id="解题思路">解题思路</h3>
 
-<p>　　通过题目分析，我们可以发现，题目很简单，就是在一个无向图中找强连通分量(SCC)。直接通过DFS来找，把不同起点的DFS记作不同的SCC。</p>
+<p>　　主要难点在于理解Zigzag样式，其要求应该如下：</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>/*n=numRows
+Δ=2n-2    1                           2n-1                         4n-3
+Δ=        2                     2n-2  2n                    4n-4   4n-2
+Δ=        3               2n-3        2n+1              4n-5       .
+Δ=        .           .               .               .            .
+Δ=        .       n+2                 .           3n               .
+Δ=        n-1 n+1                     3n-3    3n-1                 5n-5
+Δ=2n-2    n                           3n-2                         5n-4
+*/
+</code></pre>
+</div>
+<p>　　根据上面的规律处理字符串即可。</p>
 
 <h3 id="结果分析">结果分析</h3>
 
 <ul>
-  <li>时间复杂度： $ O(N^2) $ 每一个顶点查找相邻顶点的复杂度为$ O(N) $，每一个顶点都需要经历这个过程。</li>
-  <li>空间复杂度： $ O(N) $ Visited数组</li>
-  <li>通过时间： 42 ms</li>
-  <li>击败： 06.06%的提交</li>
+  <li>时间复杂度： $ O(N) $。</li>
+  <li>空间复杂度： $ O(N) $。</li>
+  <li>通过时间： 16 ms</li>
+  <li>击败： 94.44%</li>
 </ul>
 
 <h3 id="源代码">源代码</h3>
 
-<div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="c1">//事实上就是在无向图中找SCC的数量嘛
-</span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="kt">int</span> <span class="n">findCircleNum</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;&amp;</span> <span class="n">M</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">M</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">){</span>
-            <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kt">int</span> <span class="n">unionNum</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
-        <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">visited</span><span class="p">(</span><span class="n">M</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="nb">false</span><span class="p">);</span>
-        
-        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">v</span><span class="o">&lt;</span><span class="n">M</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">v</span><span class="p">){</span>
-            <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">visited</span><span class="p">[</span><span class="n">v</span><span class="p">]){</span>
-                <span class="o">++</span><span class="n">unionNum</span><span class="p">;</span>
-                <span class="n">dfs</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">visited</span><span class="p">,</span> <span class="n">M</span><span class="p">);</span>
+    <span class="n">string</span> <span class="n">convert</span><span class="p">(</span><span class="n">string</span> <span class="n">s</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numRows</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">string</span> <span class="n">result</span><span class="o">=</span><span class="s">""</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">numRows</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">s</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">step1</span><span class="p">,</span><span class="n">step2</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">len</span><span class="o">=</span><span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">numRows</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">){</span>
+            <span class="n">step1</span><span class="o">=</span><span class="p">(</span><span class="n">numRows</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="p">;</span>
+            <span class="n">step2</span><span class="o">=</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="p">;</span>
+            <span class="kt">int</span> <span class="n">pos</span><span class="o">=</span><span class="n">i</span><span class="p">;</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">pos</span><span class="o">&lt;</span><span class="n">len</span><span class="p">)</span>
+                <span class="n">result</span><span class="o">+=</span><span class="n">s</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">pos</span><span class="p">);</span>
+            <span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">){</span>
+                <span class="n">pos</span><span class="o">+=</span><span class="n">step1</span><span class="p">;</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">pos</span><span class="o">&gt;=</span><span class="n">len</span><span class="p">)</span>
+                    <span class="k">break</span><span class="p">;</span>
+				<span class="k">if</span><span class="p">(</span><span class="n">step1</span><span class="p">)</span>
+					<span class="n">result</span><span class="o">+=</span><span class="n">s</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">pos</span><span class="p">);</span>
+                <span class="n">pos</span><span class="o">+=</span><span class="n">step2</span><span class="p">;</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">pos</span><span class="o">&gt;=</span><span class="n">len</span><span class="p">)</span>
+                    <span class="k">break</span><span class="p">;</span>
+				<span class="k">if</span><span class="p">(</span><span class="n">step2</span><span class="p">)</span>
+					<span class="n">result</span><span class="o">+=</span><span class="n">s</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">pos</span><span class="p">);</span>
             <span class="p">}</span>
         <span class="p">}</span>
-        <span class="k">return</span> <span class="n">unionNum</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="kt">void</span> <span class="n">dfs</span><span class="p">(</span><span class="kt">int</span> <span class="n">v</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">visited</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;&amp;</span> <span class="n">M</span><span class="p">){</span>
-        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">M</span><span class="p">[</span><span class="n">v</span><span class="p">].</span><span class="n">size</span><span class="p">();</span><span class="o">++</span><span class="n">i</span><span class="p">){</span>
-            <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">visited</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">M</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">){</span>
-                <span class="n">visited</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
-                <span class="n">dfs</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">visited</span><span class="p">,</span> <span class="n">M</span><span class="p">);</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">};</span>
 </code></pre>

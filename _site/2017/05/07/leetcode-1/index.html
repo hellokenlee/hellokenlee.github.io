@@ -22,7 +22,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Leetcode 547. Friend Circles 解题报告</title>
+	<title>Leetcode 1. Two Sum 解题报告</title>
 
 	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
 	<link rel="icon" href="/styles/images/favicon.jpg">
@@ -30,7 +30,7 @@
 	<link rel="stylesheet" href="/styles/css/syntax.css">
 	<link rel="stylesheet" href="/styles/css/index.css">
 	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
-	<link rel="canonical" href="/2017/04/30/leetcode-547/">
+	<link rel="canonical" href="/2017/05/07/leetcode-1/">
 	<link rel="alternate" type="application/rss+xml" title="HelloKenLee" href="/feed.xml">
 	
 	<meta name="description" content="meta_des">
@@ -475,16 +475,16 @@
 			<div class="panel docs-content">
 				<div class="wrapper">
 						<header class="post-header">
-							<h1 class="post-title">Leetcode 547. Friend Circles 解题报告</h1>
-							<div class="meta">Posted on <span class="postdate">Apr 30, 2017</span> By <a target="_blank" href="http://localhost:4000">KenLee</a></div>
+							<h1 class="post-title">Leetcode 1. Two Sum 解题报告</h1>
+							<div class="meta">Posted on <span class="postdate">May 07, 2017</span> By <a target="_blank" href="http://localhost:4000">KenLee</a></div>
 							<br />
 						</header>
 						<article class="post-content">
 							<ul id="markdown-toc">
   <li><a href="#题目信息" id="markdown-toc-题目信息">题目信息</a>    <ul>
-      <li><a href="#题目-547-friend-circles" id="markdown-toc-题目-547-friend-circles">题目： <a href="https://leetcode.com/problems/friend-circles/#/description">547. Friend Circles</a></a></li>
-      <li><a href="#难度-medium" id="markdown-toc-难度-medium">难度： Medium</a></li>
-      <li><a href="#正确率-488" id="markdown-toc-正确率-488">正确率： 48.8%</a></li>
+      <li><a href="#题目-1-two-sum" id="markdown-toc-题目-1-two-sum">题目： <a href="https://leetcode.com/problems/two-sum/#/description">1. Two Sum</a></a></li>
+      <li><a href="#难度-easy" id="markdown-toc-难度-easy">难度： Easy</a></li>
+      <li><a href="#正确率-3365" id="markdown-toc-正确率-3365">正确率： 33.65%</a></li>
       <li><a href="#问题描述" id="markdown-toc-问题描述">问题描述:</a></li>
     </ul>
   </li>
@@ -496,97 +496,67 @@
 
 <h3 id="题目信息">题目信息</h3>
 
-<h5 id="题目-547-friend-circles">题目： <a href="https://leetcode.com/problems/friend-circles/#/description">547. Friend Circles</a></h5>
+<h5 id="题目-1-two-sum">题目： <a href="https://leetcode.com/problems/two-sum/#/description">1. Two Sum</a></h5>
 
-<h5 id="难度-medium">难度： Medium</h5>
+<h5 id="难度-easy">难度： Easy</h5>
 
-<h5 id="正确率-488">正确率： 48.8%</h5>
+<h5 id="正确率-3365">正确率： 33.65%</h5>
 
 <h5 id="问题描述">问题描述:</h5>
 
-<p>There are N students in a class. Some of them are friends, while some are not. Their friendship is transitive in nature. For example, if A is a direct friend of B, and B is a direct friend of C, then A is an indirect friend of C. And we defined a friend circle is a group of students who are direct or indirect friends.</p>
+<p>Given an array of integers, return indices of the two numbers such that they add up to a specific target.</p>
 
-<p>Given a N*N matrix M representing the friend relationship between students in the class. If M[i][j] = 1, then the ith and jth students are direct friends with each other, otherwise not. And you have to output the total number of friend circles among all the students.</p>
+<p>You may assume that each input would have exactly one solution, and you may not use the same element twice.</p>
 
 <p><strong>Example 1:</strong></p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Input: 
-[[1,1,0],
- [1,1,0],
- [0,0,1]]
-Output: 2
-Explanation:The 0th and 1st students are direct friends, so they are in a friend circle. 
-The 2nd student himself is in a friend circle. So return 2.
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="n">Given</span> <span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span> <span class="n">target</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+
+<span class="n">Because</span> <span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">nums</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">7</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+<span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">].</span>
 </code></pre>
 </div>
-
-<p><strong>Example 2:</strong></p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>Input: 
-[[1,1,0],
- [1,1,1],
- [0,1,1]]
-Output: 1
-Explanation:The 0th and 1st students are direct friends, the 1st and 2nd students are direct friends, 
-so the 0th and 2nd students are indirect friends. All of them are in the same friend circle, so return 1.
-</code></pre>
-</div>
-
-<p><strong>Note:</strong></p>
-
-<ol>
-  <li>N is in range [1,200].</li>
-  <li>M[i][i] = 1 for all students.</li>
-  <li>If M[i][j] = 1, then M[j][i] = 1.</li>
-</ol>
 
 <h3 id="问题分析">问题分析</h3>
 
-<p>　　题目的意思是给你一个无向图的NxN邻接矩阵M，表示N个人的朋友关系，如果i和j是朋友关系，M[i][j]和M[j][i]就是1，反之是0。 朋友关系有传递性， A和B是朋友，B和C也是朋友，那么A和C也是属于朋友。 题目希望找出给出的图中有多少个“朋友圈”， 即朋友圈中的人互相是直接或者间接的朋友。</p>
+<p>　　该问题的意思是，给出一个数组和一个目标，要求求出数组中的两个数的下标，使得这两个数相加为目标。</p>
 
 <h3 id="解题思路">解题思路</h3>
 
-<p>　　通过题目分析，我们可以发现，题目很简单，就是在一个无向图中找强连通分量(SCC)。直接通过DFS来找，把不同起点的DFS记作不同的SCC。</p>
+<p>　　简单的哈希题目，把所有数组中的数通过哈希表存其下标，然后对数组中的每一个数<code class="highlighter-rouge">nums[i]</code>，求哈希表中<code class="highlighter-rouge">key=target-nums[i]</code>的值即为所求的下标。</p>
 
 <h3 id="结果分析">结果分析</h3>
 
 <ul>
-  <li>时间复杂度： $ O(N^2) $ 每一个顶点查找相邻顶点的复杂度为$ O(N) $，每一个顶点都需要经历这个过程。</li>
-  <li>空间复杂度： $ O(N) $ Visited数组</li>
-  <li>通过时间： 42 ms</li>
-  <li>击败： 06.06%的提交</li>
+  <li>时间复杂度： $ O(N) $。</li>
+  <li>空间复杂度： $ O(N) $。</li>
+  <li>通过时间： 24 ms</li>
+  <li>击败： 50.90%</li>
 </ul>
 
 <h3 id="源代码">源代码</h3>
 
-<div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="c1">//事实上就是在无向图中找SCC的数量嘛
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="c1">//T(n)=2n?
 </span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="kt">int</span> <span class="n">findCircleNum</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;&amp;</span> <span class="n">M</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">M</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">){</span>
-            <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">twoSum</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">target</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">unordered_map</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">hashTable</span><span class="p">;</span>
+        <span class="c1">// build the hash table 
+</span>        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="o">++</span><span class="n">i</span><span class="p">){</span>
+            <span class="n">hashTable</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">));</span>
         <span class="p">}</span>
-        <span class="kt">int</span> <span class="n">unionNum</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
-        <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">visited</span><span class="p">(</span><span class="n">M</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="nb">false</span><span class="p">);</span>
-        
-        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">v</span><span class="o">&lt;</span><span class="n">M</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">v</span><span class="p">){</span>
-            <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">visited</span><span class="p">[</span><span class="n">v</span><span class="p">]){</span>
-                <span class="o">++</span><span class="n">unionNum</span><span class="p">;</span>
-                <span class="n">dfs</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">visited</span><span class="p">,</span> <span class="n">M</span><span class="p">);</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">unionNum</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="kt">void</span> <span class="n">dfs</span><span class="p">(</span><span class="kt">int</span> <span class="n">v</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">visited</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;&amp;</span> <span class="n">M</span><span class="p">){</span>
-        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">M</span><span class="p">[</span><span class="n">v</span><span class="p">].</span><span class="n">size</span><span class="p">();</span><span class="o">++</span><span class="n">i</span><span class="p">){</span>
-            <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">visited</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">M</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">){</span>
-                <span class="n">visited</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
-                <span class="n">dfs</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">visited</span><span class="p">,</span> <span class="n">M</span><span class="p">);</span>
+        <span class="c1">//for each nums[i] in array, search the target-nums[i] is in hash table(aka. is in array), if is, return the answer.
+</span>        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="o">++</span><span class="n">i</span><span class="p">){</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">hashTable</span><span class="p">[</span><span class="n">target</span><span class="o">-</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">!=</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">hashTable</span><span class="p">[</span><span class="n">target</span><span class="o">-</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">!=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">){</span>
+                <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">re</span><span class="p">;</span>
+                <span class="n">re</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">min</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">hashTable</span><span class="p">[</span><span class="n">target</span><span class="o">-</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]]));</span>
+                <span class="n">re</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">max</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">hashTable</span><span class="p">[</span><span class="n">target</span><span class="o">-</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]]));</span>
+                <span class="k">return</span> <span class="n">re</span><span class="p">;</span>
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">};</span>
+
 </code></pre>
 </div>
 
