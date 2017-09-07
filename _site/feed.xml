@@ -5,9 +5,401 @@
     <description>Abstractness is the price of genarality.</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 02 Jul 2017 14:04:17 +0800</pubDate>
-    <lastBuildDate>Sun, 02 Jul 2017 14:04:17 +0800</lastBuildDate>
+    <pubDate>Mon, 03 Jul 2017 21:32:21 +0800</pubDate>
+    <lastBuildDate>Mon, 03 Jul 2017 21:32:21 +0800</lastBuildDate>
     <generator>Jekyll v3.4.0</generator>
+    
+      <item>
+        <title>C++中的闭包原理分析，比如...返回一个lamda函数？</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#前言&quot; id=&quot;markdown-toc-前言&quot;&gt;前言&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#c中的闭包&quot; id=&quot;markdown-toc-c中的闭包&quot;&gt;C++中的闭包&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#原理解析&quot; id=&quot;markdown-toc-原理解析&quot;&gt;原理解析&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#参考资料&quot; id=&quot;markdown-toc-参考资料&quot;&gt;参考资料&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;前言&quot;&gt;前言&lt;/h2&gt;
+
+&lt;p&gt;在lua或者python等类似的动态语言中，是有&lt;strong&gt;Closure&lt;/strong&gt;(闭包或闭合函数，以下统称为闭包)这个概念的。 什么是闭包呢？ 就是在&lt;strong&gt;一个函数A里面定义另外一个子函数B，子函数B能够访问父函数A中的局部变量&lt;/strong&gt;这样一种特性。比如在lua中：&lt;/p&gt;
+
+&lt;div class=&quot;language-lua highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'i love u'&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+		&lt;span class=&quot;nb&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;-- main:&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;--&amp;gt; stdout: &quot;i love u&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;在函数&lt;code class=&quot;highlighter-rouge&quot;&gt;B()&lt;/code&gt;看来， &lt;code class=&quot;highlighter-rouge&quot;&gt;i&lt;/code&gt;即不是&lt;code class=&quot;highlighter-rouge&quot;&gt;B()&lt;/code&gt;中的局部变量，也不是全局变量，却能够在&lt;code class=&quot;highlighter-rouge&quot;&gt;B()&lt;/code&gt;中被访问到，叫做闭包的特性。这种特性在当&lt;code class=&quot;highlighter-rouge&quot;&gt;i&lt;/code&gt;本该失效的时候更加有趣，考虑一下lua代码：&lt;/p&gt;
+
+&lt;div class=&quot;language-lua highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;newCounter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;counter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;counter&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;--&amp;gt; 返回一个函数&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;-- main&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newCounter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;--&amp;gt; stdout: 1&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;--&amp;gt; stdout: 2&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newCounter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;--&amp;gt; stdout: 1&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;在上面的代码中，变量&lt;code class=&quot;highlighter-rouge&quot;&gt;i&lt;/code&gt;在执行&lt;code class=&quot;highlighter-rouge&quot;&gt;i = i + 1&lt;/code&gt;这一语句的时候已经跳出了&lt;code class=&quot;highlighter-rouge&quot;&gt;newCouter()&lt;/code&gt;这一函数，一般来说&lt;code class=&quot;highlighter-rouge&quot;&gt;i&lt;/code&gt;已经被销毁。但是从例子可以看出，&lt;code class=&quot;highlighter-rouge&quot;&gt;i&lt;/code&gt;不但没有被销毁，还能成功的被更改。这时我们称变量&lt;code class=&quot;highlighter-rouge&quot;&gt;i&lt;/code&gt;为闭包函数&lt;code class=&quot;highlighter-rouge&quot;&gt;a()&lt;/code&gt;的一个“非局部变量”。同理，闭包函数&lt;code class=&quot;highlighter-rouge&quot;&gt;b()&lt;/code&gt;也有非局部变量&lt;code class=&quot;highlighter-rouge&quot;&gt;i&lt;/code&gt;，而且他们是相互独立的。&lt;/p&gt;
+
+&lt;h2 id=&quot;c中的闭包&quot;&gt;C++中的闭包&lt;/h2&gt;
+
+&lt;p&gt;那么在C++中有没有闭包存在呢？如果有，闭包里面的“非局部变量”它既不是局部变量，因此不被储存在栈区；也不是全局变量或者静态变量，因此不存在静态区；更不是被动态创建出来的，因此不会在堆区。那么这些“非局部变量”存在哪呢？&lt;strong&gt;(太长不看版： 有；存在栈区。)&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;在传统C++的语法中，我们是不能够在一个函数中定义另一个函数的，因此也就不需要考虑闭包问题了。然而C++11对lambda表达式的支持让这个问题值得讨论：&lt;/p&gt;
+
+&lt;p&gt;C++11的lambda表达式允许我们在一个函数里面定义一个匿名的内联函数(准确来说，是允许定义一个可调用代码单元)，《C++ Primer》中对lamba表达式的定义如下：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;与任何函数类似，一个lambda表达式具有一个返回类型，一个参数列表和一个函数体。一个lambda表达式具有以下形式：&lt;/p&gt;
+
+  &lt;p&gt;[capture list] (parameter list) -&amp;gt; return type {function body}&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;特别说明一下&lt;code class=&quot;highlighter-rouge&quot;&gt;[capture list]&lt;/code&gt;即我们在父函数中的局部变量并且需要在子函数(lambda)中用到的变量。&lt;/p&gt;
+
+&lt;p&gt;因此我们不难仿照上面的lua代码写出对应的C++代码：&lt;/p&gt;
+
+&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;///!这段代码不能通过编译
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;typedef&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;funcPtr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)();&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//定义一个参数为空，返回值为int的函数指针类型
+//类似定义一个函数生成器，返回值是一个函数指针
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;funcPtr&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;// 初始化“非局部变量”
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;](){&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;};&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//引用捕获变量a，才能改变a
+&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//返回一个函数指针
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;如果你编译上面的代码，会报&lt;code class=&quot;highlighter-rouge&quot;&gt;error: cannot convert ‘create()::__lambda0’ to ‘funcPtr {aka int (*)()}’ in initialization|&lt;/code&gt;错误。原因是因为&lt;strong&gt;一个lambda表达式只有当它捕获列表为空的时候才能转换成函数指针。&lt;/strong&gt; 出自《C++11 Standard》5.1.2节：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The closure type for a lambda-expression &lt;strong&gt;with no lambda-capture&lt;/strong&gt; has a public non-virtual non-explicit const &lt;strong&gt;conversion function to pointer to function&lt;/strong&gt; having the same parameter and return types as the closure type’s function call operator. The value returned by this conversion function shall be the address of a function that, when invoked, has the same effect as invoking the closure type’s function call operator.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;那么是不是表面C++中不能使用闭包这种特性呢？ 并不是，我们可以使用&lt;code class=&quot;highlighter-rouge&quot;&gt;std::function&amp;lt;T&amp;gt;&lt;/code&gt;来使用闭包，代码更改为：&lt;/p&gt;
+
+&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;functional&amp;gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// 函数生成器，返回一个函数对象
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;// 初始化“非局部变量”
+&lt;/span&gt;	&lt;span class=&quot;c1&quot;&gt;//			lambda: [捕获 i] (空参数) -&amp;gt; 返回int
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]()&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;mutable&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;auto&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;counter1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;cout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;counter1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;endl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;// --&amp;gt;stdout: 0
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;cout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;counter1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;endl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;// --&amp;gt;stdout: 1
+&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;auto&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;counter2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;cout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;counter2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;endl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;// --&amp;gt;stdout: 1
+&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;这样子我们相当于定义了一个“函数工厂”，这个工厂可以根据参数，“生产出”不同的函数。比如上面的&lt;code class=&quot;highlighter-rouge&quot;&gt;create()&lt;/code&gt;函数我们可以传递进去一个值来初始化&lt;code class=&quot;highlighter-rouge&quot;&gt;i&lt;/code&gt;，这样我们就可以用它来生产从不同数字开始数起的计数函数了！(示例代码看最后)&lt;/p&gt;
+
+&lt;h2 id=&quot;原理解析&quot;&gt;原理解析&lt;/h2&gt;
+
+&lt;p&gt;那么为什么一个带有捕获的lambda不能转换成函数指针，却能转换成一个&lt;code class=&quot;highlighter-rouge&quot;&gt;function&amp;lt;T&amp;gt;&lt;/code&gt;呢？ 答案显而易见，&lt;strong&gt;因为函数指针只能指向一个函数，&lt;code class=&quot;highlighter-rouge&quot;&gt;function&amp;lt;T&amp;gt;&lt;/code&gt;变量表示的却是一个类的实例！&lt;/strong&gt;(准确来说是一个重载了括号运算符的类的实例，或者说，&lt;strong&gt;一个仿函数对象&lt;/strong&gt;。)根据C++官方给出的解释，lambda表达式只是一个语法糖而已，事实上lambda表达式构造的就是一个&lt;code class=&quot;highlighter-rouge&quot;&gt;function&amp;lt;T&amp;gt;&lt;/code&gt;对象。而捕获列表&lt;code class=&quot;highlighter-rouge&quot;&gt;[]&lt;/code&gt;中的也就是这个对象的构造函数的参数而已！&lt;/p&gt;
+
+&lt;p&gt;换而言之，&lt;code class=&quot;highlighter-rouge&quot;&gt;create()&lt;/code&gt;函数的作用就是不停地调用&lt;code class=&quot;highlighter-rouge&quot;&gt;function&amp;lt;int()&amp;gt;&lt;/code&gt;这个类的构造函数，并把构造出来的对象(可调用对象)返回。&lt;/p&gt;
+
+&lt;p&gt;这样看来，&lt;code class=&quot;highlighter-rouge&quot;&gt;main()&lt;/code&gt;函数中的&lt;code class=&quot;highlighter-rouge&quot;&gt;counter1&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;counter2&lt;/code&gt;都是&lt;code class=&quot;highlighter-rouge&quot;&gt;function&amp;lt;int()&amp;gt;&lt;/code&gt;类的不同实例。也就解释了&lt;code class=&quot;highlighter-rouge&quot;&gt;i&lt;/code&gt;这种所谓“非局部变量”储存在哪的问题。&lt;code class=&quot;highlighter-rouge&quot;&gt;i&lt;/code&gt;是在&lt;code class=&quot;highlighter-rouge&quot;&gt;create()&lt;/code&gt;中通过构造函数传进去的，因此也就是对象&lt;code class=&quot;highlighter-rouge&quot;&gt;counter1&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;counter2&lt;/code&gt;的成员变量而已。因为&lt;code class=&quot;highlighter-rouge&quot;&gt;counetr1&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;counter2&lt;/code&gt;是局部变量，&lt;code class=&quot;highlighter-rouge&quot;&gt;i&lt;/code&gt;自然也就是&lt;code class=&quot;highlighter-rouge&quot;&gt;main()&lt;/code&gt;中的局部变量咯！&lt;/p&gt;
+
+&lt;p&gt;最后附上终极版例子说明这种特性的用处：&lt;/p&gt;
+
+&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;createCounter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]()&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;mutable&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;};&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;auto&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;counter1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;createCounter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;// 从0开始异世界生活
+&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;auto&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;counter2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;createCounter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 从10开始的计数器
+&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;auto&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;counter3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;createCounter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 从-10开始的计数器
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;cout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;counter1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;endl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;// -&amp;gt; 1
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;cout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;counter2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;endl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;// -&amp;gt; 11
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;cout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;counter3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;endl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;// -&amp;gt; -9
+&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;参考资料&quot;&gt;参考资料&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/13358672/how-to-convert-a-lambda-to-an-stdfunction-using-templates&quot;&gt;https://stackoverflow.com/questions/13358672/how-to-convert-a-lambda-to-an-stdfunction-using-templates&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://shaharmike.com/cpp/lambdas-and-functions/#mutable-lambdas:20d83d12ec0a04fbb356ddfee1c565a0&quot;&gt;http://shaharmike.com/cpp/lambdas-and-functions/#mutable-lambdas:20d83d12ec0a04fbb356ddfee1c565a0&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.cplusplus.com/reference/functional/function/?kw=function&quot;&gt;http://www.cplusplus.com/reference/functional/function/?kw=function&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+</description>
+        <pubDate>Mon, 03 Jul 2017 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/07/03/cpp%E4%B8%AD%E7%9A%84%E9%97%AD%E5%8C%85/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/07/03/cpp%E4%B8%AD%E7%9A%84%E9%97%AD%E5%8C%85/</guid>
+        
+        <category>编程</category>
+        
+        <category>C++</category>
+        
+        
+        <category>编程</category>
+        
+      </item>
+    
+      <item>
+        <title>Lua学习笔记</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#第一章-开始&quot; id=&quot;markdown-toc-第一章-开始&quot;&gt;第一章： 开始&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#第二章-值与类型&quot; id=&quot;markdown-toc-第二章-值与类型&quot;&gt;第二章： 值与类型&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#第三章-表达式&quot; id=&quot;markdown-toc-第三章-表达式&quot;&gt;第三章： 表达式&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#第四章-赋值&quot; id=&quot;markdown-toc-第四章-赋值&quot;&gt;第四章： 赋值&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#第五章-函数&quot; id=&quot;markdown-toc-第五章-函数&quot;&gt;第五章： 函数&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#第六章-深入函数&quot; id=&quot;markdown-toc-第六章-深入函数&quot;&gt;第六章： 深入函数&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#第七章-迭代器和泛型for&quot; id=&quot;markdown-toc-第七章-迭代器和泛型for&quot;&gt;第七章： 迭代器和泛型for&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#第八章-编译执行和错误&quot; id=&quot;markdown-toc-第八章-编译执行和错误&quot;&gt;第八章： 编译，执行和错误&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#第九章-协程&quot; id=&quot;markdown-toc-第九章-协程&quot;&gt;第九章： 协程&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;看《Programming.in.Lua.2th》的读书笔记。因为有python和c/c++基础，读的比较快，仅仅把一些需要注意的地方或者语法糖标注出来。&lt;/p&gt;
+
+&lt;h2 id=&quot;第一章-开始&quot;&gt;第一章： 开始&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;lua -i prog.lua&lt;/code&gt;表示执行完prog.lua脚本后直接进入交互模式。&lt;/li&gt;
+  &lt;li&gt;代码中执行&lt;code class=&quot;highlighter-rouge&quot;&gt;dofile(&quot;file.lua&quot;)&lt;/code&gt;来动态执行某个文件，可用于加载库。和python的&lt;code class=&quot;highlighter-rouge&quot;&gt;import&lt;/code&gt;类似。&lt;/li&gt;
+  &lt;li&gt;行注释&lt;code class=&quot;highlighter-rouge&quot;&gt;--xxxx&lt;/code&gt;， 块注释&lt;code class=&quot;highlighter-rouge&quot;&gt;--[[xxx]]&lt;/code&gt;。&lt;/li&gt;
+  &lt;li&gt;显式删除一个变量只需要把那个变量赋值为&lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt;即可。&lt;/li&gt;
+  &lt;li&gt;定义全局变量&lt;code class=&quot;highlighter-rouge&quot;&gt;_PROMPT&lt;/code&gt;来更改lua的交互模式提示符；定义系统环境变量&lt;code class=&quot;highlighter-rouge&quot;&gt;LUA_INT&lt;/code&gt;可编写解释器执行的初始化脚本(使用@文件名 来执行某个文件；直接赋值则当做代码执行。)&lt;/li&gt;
+  &lt;li&gt;lua参数存在全局变量&lt;code class=&quot;highlighter-rouge&quot;&gt;arg&lt;/code&gt;这个table中。按照下标可访问参数的值。&lt;/li&gt;
+  &lt;li&gt;使用&lt;code class=&quot;highlighter-rouge&quot;&gt;io.read()&lt;/code&gt;从stdin读入数据。&lt;/li&gt;
+  &lt;li&gt;lua会默认对数字和字符串类型进行互相转换， 注意性能问题。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;第二章-值与类型&quot;&gt;第二章： 值与类型&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;复合数据类型table的本质相当于哈希表+数组， 用法相当于python的dict和list的结合。其key可以是任意的值，甚至可以是table本身。比如&lt;code class=&quot;highlighter-rouge&quot;&gt;a={}; b={}; b[a]=1;&lt;/code&gt;。(&lt;strong&gt;疑问: table是如何用c实现的？&lt;/strong&gt;)&lt;/li&gt;
+  &lt;li&gt;table永远是匿名的，因此table变量永远是引用。&lt;/li&gt;
+  &lt;li&gt;lua数组下标默认从1开始。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;#var&lt;/code&gt;表示求var的长度，当var为字符串时，就是求字符串长度。但当var为table时，所求的是哈希表中第一个为nil的key的下标。因此如果不是满table不建议用&lt;code class=&quot;highlighter-rouge&quot;&gt;#&lt;/code&gt;求长度，实际长度可以使用&lt;code class=&quot;highlighter-rouge&quot;&gt;table.maxn(var)&lt;/code&gt;求。&lt;/li&gt;
+  &lt;li&gt;lua的字符串永远是常量，不能通过下标修改字符串。因此修改字符串只能新建一个字符串，注意由此带来的性能问题。&lt;/li&gt;
+  &lt;li&gt;使用&lt;code class=&quot;highlighter-rouge&quot;&gt;[[多行字符串]]&lt;/code&gt;编写多行字符串。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;第三章-表达式&quot;&gt;第三章： 表达式&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;lua取余定义为：&lt;code class=&quot;highlighter-rouge&quot;&gt;a%b = a-floor(a/b)*b&lt;/code&gt;因此取余能对负数生效：&lt;code class=&quot;highlighter-rouge&quot;&gt;-1 % 3 == 2&lt;/code&gt;，也能对小数生效：&lt;code class=&quot;highlighter-rouge&quot;&gt;3.14 % 1 == 0.14&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;使用&lt;code class=&quot;highlighter-rouge&quot;&gt;..&lt;/code&gt;连接两个字符串&lt;/li&gt;
+  &lt;li&gt;table的构造方法，推荐使用&lt;code class=&quot;highlighter-rouge&quot;&gt;t = {[1] = 1, [2] = 2; [&quot;key1&quot;] = value1, [&quot;key2&quot;] = value2}&lt;/code&gt;写法。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;第四章-赋值&quot;&gt;第四章： 赋值&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;支持多个变量赋值，用法如python的tuple：&lt;code class=&quot;highlighter-rouge&quot;&gt;x,y = y,x&lt;/code&gt;。注意如果左右两边的变量数目不一样，那么会把左边多出来的变量设为&lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt;或者把右边多出来的值丢弃。&lt;/li&gt;
+  &lt;li&gt;需要显式声明局部变量&lt;code class=&quot;highlighter-rouge&quot;&gt;local i = 1;&lt;/code&gt;，不然都默认为全局变量。(注意交互模式每一行输入都为独立的一个作用域，因此交互模式的local变量在一行输入之后立刻会被销毁。如果需要多行，可以使用&lt;code class=&quot;highlighter-rouge&quot;&gt;do...end&lt;/code&gt;包围代码块。)&lt;/li&gt;
+  &lt;li&gt;对于需要继承全局变量的局部变量， 可以写为&lt;code class=&quot;highlighter-rouge&quot;&gt;local foo = foo&lt;/code&gt;, 即使用全局变量&lt;code class=&quot;highlighter-rouge&quot;&gt;foo&lt;/code&gt;去初始化局部变量&lt;code class=&quot;highlighter-rouge&quot;&gt;foo&lt;/code&gt;， 在这之后该全局变量变为不可见。&lt;/li&gt;
+  &lt;li&gt;条件判断写法：&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;language-lua highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;elseif&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;$~~&lt;del&gt;$5 . 使用&lt;code class=&quot;highlighter-rouge&quot;&gt;repeat ... until(...)&lt;/code&gt;代替&lt;code class=&quot;highlighter-rouge&quot;&gt;do...while(...)&lt;/code&gt;。注意循环体内的局部变量作用域包括&lt;code class=&quot;highlighter-rouge&quot;&gt;until()&lt;/code&gt;等条件判断
+$&lt;/del&gt;~~$6 . 数字&lt;code class=&quot;highlighter-rouge&quot;&gt;for&lt;/code&gt;循环, 表示变量var从a以步长step增加到b执行的语句。（a，b包头包尾，相当于&amp;lt;=b）&lt;/p&gt;
+
+&lt;div class=&quot;language-lua highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;-- 打印1,3,5,7,9&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+	&lt;span class=&quot;nb&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;$~~~~$7 . 迭代器for:&lt;/p&gt;
+
+&lt;div class=&quot;language-lua highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;-- 打印table t中的所有key&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;it&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;pairs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+	&lt;span class=&quot;nb&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;it&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;$~~~~$8 . 注意&lt;code class=&quot;highlighter-rouge&quot;&gt;retrurn&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;break&lt;/code&gt;只能是一个语法块的最后一句，如果要在中间return， 可以这样写：&lt;code class=&quot;highlighter-rouge&quot;&gt;do return end&lt;/code&gt;。&lt;/p&gt;
+
+&lt;h2 id=&quot;第五章-函数&quot;&gt;第五章： 函数&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;函数支持3种调用方法： &lt;code class=&quot;highlighter-rouge&quot;&gt;foo(x); o.foo(o, x); o:foo(x);&lt;/code&gt;。 其中&lt;code class=&quot;highlighter-rouge&quot;&gt;o.foo(o, x)和o:foo(x)&lt;/code&gt;等价。&lt;/li&gt;
+  &lt;li&gt;形参和实参数量不对等的时候遵循 &lt;strong&gt;四.1&lt;/strong&gt; 所述规则丢弃或置空。&lt;/li&gt;
+  &lt;li&gt;允许函数返回多个值，如果接收返回值的变量不一样，按照规则丢弃返回值或置空。&lt;/li&gt;
+  &lt;li&gt;使用table构造式完整接收一个函数的所有返回：&lt;code class=&quot;highlighter-rouge&quot;&gt;t = {foo()}&lt;/code&gt;；假设&lt;code class=&quot;highlighter-rouge&quot;&gt;foo()&lt;/code&gt;返回数量是运行时确定的也没关系，但只有函数表达式作为最后一个构造元素才有意义。&lt;/li&gt;
+  &lt;li&gt;特殊函数&lt;code class=&quot;highlighter-rouge&quot;&gt;unpack(t)&lt;/code&gt;，接收一个数组作为参数，返回数组中从下标为1开始的所有元素。&lt;/li&gt;
+  &lt;li&gt;变长参数&lt;code class=&quot;highlighter-rouge&quot;&gt;foo(...)&lt;/code&gt;，使用表达式&lt;code class=&quot;highlighter-rouge&quot;&gt;t = {...}&lt;/code&gt;获取所有参数。&lt;/li&gt;
+  &lt;li&gt;使用函数&lt;code class=&quot;highlighter-rouge&quot;&gt;select(i, ...)&lt;/code&gt;获取变长中第i个参数；&lt;code class=&quot;highlighter-rouge&quot;&gt;select('#', ...)&lt;/code&gt;获取参数的数量。&lt;/li&gt;
+  &lt;li&gt;可以通过传入一个table来实现类似python的带名字参数的函数调用。如：&lt;code class=&quot;highlighter-rouge&quot;&gt;os.rename({old = &quot;temp.txt&quot;, new = &quot;temp.txt.bk&quot;})&lt;/code&gt;。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;附：变长add函数实现：&lt;/p&gt;
+&lt;div class=&quot;language-lua highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;ipairs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;附：unpack()函数的实现原理：&lt;/p&gt;
+
+&lt;div class=&quot;language-lua highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;unpack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unpack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;第六章-深入函数&quot;&gt;第六章： 深入函数&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;所有函数和table一样都是匿名的，函数名仅仅是指向一个函数的引用。(&lt;strong&gt;疑问： 那函数变量会被垃圾回收机制回收吗？&lt;/strong&gt;)&lt;/li&gt;
+  &lt;li&gt;所谓的函数定义只是语法糖，一个定义相当于一个赋值语句。如：&lt;code class=&quot;highlighter-rouge&quot;&gt;function foo (x) retrun 2*x end; -(等价于)-&amp;gt; foo = function (x) return 2*x end;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;使用function字段创建出来的就是一个匿名函数，类似lamda表达式，可以用于各种临时函数传入如&lt;code class=&quot;highlighter-rouge&quot;&gt;table.sort()&lt;/code&gt;,也被称作高阶函数。&lt;/li&gt;
+  &lt;li&gt;这种函数的一个很好的编程特性就是可以使用函数在“制造函数”(有点类似于函数版的工厂模式)， 比如有一个函数需要很多参数(或者参数里面是一个函数)，那么可以写一个函数来“生产”初始化好这些参数的函数，例子就是导函数。&lt;/li&gt;
+  &lt;li&gt;lua函数的特性导致它和python一样支持闭包(闭合函数， closure)——即一个函数可以访问其外部函数的局部变量，这时候这些变量在内部函数中既不是全局变量也不是局部变量，被成为“非全局变量”。(&lt;strong&gt;疑问：闭包的实现原理是什么？&lt;/strong&gt;)&lt;/li&gt;
+  &lt;li&gt;“简单的说，一个closure就是一个函数加上该函数所需访问的’非局部变量’。”这些非局部变量对于每一个closure都是独立的。（对比c++的lambda表达式）&lt;/li&gt;
+  &lt;li&gt;函数可以被当做变量重新定义，这种特性可以使得我们可以重新赋值lua提供的所有接口来制造一个“沙盒”，用于运行不可信的代码段。&lt;/li&gt;
+  &lt;li&gt;lua可以在函数内定义局部函数，只需要在函数定义前面加&lt;code class=&quot;highlighter-rouge&quot;&gt;local&lt;/code&gt;关键字就好。(结合 &lt;strong&gt;六.1&lt;/strong&gt; 其实就是定义了一个local变量而已)。&lt;/li&gt;
+  &lt;li&gt;局部函数递归需要注意写法。&lt;/li&gt;
+  &lt;li&gt;间接递归(2个函数互相递归调用)的情况需要使用明确的前向声明。&lt;/li&gt;
+  &lt;li&gt;lua支持尾调用消除，也就是说：当一个函数最后一个动作是调用某函数的时候，lua不会新开栈空间，这时候无论调用多少次都不会爆栈。(如： &lt;code class=&quot;highlighter-rouge&quot;&gt;function f(x) return g(x) end&lt;/code&gt;)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;附： 正确的局部函数递归写法：&lt;/p&gt;
+
+&lt;div class=&quot;language-lua highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cm&quot;&gt;--[[
+注意不能写成：
+local fact = function(n)
+	...
+	...
+	return n * fact(n - 1) --&amp;gt;因为此时fact还没声明完
+end
+]]&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fact&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;-- 先声明一个局部变量&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;fact&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;-- 再给其赋值&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fact&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;附： 高阶函数/“函数工厂”：&lt;/p&gt;
+
+&lt;div class=&quot;language-lua highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;derivative&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;delta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;delta&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;delta&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1e-4&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;functuin&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+				&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;delta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;delta&lt;/span&gt;
+		   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;第七章-迭代器和泛型for&quot;&gt;第七章： 迭代器和泛型for&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;lua的迭代器是通过闭包实现的。即不断调用某个函数，不断返回下一个位置的值。&lt;/li&gt;
+  &lt;li&gt;上述迭代器每次调用都会产生一个新的闭包，但泛型for针对这点有优化，但需要无状态迭代器。参见下面等价代码。&lt;/li&gt;
+  &lt;li&gt;编写迭代器也可以在迭代器参数传入要执行的函数变量，在迭代器内部执行。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;附： lua迭代器闭包实现：&lt;/p&gt;
+
+&lt;div class=&quot;language-lua highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;values&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;附： 泛型for的等价代码：&lt;/p&gt;
+&lt;div class=&quot;language-lua highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;-- for var1, ..., varn in &amp;lt;explist&amp;gt; do &amp;lt;block&amp;gt; end 等价于：&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+	&lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_var&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;explist&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+		&lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;var1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;varn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_var&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;_var&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;var1&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_var&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+		&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;block&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;-- 无状态迭代器&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;iter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+	&lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;第八章-编译执行和错误&quot;&gt;第八章： 编译，执行和错误&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;使用&lt;code class=&quot;highlighter-rouge&quot;&gt;dofile(filename)&lt;/code&gt;执行外部文件代码，事实上是调用&lt;code class=&quot;highlighter-rouge&quot;&gt;loadfile()&lt;/code&gt;完成的。使用&lt;code class=&quot;highlighter-rouge&quot;&gt;loadfile(filename)&lt;/code&gt;加载代码，如果发生错误，会返回nil和错误信息。（对于多次执行的代码可以使用一次loadfile()减少编译次数）&lt;/li&gt;
+  &lt;li&gt;使用&lt;code class=&quot;highlighter-rouge&quot;&gt;dostring(astring)&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;loadstring(astring)&lt;/code&gt;执行在字符串中的代码。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;loadxxx()&lt;/code&gt;中不涉及词法域，因此loadxxx()中不能使用非局部变量。&lt;/li&gt;
+  &lt;li&gt;使用&lt;code class=&quot;highlighter-rouge&quot;&gt;f = package.loadlib(dllpath, function_name)&lt;/code&gt;来载入一个c语言编译好的动态链接库的C函数，并返回一个lua函数存在f中。（&lt;strong&gt;不能调用任意函数，必须按照lua调用C的写法写C函数&lt;/strong&gt;）&lt;/li&gt;
+  &lt;li&gt;通过&lt;code class=&quot;highlighter-rouge&quot;&gt;error(errMsgStr)&lt;/code&gt;触发一个错误。&lt;/li&gt;
+  &lt;li&gt;通过&lt;code class=&quot;highlighter-rouge&quot;&gt;assert(&amp;lt;expr&amp;gt;, errMsgStr)&lt;/code&gt;来检查&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;expr&amp;gt;&lt;/code&gt;是否为真，不是则调用error函数并传入第二个参数。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;第九章-协程&quot;&gt;第九章： 协程&lt;/h2&gt;
+
+</description>
+        <pubDate>Sun, 02 Jul 2017 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/07/02/Lua%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/07/02/Lua%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
+        
+        <category>编程</category>
+        
+        <category>Lua</category>
+        
+        
+        <category>编程</category>
+        
+      </item>
     
       <item>
         <title>Hitting Set问题NP-Complete 证明</title>
@@ -1092,226 +1484,6 @@ Output: 7 -&amp;gt; 0 -&amp;gt; 8&lt;/p&gt;
         <pubDate>Sun, 14 May 2017 12:01:00 +0800</pubDate>
         <link>http://localhost:4000/2017/05/14/leetcode-2/</link>
         <guid isPermaLink="true">http://localhost:4000/2017/05/14/leetcode-2/</guid>
-        
-        <category>算法</category>
-        
-        <category>Leetcode</category>
-        
-        
-        <category>算法课解题报告</category>
-        
-      </item>
-    
-      <item>
-        <title>Leetcode 1. Two Sum 解题报告</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#题目信息&quot; id=&quot;markdown-toc-题目信息&quot;&gt;题目信息&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#题目-1-two-sum&quot; id=&quot;markdown-toc-题目-1-two-sum&quot;&gt;题目： &lt;a href=&quot;https://leetcode.com/problems/two-sum/#/description&quot;&gt;1. Two Sum&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#难度-easy&quot; id=&quot;markdown-toc-难度-easy&quot;&gt;难度： Easy&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#正确率-3365&quot; id=&quot;markdown-toc-正确率-3365&quot;&gt;正确率： 33.65%&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#问题描述&quot; id=&quot;markdown-toc-问题描述&quot;&gt;问题描述:&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#问题分析&quot; id=&quot;markdown-toc-问题分析&quot;&gt;问题分析&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#解题思路&quot; id=&quot;markdown-toc-解题思路&quot;&gt;解题思路&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#结果分析&quot; id=&quot;markdown-toc-结果分析&quot;&gt;结果分析&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#源代码&quot; id=&quot;markdown-toc-源代码&quot;&gt;源代码&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;题目信息&quot;&gt;题目信息&lt;/h3&gt;
-
-&lt;h5 id=&quot;题目-1-two-sum&quot;&gt;题目： &lt;a href=&quot;https://leetcode.com/problems/two-sum/#/description&quot;&gt;1. Two Sum&lt;/a&gt;&lt;/h5&gt;
-
-&lt;h5 id=&quot;难度-easy&quot;&gt;难度： Easy&lt;/h5&gt;
-
-&lt;h5 id=&quot;正确率-3365&quot;&gt;正确率： 33.65%&lt;/h5&gt;
-
-&lt;h5 id=&quot;问题描述&quot;&gt;问题描述:&lt;/h5&gt;
-
-&lt;p&gt;Given an array of integers, return indices of the two numbers such that they add up to a specific target.&lt;/p&gt;
-
-&lt;p&gt;You may assume that each input would have exactly one solution, and you may not use the same element twice.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Example 1:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Given&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;11&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;15&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;target&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;9&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;Because&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;9&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;问题分析&quot;&gt;问题分析&lt;/h3&gt;
-
-&lt;p&gt;　　该问题的意思是，给出一个数组和一个目标，要求求出数组中的两个数的下标，使得这两个数相加为目标。&lt;/p&gt;
-
-&lt;h3 id=&quot;解题思路&quot;&gt;解题思路&lt;/h3&gt;
-
-&lt;p&gt;　　简单的哈希题目，把所有数组中的数通过哈希表存其下标，然后对数组中的每一个数&lt;code class=&quot;highlighter-rouge&quot;&gt;nums[i]&lt;/code&gt;，求哈希表中&lt;code class=&quot;highlighter-rouge&quot;&gt;key=target-nums[i]&lt;/code&gt;的值即为所求的下标。&lt;/p&gt;
-
-&lt;h3 id=&quot;结果分析&quot;&gt;结果分析&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;时间复杂度： $ O(N) $。&lt;/li&gt;
-  &lt;li&gt;空间复杂度： $ O(N) $。&lt;/li&gt;
-  &lt;li&gt;通过时间： 24 ms&lt;/li&gt;
-  &lt;li&gt;击败： 50.90%&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;源代码&quot;&gt;源代码&lt;/h3&gt;
-
-&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;//T(n)=2n?
-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Solution&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;vector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;twoSum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;unordered_map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hashTable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;c1&quot;&gt;// build the hash table 
-&lt;/span&gt;        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;hashTable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;insert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pair&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;c1&quot;&gt;//for each nums[i] in array, search the target-nums[i] is in hash table(aka. is in array), if is, return the answer.
-&lt;/span&gt;        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hashTable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hashTable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;vector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;re&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;re&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;push_back&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hashTable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]));&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;re&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;push_back&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hashTable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]));&lt;/span&gt;
-                &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;re&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-</description>
-        <pubDate>Sun, 07 May 2017 12:01:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/05/07/leetcode-1/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/05/07/leetcode-1/</guid>
-        
-        <category>算法</category>
-        
-        <category>Leetcode</category>
-        
-        
-        <category>算法课解题报告</category>
-        
-      </item>
-    
-      <item>
-        <title>Leetcode 547. Friend Circles 解题报告</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#题目信息&quot; id=&quot;markdown-toc-题目信息&quot;&gt;题目信息&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#题目-547-friend-circles&quot; id=&quot;markdown-toc-题目-547-friend-circles&quot;&gt;题目： &lt;a href=&quot;https://leetcode.com/problems/friend-circles/#/description&quot;&gt;547. Friend Circles&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#难度-medium&quot; id=&quot;markdown-toc-难度-medium&quot;&gt;难度： Medium&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#正确率-488&quot; id=&quot;markdown-toc-正确率-488&quot;&gt;正确率： 48.8%&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#问题描述&quot; id=&quot;markdown-toc-问题描述&quot;&gt;问题描述:&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#问题分析&quot; id=&quot;markdown-toc-问题分析&quot;&gt;问题分析&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#解题思路&quot; id=&quot;markdown-toc-解题思路&quot;&gt;解题思路&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#结果分析&quot; id=&quot;markdown-toc-结果分析&quot;&gt;结果分析&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#源代码&quot; id=&quot;markdown-toc-源代码&quot;&gt;源代码&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;题目信息&quot;&gt;题目信息&lt;/h3&gt;
-
-&lt;h5 id=&quot;题目-547-friend-circles&quot;&gt;题目： &lt;a href=&quot;https://leetcode.com/problems/friend-circles/#/description&quot;&gt;547. Friend Circles&lt;/a&gt;&lt;/h5&gt;
-
-&lt;h5 id=&quot;难度-medium&quot;&gt;难度： Medium&lt;/h5&gt;
-
-&lt;h5 id=&quot;正确率-488&quot;&gt;正确率： 48.8%&lt;/h5&gt;
-
-&lt;h5 id=&quot;问题描述&quot;&gt;问题描述:&lt;/h5&gt;
-
-&lt;p&gt;There are N students in a class. Some of them are friends, while some are not. Their friendship is transitive in nature. For example, if A is a direct friend of B, and B is a direct friend of C, then A is an indirect friend of C. And we defined a friend circle is a group of students who are direct or indirect friends.&lt;/p&gt;
-
-&lt;p&gt;Given a N*N matrix M representing the friend relationship between students in the class. If M[i][j] = 1, then the ith and jth students are direct friends with each other, otherwise not. And you have to output the total number of friend circles among all the students.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Example 1:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Input: 
-[[1,1,0],
- [1,1,0],
- [0,0,1]]
-Output: 2
-Explanation:The 0th and 1st students are direct friends, so they are in a friend circle. 
-The 2nd student himself is in a friend circle. So return 2.
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;Example 2:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Input: 
-[[1,1,0],
- [1,1,1],
- [0,1,1]]
-Output: 1
-Explanation:The 0th and 1st students are direct friends, the 1st and 2nd students are direct friends, 
-so the 0th and 2nd students are indirect friends. All of them are in the same friend circle, so return 1.
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;N is in range [1,200].&lt;/li&gt;
-  &lt;li&gt;M[i][i] = 1 for all students.&lt;/li&gt;
-  &lt;li&gt;If M[i][j] = 1, then M[j][i] = 1.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;问题分析&quot;&gt;问题分析&lt;/h3&gt;
-
-&lt;p&gt;　　题目的意思是给你一个无向图的NxN邻接矩阵M，表示N个人的朋友关系，如果i和j是朋友关系，M[i][j]和M[j][i]就是1，反之是0。 朋友关系有传递性， A和B是朋友，B和C也是朋友，那么A和C也是属于朋友。 题目希望找出给出的图中有多少个“朋友圈”， 即朋友圈中的人互相是直接或者间接的朋友。&lt;/p&gt;
-
-&lt;h3 id=&quot;解题思路&quot;&gt;解题思路&lt;/h3&gt;
-
-&lt;p&gt;　　通过题目分析，我们可以发现，题目很简单，就是在一个无向图中找强连通分量(SCC)。直接通过DFS来找，把不同起点的DFS记作不同的SCC。&lt;/p&gt;
-
-&lt;h3 id=&quot;结果分析&quot;&gt;结果分析&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;时间复杂度： $ O(N^2) $ 每一个顶点查找相邻顶点的复杂度为$ O(N) $，每一个顶点都需要经历这个过程。&lt;/li&gt;
-  &lt;li&gt;空间复杂度： $ O(N) $ Visited数组&lt;/li&gt;
-  &lt;li&gt;通过时间： 42 ms&lt;/li&gt;
-  &lt;li&gt;击败： 06.06%的提交&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;源代码&quot;&gt;源代码&lt;/h3&gt;
-
-&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;//事实上就是在无向图中找SCC的数量嘛
-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Solution&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;findCircleNum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unionNum&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;vector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;visited&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-        
-        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;visited&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]){&lt;/span&gt;
-                &lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unionNum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;dfs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;visited&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unionNum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;private&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dfs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;visited&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;visited&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;visited&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;dfs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;visited&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-</description>
-        <pubDate>Sun, 30 Apr 2017 12:01:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/04/30/leetcode-547/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/04/30/leetcode-547/</guid>
         
         <category>算法</category>
         
