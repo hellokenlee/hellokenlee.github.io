@@ -30,7 +30,7 @@ layout: resume
 <br>
 <br>
 
-`　　　　　　　　　　　　　　　　　　　From_李小狼`
+`                                   From_李小狼`
 <br>
 
 P.S. 凭密码可以兑换取礼物喔
