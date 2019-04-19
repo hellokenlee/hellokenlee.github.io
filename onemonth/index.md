@@ -21,13 +21,14 @@ layout: resume
 <br>
 <br>
 `To_龙小姐`
-<br>
+
+
 `今天我想说("105032108111118101032121111117");`
-<br>                                 
-`                                  From_李小狼`
+　
+`　　　　　　　　　　　　　　　　　　　From_李小狼`
 <br>
 
-P.S. 凭此可以兑换取礼物喔
+P.S. 凭密码可以兑换取礼物喔
 
 ↑↑↑ 这段代码真的能运行喔 ([?不信试试? ](https://wandbox.org/permlink/BXQ9WgKS6yPRpXKW))↑↑↑
 
