@@ -15,8 +15,11 @@ layout: resume
 <br>
 
 `#include <cstdio>`
+
 `#define To_龙小姐 int main(){`
+
 `#define 今天我想说(x) printf("I say: %s", x)`
+
 `#define From_李小狼 return 520;}`
 <br>
 <br>
@@ -24,7 +27,9 @@ layout: resume
 
 
 `今天我想说("105032108111118101032121111117");`
-　
+<br>
+<br>
+
 `　　　　　　　　　　　　　　　　　　　From_李小狼`
 <br>
 
