@@ -15,15 +15,20 @@ layout: resume
 
 <code>
 #include <cstdio>
+<br>
 #define To_龙小姐 int main(){
-#define 今天我想说(x) printf("%s", x)
+<br>
+#define 今天我想说(x) printf("I say: %s", x)
+<br>
 #define From_李小狼 return 520;}
-
+<br>
+<br>
 To_龙小姐
+<br>
+&nbsp&nbsp&nbsp&nbsp今天我想说("105032108111118101032121111117");
+<br>                                 
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspFrom_李小狼
 
-    今天我想说("105032108111118101032121111117");
-                                     
-                                     From_李小狼
 /*
 P.S.
 凭此可以兑换取礼物喔
