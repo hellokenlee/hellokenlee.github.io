@@ -13,7 +13,7 @@ layout: resume
 
 一个月后的今天, 请允许我重新告白.
 
-```cpp
+```c
 #include <cstdio>
 #define To_龙小姐 int main(){
 #define 今天我想说(x) printf("%s", x)

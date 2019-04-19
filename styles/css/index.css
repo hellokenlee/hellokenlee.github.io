@@ -6130,6 +6130,8 @@ a:focus {
 }
 img {
   vertical-align: middle;
+  max-height: 100%;
+  max-width: 100%;
 }
 .img-responsive {
   display: block;
